@@ -9,14 +9,14 @@ import './style.css';
 
 const App = observer(()=> {
   const { user } = useContext(Context)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     check().then(data => {
       user.setUser(data)
       user.setIsAuth(true)
     }).finally(() => setLoading(false))
-  }, [])
+  }, [user])
 
   if (loading) {
     return <h2>loading</h2>
