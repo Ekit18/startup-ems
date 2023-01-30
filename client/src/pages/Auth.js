@@ -20,10 +20,10 @@ const submit = async () => {
     data = await login(email,password)
     
     } else {
-      data = await registration(email,password);
+    data = await registration(email,password);
     }
     
-user.setUser(user)
+user.setUser(data)
 user.setIsAuth(true)
 console.log(user.isAuth)
 navigate(MAIN_ROUTE)
