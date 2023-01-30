@@ -19,6 +19,10 @@ export default class UserStore {
         return this._isAuth
     }
 
+    get userId() {
+        return this._user.id
+    }
+
     get user() {
         return this._user
     }
@@ -27,4 +31,6 @@ export default class UserStore {
         this._isAuth = false
         this._user = {} 
     }
+
+
 }
