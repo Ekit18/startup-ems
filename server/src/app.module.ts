@@ -8,9 +8,16 @@ import { RolesModule } from './roles/roles.module';
 import { Role } from "./roles/roles.model";
 import { UserRoles } from "./roles/user-roles.model";
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from "./auth/jwt-auth.guard";
 @Module({
      controllers:[],
-     providers:[],
+     providers:[
+    //     {
+    //     provide:APP_GUARD,
+    //     useClass:JwtAuthGuard
+    //  },
+    ],
      imports:[
         ConfigModule.forRoot({
             envFilePath:'.env'
