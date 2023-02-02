@@ -24,6 +24,7 @@ const submit = async () => {
     }
     
 user.setUser(data)
+console.log(data)
 user.setIsAuth(true)
 console.log(user.isAuth)
 navigate(MAIN_ROUTE)

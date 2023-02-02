@@ -42,4 +42,8 @@ export class AuthService {
         throw new UnauthorizedException({ message: 'Wrong password or email' });
     }
 
+    async checkToken(req) {
+        const token = this.generateToken(req.user)
+        return token
+    }
 }
