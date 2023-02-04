@@ -29,7 +29,10 @@ user.setIsAuth(true)
 console.log(user.isAuth)
 navigate(MAIN_ROUTE)
   } catch(e) {
-   alert(e.response.data.message);
+   Array.isArray(e.response.data.message) ?  e.response.data.message.forEach(element => {
+    alert(Object.values(element))
+
+   }):alert(e.response.data.message);
   }
 
 
