@@ -11,30 +11,30 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from "./auth/jwt-auth.guard";
 @Module({
-     controllers:[],
-     providers:[
-    //     {
-    //     provide:APP_GUARD,
-    //     useClass:JwtAuthGuard
-    //  },
+    controllers: [],
+    providers: [
+        //     {
+        //     provide:APP_GUARD,
+        //     useClass:JwtAuthGuard
+        //  },
     ],
-     imports:[
+    imports: [
         ConfigModule.forRoot({
-            envFilePath:'.env'
+            envFilePath: '.env'
         }),
         SequelizeModule.forRoot({
             dialect: 'postgres',
             host: process.env.POSTGRES_HOST,
-            port:Number(process.env.POSTGRES_PORT),
+            port: Number(process.env.POSTGRES_PORT),
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User,Role,UserRoles],
-            autoLoadModels:true
-          }),
-          UsersModule,
-          RolesModule,
-          AuthModule,
-     ]
+            models: [User, Role, UserRoles],
+            autoLoadModels: true
+        }),
+        UsersModule,
+        RolesModule,
+        AuthModule,
+    ]
 })
-export class AppModule{}
+export class AppModule { }

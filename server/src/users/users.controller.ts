@@ -24,7 +24,7 @@ export class UsersController {
     @Roles("ADMIN")
     @UseGuards(RolesGuard)
     @Post('/role')
-    addRole(@Body() dto:AddRoleDto) {
+    addRole(@Body() dto: AddRoleDto) {
         return this.usersService.addRole(dto);
     }
 }

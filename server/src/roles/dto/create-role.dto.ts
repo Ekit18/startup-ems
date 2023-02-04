@@ -1,8 +1,8 @@
 import { IsNumber, IsString } from "class-validator";
 
 export class CreateRoleDto {
-    @IsString({message:"Must be string"})
+    @IsString({ message: "Must be string" })
     readonly value: string;
-    @IsNumber({},{message:"Must be number"})
+    @IsString({ message: "Must be string" })
     readonly description: string;
 }
