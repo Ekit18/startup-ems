@@ -12,6 +12,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from "./auth/jwt-auth.guard";
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from "./filters/all-exceptions.filter";
+import { ServeStaticModule } from "@nestjs/serve-static";
+import {join, resolve} from 'path';
+
 @Module({
     controllers: [],
     providers: [
@@ -22,11 +25,14 @@ import { AllExceptionsFilter } from "./filters/all-exceptions.filter";
         {
             provide: APP_FILTER,
             useClass: AllExceptionsFilter,
-          }
+        }
     ],
     imports: [
         ConfigModule.forRoot({
             envFilePath: '.env'
+        }),
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname,'..','/src/', 'static'),
         }),
         SequelizeModule.forRoot({
             dialect: 'postgres',
