@@ -35,6 +35,9 @@ export class AuthService {
     }
     private async validateUser(userDto: CreateUserDto) {
         const user = await this.userService.getUserByEmail(userDto.email);
+        if(!user) {
+            throw new UnauthorizedException({ message: "User doesn't exist" }); 
+        }
         const passwordEquals = await bcrypt.compare(userDto.password, user.password);
         if (user && passwordEquals) {
             return user;

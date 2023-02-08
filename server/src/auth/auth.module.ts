@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersModule } from 'src/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
+import { APP_FILTER } from '@nestjs/core';
+import { AllExceptionsFilter } from 'src/filters/all-exceptions.filter';
 
 @Module({
   providers: [AuthService],
