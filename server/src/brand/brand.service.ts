@@ -6,6 +6,8 @@ import { BrandDto } from './dto/brand.dto';
 @Injectable()
 export class BrandService {
     constructor(@InjectModel(Brand) private brandRepository: typeof Brand) { }
+
+    // TODO:check if brand already exist
     async createBrand(dto: BrandDto) {
         const brand = await this.brandRepository.create(dto);
         return brand;
@@ -18,7 +20,7 @@ export class BrandService {
         return brand;
     }
     async getAllBrands() {
-        const brands = await this.brandRepository.findAll({ include: { all: true } });
+        const brands = await this.brandRepository.findAll();
         return brands;
     }
     async updateBrand(id: number, brandDto: BrandDto) {

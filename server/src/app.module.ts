@@ -16,6 +16,8 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 import { join, resolve } from 'path';
 import { BrandModule } from './brand/brand.module';
 import { Brand } from "./brand/brand.model";
+import { CarModule } from './car/car.module';
+import { Car } from "./car/car.model";
 
 @Module({
     controllers: [],
@@ -33,9 +35,9 @@ import { Brand } from "./brand/brand.model";
         ConfigModule.forRoot({
             envFilePath: '.env'
         }),
-        ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '..', '/src/', 'static'),
-        }),
+        // ServeStaticModule.forRoot({
+        //     rootPath: join(__dirname, '..', '/src/', 'static'),
+        // }),
         SequelizeModule.forRoot({
             dialect: 'postgres',
             host: process.env.POSTGRES_HOST,
@@ -43,13 +45,14 @@ import { Brand } from "./brand/brand.model";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles,Brand],
+            models: [User, Role, UserRoles,Brand,Car],
             autoLoadModels: true
         }),
         UsersModule,
         RolesModule,
         AuthModule,
         BrandModule,
+        CarModule,
     ]
 })
 export class AppModule { }

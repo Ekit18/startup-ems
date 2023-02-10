@@ -11,4 +11,4 @@ import { Brand } from './brand.model';
     SequelizeModule.forFeature([Brand])
   ]
 })
-export class BrandModule { }
+export class BrandModule {}
