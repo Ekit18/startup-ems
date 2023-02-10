@@ -7,15 +7,17 @@ import { BrandDto } from './dto/brand.dto';
 export class BrandService {
     constructor(@InjectModel(Brand) private brandRepository: typeof Brand) { }
 
-    // TODO:check if brand already exist
     async createBrand(dto: BrandDto) {
+        if (this.getBrandByValue(dto)) {
+            throw new HttpException({ message: 'Already exist' }, HttpStatus.BAD_REQUEST);
+        }
         const brand = await this.brandRepository.create(dto);
         return brand;
     }
     async getBrandByValue(dto: BrandDto) {
         const brand = await this.brandRepository.findOne({ where: { brand: dto.brand } });
         if (!brand) {
-            throw new HttpException({message:'Wrong data'}, HttpStatus.BAD_REQUEST);
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
         return brand;
     }
