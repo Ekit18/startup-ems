@@ -13,7 +13,9 @@ import { JwtAuthGuard } from "./auth/jwt-auth.guard";
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from "./filters/all-exceptions.filter";
 import { ServeStaticModule } from "@nestjs/serve-static";
-import {join, resolve} from 'path';
+import { join, resolve } from 'path';
+import { BrandModule } from './brand/brand.module';
+import { Brand } from "./brand/brand.model";
 
 @Module({
     controllers: [],
@@ -32,7 +34,7 @@ import {join, resolve} from 'path';
             envFilePath: '.env'
         }),
         ServeStaticModule.forRoot({
-            rootPath: join(__dirname,'..','/src/', 'static'),
+            rootPath: join(__dirname, '..', '/src/', 'static'),
         }),
         SequelizeModule.forRoot({
             dialect: 'postgres',
@@ -41,12 +43,13 @@ import {join, resolve} from 'path';
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles],
+            models: [User, Role, UserRoles,Brand],
             autoLoadModels: true
         }),
         UsersModule,
         RolesModule,
         AuthModule,
+        BrandModule,
     ]
 })
 export class AppModule { }

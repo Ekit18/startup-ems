@@ -16,13 +16,6 @@ export class UsersController {
     }
     @Roles("ADMIN")
     @UseGuards(RolesGuard)
-    @Get('/:value')
-    getByValue(@Param('value') value: string) {
-        return this.usersService.getUserByEmail(value);
-    }
-
-    @Roles("ADMIN")
-    @UseGuards(RolesGuard)
     @Post('/role')
     addRole(@Body() dto:AddRoleDto) {
         return this.usersService.addRole(dto);
