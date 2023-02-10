@@ -18,11 +18,11 @@ export class BrandController {
         return this.brandService.getAllBrands();
     }
     @Put(':id')
-    update(@Param() id: number, @Body() brandDto: BrandDto) {
+    update(@Param('id') id: number, @Body() brandDto: BrandDto) {
         return this.brandService.updateBrand(id, brandDto);
     }
     @Delete(':id')
-    remove(@Param() id: number) {
+    remove(@Param('id') id: number) {
         return this.brandService.remove(id);
     }
 }
