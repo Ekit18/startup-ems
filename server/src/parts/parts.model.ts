@@ -17,14 +17,11 @@ export class Part extends Model<Part, PartCreationAttrs>{
     partId: number;
     @Column({ type: DataType.STRING, allowNull: false })
     brand: string;
-    @Column({ type: DataType.STRING, allowNull: false })
+    @Column({ type: DataType.STRING, allowNull: false, unique:true })
     name: string;
 
     @Column({type:DataType.STRING, allowNull:false})
     type:string;
-
-    @ForeignKey(()=>Car)
-    carId:number;
 
     @BelongsToMany(() => Car, () => CarsParts)
     cars: Car[];

@@ -1,5 +1,6 @@
 import { Model, Table, Column, DataType, BelongsToMany, BelongsTo, ForeignKey, HasMany } from "sequelize-typescript";
 import { Brand } from "src/brand/brand.model";
+import { CarsParts } from "src/parts/cars-parts.model";
 import { Part } from "src/parts/parts.model";
 
 
@@ -31,5 +32,7 @@ export class Car extends Model<Car, CarCreationAttrs>{
     @Column({ type: DataType.INTEGER, allowNull: false})
     year: number;
 
+    @BelongsToMany(() => Part, () => CarsParts)
+    parts: Part[];
     
 }

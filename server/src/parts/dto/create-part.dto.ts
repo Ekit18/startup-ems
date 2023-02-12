@@ -9,5 +9,4 @@ export class CreatePartDTO{
     type:string;
     @IsNumberString({},{ message:"$property must be numeric string!"} )
     carId:number;
-
 }

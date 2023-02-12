@@ -15,8 +15,8 @@ export class CarService {
         return car;
     }
 
-    private  async getCarById(id:number) {
-        const car = await this.carRepository.findOne({ where: { id } });
+    async getCarById(id:number) {
+        const car = await this.carRepository.findOne({ where: { id },include:{all:true}});
         return car;
     }
 

@@ -7,7 +7,7 @@ import { BrandDto } from './dto/brand.dto';
 export class BrandService {
     constructor(@InjectModel(Brand) private brandRepository: typeof Brand) { }
 
-    async createBrand(dto: BrandDto) {
+    async createBrand(dto: BrandDto) {      
         const candidate = await this.getBrandByValue(dto);
         if (candidate) {
             throw new HttpException({ message: 'Already exist' }, HttpStatus.BAD_REQUEST);

@@ -16,7 +16,7 @@ export class PartsController {
         return this.partService.createPart(createPartDTO);
     }
     @Put('/:partId')
-    updatePart(@Param('partID') partId:number, @Body() updatePartDTO:UpdatePartDTO){
+    updatePart(@Param('partId') partId:number, @Body() updatePartDTO:UpdatePartDTO){
         return this.partService.updatePart(partId, updatePartDTO);
     }
     @Delete('/:partId')
