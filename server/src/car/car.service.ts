@@ -15,6 +15,10 @@ export class CarService {
         return car;
     }
 
+    private  async getCarById(id:number) {
+        const car = await this.carRepository.findOne({ where: { id } });
+        return car;
+    }
 
 
     async getAllCarByModel(dto: GetCarByModelDto) {

@@ -3,7 +3,11 @@ import { Brand } from "src/brand/brand.model";
 
 
 interface CarCreationAttrs {
-    
+    brandId:number;
+    model: string;
+    fuelType: string;
+    bodyType: string;
+    year: number;
 }
 
 @Table({ tableName: 'car' })
