@@ -1,5 +1,6 @@
-import { Model, Table, Column, DataType, BelongsToMany, BelongsTo, ForeignKey } from "sequelize-typescript";
+import { Model, Table, Column, DataType, BelongsToMany, BelongsTo, ForeignKey, HasMany } from "sequelize-typescript";
 import { Brand } from "src/brand/brand.model";
+import { Part } from "src/parts/parts.model";
 
 
 interface CarCreationAttrs {
@@ -8,6 +9,7 @@ interface CarCreationAttrs {
 
 @Table({ tableName: 'car' })
 export class Car extends Model<Car, CarCreationAttrs>{
+    
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     id: number;
 

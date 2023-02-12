@@ -8,7 +8,11 @@ export class BrandService {
     constructor(@InjectModel(Brand) private brandRepository: typeof Brand) { }
 
     async createBrand(dto: BrandDto) {
-        if (this.getBrandByValue(dto)) {
+        const tryFind = this.getBrandByValue(dto)
+
+        tryFind.catch(value => console.log(value));
+        if (tryFind) {
+            
             throw new HttpException({ message: 'Already exist' }, HttpStatus.BAD_REQUEST);
         }
         const brand = await this.brandRepository.create(dto);
@@ -16,9 +20,11 @@ export class BrandService {
     }
     async getBrandByValue(dto: BrandDto) {
         const brand = await this.brandRepository.findOne({ where: { brand: dto.brand } });
+        
         if (!brand) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
+        
         return brand;
     }
     async getAllBrands() {
