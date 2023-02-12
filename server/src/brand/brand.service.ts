@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Brand } from './brand.model';
 import { BrandDto } from './dto/brand.dto';
@@ -8,11 +8,8 @@ export class BrandService {
     constructor(@InjectModel(Brand) private brandRepository: typeof Brand) { }
 
     async createBrand(dto: BrandDto) {
-        const tryFind = this.getBrandByValue(dto)
-
-        tryFind.catch(value => console.log(value));
-        if (tryFind) {
-            
+        const candidate = await this.getBrandByValue(dto);
+        if (candidate) {
             throw new HttpException({ message: 'Already exist' }, HttpStatus.BAD_REQUEST);
         }
         const brand = await this.brandRepository.create(dto);
@@ -20,11 +17,6 @@ export class BrandService {
     }
     async getBrandByValue(dto: BrandDto) {
         const brand = await this.brandRepository.findOne({ where: { brand: dto.brand } });
-        
-        if (!brand) {
-            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
-        }
-        
         return brand;
     }
     async getAllBrands() {
