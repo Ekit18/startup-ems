@@ -27,7 +27,7 @@ export class PartsService {
         return this.partRepository.findOne({ where: { name } });
     }
     async createPart(createPartDTO: CreatePartDTO) {
-        const candidate = this.getPartByName(createPartDTO.name)
+        const candidate = await this.getPartByName(createPartDTO.name)
         if (candidate) {
             throw new HttpException({ message: 'Part is already in the system' }, HttpStatus.BAD_REQUEST)
         }
