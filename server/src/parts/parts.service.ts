@@ -17,12 +17,10 @@ export class PartsService {
         @InjectModel(CarsParts) private carsParts: typeof CarsParts) { }
 
     async getAllPartsByCarID(getPartsDTO: GetPartsDTO) {
-        // const {carId} = getPartsDTO;
-        // const carParts = await this.carRepository.findOne({where:{id:carId},include:{all:true}})
-        // if(!carParts){
-        //     throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
-        // }
-        // return carParts;
+        let candidateCar = await this.carService.getCarById(getPartsDTO.carId);
+        if(!candidateCar){
+            throw new HttpException({ message: 'Car with such parts does not exist in the system' }, HttpStatus.BAD_REQUEST)
+        }
         return (await this.carService.getCarById(getPartsDTO.carId)).parts;
     }
     async getPartByName(name: string) {
@@ -30,7 +28,7 @@ export class PartsService {
     }
     async createPart(createPartDTO: CreatePartDTO) {
         const candidate = this.getPartByName(createPartDTO.name)
-        if (!candidate) {
+        if (candidate) {
             throw new HttpException({ message: 'Part is already in the system' }, HttpStatus.BAD_REQUEST)
         }
 
@@ -39,7 +37,6 @@ export class PartsService {
         const car = await this.carService.getCarById(createPartDTO.carId)
         await part.$set('cars', [car.id])
         part.cars = [car]
-        part.$add
         return part;
     }
     async updatePart(partId: number, updatePartDTO: UpdatePartDTO) {
@@ -49,12 +46,12 @@ export class PartsService {
         try {
             const updateResult = await Part.update({ ...updatePartDTO }, { where: { partId } });
             if (updateResult[0] == 0) {
-                throw new HttpException({ message: "No rows affected by the update" }, HttpStatus.BAD_REQUEST)
+                throw new Error()
             }
             return updateResult
         }
         catch{
-            throw new HttpException({ message: "Can't update a row to make it with already existing name" }, HttpStatus.BAD_REQUEST)
+            throw new HttpException({ message: "Part doesn't exist or trying to make duplicate names" }, HttpStatus.BAD_REQUEST)
         }
         
 
@@ -64,7 +61,10 @@ export class PartsService {
     //     return partFromTable ? false : true
     // }
     remove(partId: number) {
-        return Part.destroy({ where: { partId } })
+        let destroyResult = Part.destroy({ where: { partId } })
+        if(!destroyResult){
+            throw new HttpException({message:"No rows were deleted!"},HttpStatus.BAD_REQUEST)
+        }
     }
 
 
