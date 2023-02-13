@@ -5,6 +5,7 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { RolesService } from 'src/roles/roles.service';
 import { AddRoleDto } from './dto/addRole.dto';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
+import { UpdateUserDto } from './dto/update-user.dto';
 @Injectable()
 export class UsersService {
     constructor(@InjectModel(User) private userRepository: typeof User,
@@ -20,7 +21,6 @@ export class UsersService {
         const user = await this.userRepository.findOne({ where: { email }, include: { all: true } });
         return user;
     }
-
     async addRole(dto:AddRoleDto){
         const user= await this.userRepository.findByPk(dto.userId);
         const role = await this.roleService.getRoleByValue(dto.value);
@@ -29,5 +29,18 @@ export class UsersService {
             return dto;
         }
         throw new HttpException('Пользователь или роль не найдены', HttpStatus.NOT_FOUND)
+    }
+    async getAllUsers(){
+        const users = await this.userRepository.findAll({include: {all: true}});
+        return users;
+    }
+    async updateUser(id: number, dto:UpdateUserDto){
+        if(!Object.keys(dto).length) {
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+        }
+        return User.update({ ...dto }, { where: { id: id } });
+    }
+    async remove(id:number){
+        return User.destroy({ where: { id } });
     }
 }
