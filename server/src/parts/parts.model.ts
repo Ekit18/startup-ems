@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { Model, Table, Column, DataType, BelongsToMany, ForeignKey } from "sequelize-typescript";
 import { Col } from "sequelize/types/utils";
 import { Car } from "src/car/car.model";
@@ -13,16 +14,23 @@ interface PartCreationAttrs {
 }
 @Table({ tableName: 'parts' })
 export class Part extends Model<Part, PartCreationAttrs>{
+    @ApiProperty({example: "1", description:"Unique part ID"})
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     partId: number;
+
+    @ApiProperty({example: "Yokohama", description:"Part brand"})
     @Column({ type: DataType.STRING, allowNull: false })
     brand: string;
+
+    @ApiProperty({example: "W.Drive V905 215/65 R16 98H", description:"Unique part factory name"})
     @Column({ type: DataType.STRING, allowNull: false, unique:true })
     name: string;
 
+    @ApiProperty({example: "Tire", description:"Part type"})
     @Column({type:DataType.STRING, allowNull:false})
     type:string;
 
+    @ApiProperty({type:[Car],description:"Array of cars"})
     @BelongsToMany(() => Car, () => CarsParts)
     cars: Car[];
 }
