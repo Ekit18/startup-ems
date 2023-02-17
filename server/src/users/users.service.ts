@@ -28,7 +28,7 @@ export class UsersService {
             await user.$add('role',role.id)
             return dto;
         }
-        throw new HttpException('Пользователь или роль не найдены', HttpStatus.NOT_FOUND)
+        throw new HttpException('User or role does not exist', HttpStatus.NOT_FOUND)
     }
     async getAllUsers(){
         const users = await this.userRepository.findAll({include: {all: true}});
