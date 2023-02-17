@@ -56,15 +56,12 @@ export class PartsService {
         
 
     }
-    // isUniquePart(updatePartDTO: UpdatePartDTO){
-    //     let partFromTable = this.partRepository.findOne({where:{name:updatePartDTO.name}})
-    //     return partFromTable ? false : true
-    // }
-    remove(partId: number) {
-        let destroyResult = Part.destroy({ where: { partId } })
+    async remove(partId: number) {
+        let destroyResult = await Part.destroy({ where: { partId } })
         if(!destroyResult){
             throw new HttpException({message:"No rows were deleted!"},HttpStatus.BAD_REQUEST)
         }
+        return destroyResult;
     }
 
 
