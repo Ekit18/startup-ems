@@ -1,11 +1,13 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { Model, Table, Column, DataType, BelongsToMany, BelongsTo, ForeignKey, HasMany } from "sequelize-typescript";
 import { Brand } from "src/brand/brand.model";
 import { CarsParts } from "src/parts/cars-parts.model";
+import { CreatePartDTO } from "src/parts/dto/create-part.dto";
 import { Part } from "src/parts/parts.model";
 
 
 interface CarCreationAttrs {
-    brandId:number;
+    brandId: number;
     model: string;
     fuelType: string;
     bodyType: string;
@@ -14,25 +16,28 @@ interface CarCreationAttrs {
 
 @Table({ tableName: 'car' })
 export class Car extends Model<Car, CarCreationAttrs>{
-    
+    @ApiProperty({ example: "1", description: "Unique id" })
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     id: number;
 
- 
+    @ApiProperty({ example: "1", description: "Existing brand id" })
     @ForeignKey(() => Brand)
-    brandId:number;
-    
-    @Column({ type: DataType.STRING, allowNull: false})
+    brandId: number;
+
+    @ApiProperty({ example: "Octavia", description: "Car model" })
+    @Column({ type: DataType.STRING, allowNull: false })
     model: string;
-
-    @Column({ type: DataType.STRING, allowNull: false})
+    @ApiProperty({ example: "Petrol", description: "Car fuel type" })
+    @Column({ type: DataType.STRING, allowNull: false })
     fuelType: string;
-    @Column({ type: DataType.STRING, allowNull: false})
+    @ApiProperty({ example: "Sedan", description: "Car body type" })
+    @Column({ type: DataType.STRING, allowNull: false })
     bodyType: string;
-    @Column({ type: DataType.INTEGER, allowNull: false})
+    @ApiProperty({ example: "2023", description: "Car manufacturing year" })
+    @Column({ type: DataType.INTEGER, allowNull: false })
     year: number;
-
+    @ApiProperty({ description: "Array of parts", type: [CreatePartDTO] })
     @BelongsToMany(() => Part, () => CarsParts)
     parts: Part[];
-    
+
 }
