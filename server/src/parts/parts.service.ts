@@ -27,7 +27,7 @@ export class PartsService {
         return this.partRepository.findOne({ where: { name } });
     }
     async createPart(createPartDTO: CreatePartDTO) {
-        const candidate = this.getPartByName(createPartDTO.name)
+        const candidate = await this.getPartByName(createPartDTO.name)
         if (candidate) {
             throw new HttpException({ message: 'Part is already in the system' }, HttpStatus.BAD_REQUEST)
         }
@@ -56,15 +56,12 @@ export class PartsService {
         
 
     }
-    // isUniquePart(updatePartDTO: UpdatePartDTO){
-    //     let partFromTable = this.partRepository.findOne({where:{name:updatePartDTO.name}})
-    //     return partFromTable ? false : true
-    // }
-    remove(partId: number) {
-        let destroyResult = Part.destroy({ where: { partId } })
+    async remove(partId: number) {
+        let destroyResult = await Part.destroy({ where: { partId } })
         if(!destroyResult){
             throw new HttpException({message:"No rows were deleted!"},HttpStatus.BAD_REQUEST)
         }
+        return destroyResult;
     }
 
 
