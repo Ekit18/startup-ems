@@ -39,12 +39,12 @@ export class PartsService {
         part.cars = [car]
         return part;
     }
-    async updatePart(partId: number, updatePartDTO: UpdatePartDTO) {
-        if (!Object.keys(updatePartDTO).length) {
+    async updatePart(updatePartDTO: UpdatePartDTO) {
+        if (Object.keys(updatePartDTO).length == 1) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
         try {
-            const updateResult = await Part.update({ ...updatePartDTO }, { where: { partId } });
+            const updateResult = await Part.update({ ...updatePartDTO }, { where: { partId:updatePartDTO.partId } });
             if (updateResult[0] == 0) {
                 throw new Error()
             }

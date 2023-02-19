@@ -14,4 +14,7 @@ export class UpdatePartDTO{
     @IsOptional()
     @IsString({ message:"$property must be string!"} )
     type:string;
+    @ApiProperty({example: "7", description:"Part ID to update"})
+    @IsNumberString({},{message:"$property must be numeric for UpdatePartDTO"})
+    partId:number;
 }

@@ -27,10 +27,9 @@ export class PartsController {
     
     @ApiOperation({summary:'Update part in the database. Returns a number of updated parts'})
     @ApiResponse({status:200, type:[Number]})
-    @ApiQuery({description:"ID of part to update",required:false})
-    @Put(':partId')
-    updatePart(@Param('partId') partId:number, @Body() updatePartDTO:UpdatePartDTO){
-        return this.partService.updatePart(partId, updatePartDTO);
+    @Put()
+    updatePart(@Body() updatePartDTO:UpdatePartDTO){
+        return this.partService.updatePart(updatePartDTO);
     }
 
     @ApiOperation({summary:'Delete part by its ID. Returns 1 on success, 0 on fail or such part was not found'})

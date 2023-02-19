@@ -30,7 +30,7 @@ export class Part extends Model<Part, PartCreationAttrs>{
     @Column({type:DataType.STRING, allowNull:false})
     type:string;
 
-    @ApiProperty({type:[Car],description:"Array of cars"})
+    @ApiProperty({name:"CarsParts", example: {id:5,carId:1,partId:1},type:CarsParts,description:"CarsParts row"})
     @BelongsToMany(() => Car, () => CarsParts)
     cars: Car[];
 }
