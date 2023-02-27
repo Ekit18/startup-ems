@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
 import { Req } from '@nestjs/common/decorators';
 import { ApiBearerAuth, ApiOperation, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -32,7 +32,7 @@ export class AuthController {
     @ApiResponse({ status: 200, type: TokenResponse })
     @UseGuards(JwtAuthGuard)
     @Get('/check')
-    check(@Req() req: any) {
+    check(@Req() req: Request) {
         return this.authService.checkToken(req);
     }
 }
