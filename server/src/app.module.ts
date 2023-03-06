@@ -21,6 +21,8 @@ import { Car } from "./car/car.model";
 import { PartsModule } from './parts/parts.module';
 import { Part } from "./parts/parts.model";
 import { CarsParts } from "./parts/cars-parts.model";
+import { GoogleAuthModule } from "./auth/google/googleAuth.module";
+
 
 @Module({
     controllers: [],
@@ -38,9 +40,9 @@ import { CarsParts } from "./parts/cars-parts.model";
         ConfigModule.forRoot({
             envFilePath: '.env'
         }),
-        ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '..', '/src/', 'static'),
-        }),
+        // ServeStaticModule.forRoot({
+        //     rootPath: join(__dirname, '..', '/src/', 'static'),
+        // }),
         SequelizeModule.forRoot({
             dialect: 'postgres',
             host: process.env.POSTGRES_HOST,
@@ -57,6 +59,7 @@ import { CarsParts } from "./parts/cars-parts.model";
         BrandModule,
         CarModule,
         PartsModule,
+        GoogleAuthModule,
     ]
 })
 export class AppModule { }

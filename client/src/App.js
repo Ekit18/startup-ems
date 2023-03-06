@@ -1,6 +1,6 @@
 
 import { observer } from 'mobx-react-lite';
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Context } from '.';
 import { check } from './http/userApi';
@@ -12,6 +12,9 @@ const App = observer(()=> {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+if(!localStorage.getItem('token')) {
+  return setLoading(false)
+}
     check().then(data => {
       user.setUser(data)
       user.setIsAuth(true)
@@ -23,10 +26,11 @@ const App = observer(()=> {
   }
 
   return (
-   
+    <React.StrictMode>
     <BrowserRouter>
     <AppRouter />
   </BrowserRouter>
+  </React.StrictMode>
   );
 })
 

@@ -1,19 +1,25 @@
+import { googleLogout } from '@react-oauth/google'
 import { observer } from 'mobx-react-lite'
 import React, { useContext, useEffect, useReducer } from 'react'
-import { Col, Container, Row } from 'react-bootstrap'
+import { Button, Col, Container, Row } from 'react-bootstrap'
 import { Context } from '..'
+
+
 
 
 const MainPage = observer(() => {
 
-  const {user} = useContext(Context)
-  
+  const { user } = useContext(Context)
+
+
+
   return (
-<>
-<h2>test {user.userId}</h2>
-</>
+    <>
+      <h2>test {user.userId}</h2>
+      <Button onClick={()=>user.logOut()}>log out</Button>
+    </>
   )
-  
+
 })
 
 

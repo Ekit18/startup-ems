@@ -11,8 +11,8 @@ async function start() {
     const app = await NestFactory.create(AppModule);
 
     const config = new DocumentBuilder().setTitle('AI Car Mechanic').setDescription("AI Car Mechanic API Docs").setVersion("1.0.0").addTag("AI Startup").build()
-    const document = SwaggerModule.createDocument(app,config)
-    SwaggerModule.setup("/api/docs",app,document)
+    const document = SwaggerModule.createDocument(app, config)
+    SwaggerModule.setup("/api/docs", app, document)
 
     app.enableCors();
     app.useGlobalPipes(new ValidationPipe())

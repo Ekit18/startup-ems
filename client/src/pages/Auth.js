@@ -1,3 +1,4 @@
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import React, { useContext, useState } from 'react'
 
 import {Button, Card, Container, Form, Row} from "react-bootstrap"
@@ -5,6 +6,8 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { login, registration } from '../http/userApi';
 import { Context } from '../index';
 import { LOGIN_ROUTE, MAIN_ROUTE, REGISTRATION_ROUTE } from '../utils/constants';
+import GoogleAuth from './GoogleAuth';
+
 const Auth = () => {
   const {user} = useContext(Context)
   const location = useLocation()
@@ -40,10 +43,16 @@ navigate(MAIN_ROUTE)
 }
 
   return (
+
     <Container className="d-flex justify-content-center align-items-center">
       <Row>
     <Card  className="p-5 col-md-12">
       <h2 className="m-auto">{isLogin ? 'Authorization' : 'Registration'}</h2>
+      <div className='d-flex justify-content-center'>
+      <GoogleOAuthProvider  clientId={process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID}>
+      <GoogleAuth/>
+      </GoogleOAuthProvider>
+      </div>
       <Form className="d-flex flex-column">
         <Form.Control 
         value={email}
@@ -74,8 +83,14 @@ navigate(MAIN_ROUTE)
         </Row>
       </Form>
     </Card>
+
       </Row>
+    
+     
     </Container>
+
+   
+
   );
 };
 

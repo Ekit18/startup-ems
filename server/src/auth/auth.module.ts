@@ -10,7 +10,7 @@ import { AllExceptionsFilter } from 'src/filters/all-exceptions.filter';
   providers: [AuthService],
   controllers: [AuthController],
   imports: [
-    forwardRef(()=> UsersModule),
+    forwardRef(() => UsersModule),
     JwtModule.register({
       secret: process.env.PRIVATE_KEY || 'SECRET',
       signOptions: {
@@ -18,7 +18,7 @@ import { AllExceptionsFilter } from 'src/filters/all-exceptions.filter';
       }
     })
   ],
-  exports:[
+  exports: [
     AuthService,
     JwtModule
   ]

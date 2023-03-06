@@ -29,7 +29,8 @@ export default class UserStore {
 
     logOut() {
         this._isAuth = false
-        this._user = {} 
+        this._user = {}
+        localStorage.clear() 
     }
 
 
