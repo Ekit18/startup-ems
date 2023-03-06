@@ -15,7 +15,7 @@ export class UserCarsService {
     async createUserCar(dto: CreateUserCarsDto) {
         const user = await this.userService.getUserById(dto.userId);
         const car = await this.carService.getCarById(dto.carId);
-        if (!user && !car) {
+        if (!user || !car) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
         const userCar = await this.userCarsRepository.create(dto);
@@ -35,7 +35,7 @@ export class UserCarsService {
     async getUserCar(dto: GetUserCar) {
         const user = await this.userService.getUserById(dto.userId);
         const checkCar = await this.carService.getCarById(dto.carId);
-        if (!user && !checkCar) {
+        if (!user || !checkCar) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
         const car = await this.userCarsRepository.findOne({ where: { userId: dto.userId, carId: dto.carId } });
@@ -45,7 +45,7 @@ export class UserCarsService {
     async updateMileage(params: GetUserCar, dto: updateMileage) {
         const user = await this.userService.getUserById(params.userId);
         const car = await this.carService.getCarById(params.carId);
-        if (!user && !car) {
+        if (!user || !car) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
         return UserCars.update({ carMileage: dto.carMileage }, { where: { userId: params.userId, carId: params.carId } });
@@ -54,7 +54,7 @@ export class UserCarsService {
     async remove(params: GetUserCar) {
         const user = await this.userService.getUserById(params.userId);
         const checkCar = await this.carService.getCarById(params.carId);
-        if (!user && !checkCar) {
+        if (!user || !checkCar) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
         return UserCars.destroy({ where: { userId: params.userId, carId: params.carId } });
