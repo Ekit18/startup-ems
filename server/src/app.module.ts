@@ -21,6 +21,8 @@ import { Car } from "./car/car.model";
 import { PartsModule } from './parts/parts.module';
 import { Part } from "./parts/parts.model";
 import { CarsParts } from "./parts/cars-parts.model";
+import { UserCarsModule } from './user-cars/user-cars.module';
+import { UserCars } from "./user-cars/user-cars.model";
 
 @Module({
     controllers: [],
@@ -48,7 +50,7 @@ import { CarsParts } from "./parts/cars-parts.model";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles,Brand,Car,Part,CarsParts],
+            models: [User, Role, UserRoles,Brand,Car,Part,CarsParts, UserCars],
             autoLoadModels: true
         }),
         UsersModule,
@@ -57,6 +59,7 @@ import { CarsParts } from "./parts/cars-parts.model";
         BrandModule,
         CarModule,
         PartsModule,
+        UserCarsModule,
     ]
 })
 export class AppModule { }

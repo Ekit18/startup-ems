@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { UserCars } from 'src/user-cars/user-cars.model';
 import { CarController } from './car.controller';
 import { Car } from './car.model';
 import { CarService } from './car.service';
@@ -8,7 +9,7 @@ import { CarService } from './car.service';
   controllers: [CarController],
   providers: [CarService],
   imports: [
-    SequelizeModule.forFeature([Car])
+    SequelizeModule.forFeature([Car, UserCars])
   ],
   exports:[CarService]
 })
