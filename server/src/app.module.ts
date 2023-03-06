@@ -40,9 +40,9 @@ import { UserCars } from "./user-cars/user-cars.model";
         ConfigModule.forRoot({
             envFilePath: '.env'
         }),
-        // ServeStaticModule.forRoot({
-        //     rootPath: join(__dirname, '..', '/src/', 'static'),
-        // }),
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', '/src/', 'static'),
+        }),
         SequelizeModule.forRoot({
             dialect: 'postgres',
             host: process.env.POSTGRES_HOST,
