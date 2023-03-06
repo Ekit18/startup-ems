@@ -10,6 +10,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
     constructor(@InjectModel(User) private userRepository: typeof User,
         private roleService: RolesService) { }
+
     async createUser(dto: CreateUserDto) {
         const user = await this.userRepository.create(dto);
         const role = await this.roleService.getRoleByValue("USER");
@@ -17,6 +18,7 @@ export class UsersService {
         user.roles = [role];
         return user;
     }
+
     async getUserByEmail(email: string) {
         const user = await this.userRepository.findOne({ where: { email }, include: { all: true } });
         return user;
@@ -42,5 +44,10 @@ export class UsersService {
     }
     async remove(id:number) {
         return User.destroy({ where: { id } });
+    }
+
+    async getUserById(id: number) {
+        const user = await this.userRepository.findOne({ where: { id } });
+        return user;
     }
 }

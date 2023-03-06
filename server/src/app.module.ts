@@ -21,8 +21,9 @@ import { Car } from "./car/car.model";
 import { PartsModule } from './parts/parts.module';
 import { Part } from "./parts/parts.model";
 import { CarsParts } from "./parts/cars-parts.model";
+import { UserCarsModule } from './user-cars/user-cars.module';
+import { UserCars } from "./user-cars/user-cars.model";
 import { GoogleAuthModule } from "./auth/google/googleAuth.module";
-
 
 @Module({
     controllers: [],
@@ -50,7 +51,7 @@ import { GoogleAuthModule } from "./auth/google/googleAuth.module";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles,Brand,Car,Part,CarsParts],
+            models: [User, Role, UserRoles,Brand,Car,Part,CarsParts, UserCars],
             autoLoadModels: true
         }),
         UsersModule,
@@ -59,6 +60,7 @@ import { GoogleAuthModule } from "./auth/google/googleAuth.module";
         BrandModule,
         CarModule,
         PartsModule,
+        UserCarsModule,
         GoogleAuthModule,
     ]
 })

@@ -4,6 +4,8 @@ import { Brand } from "src/brand/brand.model";
 import { CarsParts } from "src/parts/cars-parts.model";
 import { CreatePartDTO } from "src/parts/dto/create-part.dto";
 import { Part } from "src/parts/parts.model";
+import { UserCars } from "src/user-cars/user-cars.model";
+import { User } from "src/users/users.model";
 
 
 interface CarCreationAttrs {
@@ -39,5 +41,6 @@ export class Car extends Model<Car, CarCreationAttrs>{
     @ApiProperty({ description: "Array of parts", type: [CreatePartDTO] })
     @BelongsToMany(() => Part, () => CarsParts)
     parts: Part[];
-
+    @BelongsToMany(() => User, () => UserCars)
+    users: User[];
 }

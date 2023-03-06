@@ -1,7 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Model, Table, Column, DataType, BelongsToMany } from "sequelize-typescript";
+import { Car } from "src/car/car.model";
 import { Role } from "src/roles/roles.model";
 import { UserRoles } from "src/roles/user-roles.model";
+import { UserCars } from "src/user-cars/user-cars.model";
 
 
 interface UserCreationAttrs {
@@ -25,4 +27,6 @@ export class User extends Model<User, UserCreationAttrs> {
     isRegisteredWithGoogle: boolean;
     @BelongsToMany(() => Role, () => UserRoles)
     roles: Role[];
+    @BelongsToMany(() => Car, () => UserCars)
+    cars: Car[];
 }
