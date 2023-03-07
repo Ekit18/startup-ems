@@ -24,6 +24,10 @@ import { CarsParts } from "./parts/cars-parts.model";
 import { UserCarsModule } from './user-cars/user-cars.module';
 import { UserCars } from "./user-cars/user-cars.model";
 import { GoogleAuthModule } from "./auth/google/googleAuth.module";
+import { CarServiceModule } from "./car-service/car-service.module";
+import { CarServices } from "./car-service/car-service.model";
+import { CarOperationModule } from './car-operation/car-operation.module';
+import { CarOperation } from "./car-operation/car-operation.model";
 
 @Module({
     controllers: [],
@@ -41,9 +45,9 @@ import { GoogleAuthModule } from "./auth/google/googleAuth.module";
         ConfigModule.forRoot({
             envFilePath: '.env'
         }),
-        // ServeStaticModule.forRoot({
-        //     rootPath: join(__dirname, '..', '/src/', 'static'),
-        // }),
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', '/src/', 'static'),
+        }),
         SequelizeModule.forRoot({
             dialect: 'postgres',
             host: process.env.POSTGRES_HOST,
@@ -51,7 +55,7 @@ import { GoogleAuthModule } from "./auth/google/googleAuth.module";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles,Brand,Car,Part,CarsParts, UserCars],
+            models: [User, Role, UserRoles, Brand, Car, Part, CarsParts, UserCars, CarServices, CarOperation],
             autoLoadModels: true
         }),
         UsersModule,
@@ -62,6 +66,8 @@ import { GoogleAuthModule } from "./auth/google/googleAuth.module";
         PartsModule,
         UserCarsModule,
         GoogleAuthModule,
+        CarServiceModule,
+        CarOperationModule,
     ]
 })
 export class AppModule { }
