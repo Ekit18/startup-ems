@@ -1,10 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { google, Auth } from 'googleapis';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from '../auth.service';
 import { GoogleCodeDto } from '../dto/googleCode.dto';
-
 
 
 @Injectable()
@@ -27,35 +26,12 @@ export class GoogleAuthService {
     }
 
     async authenticate(googleCodeDto: GoogleCodeDto) {
-        const codeToToken = googleCodeDto.code;
-
-        const { tokens } = await this.oauthClient.getToken(codeToToken);
-
-
-        console.log(tokens.access_token);
+        const { tokens } = await this.oauthClient.getToken(googleCodeDto.code);
         const tokenInfo = await this.oauthClient.getTokenInfo(tokens.access_token);
         const user = await this.userService.getUserByEmail(tokenInfo.email);
         if (user) {
             return this.authService.login(user);
         }
-
         return this.authService.googleRegistration(tokenInfo.email);
-        // try {
-        //     const user = await this.usersService.getByEmail(email);
-
-        //     return this.handleRegisteredUser(user);
-        // } catch (error) {
-        //     if (error.status !== 404) {
-        //         throw new error;
-        //     }
-
-        //     return this.registerUser(token, email);
-        // }
     }
-
-    // async exchangeCodeForToken(code: string): Promise<string> {
-    //     const { tokens } = await this.oauthClient.getToken(code);
-    //     const accessToken = tokens.access_token;
-    //     return accessToken;
-    //   }
 }

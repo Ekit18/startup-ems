@@ -4,4 +4,3 @@ export const REGISTRATION_ROUTE = '/registration'
 export const GOOGLE_REDIRECT_ROUTE = 'login/google/redirect'
 
 
-

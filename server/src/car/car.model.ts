@@ -17,7 +17,7 @@ interface CarCreationAttrs {
 }
 
 @Table({ tableName: 'car' })
-export class Car extends Model<Car, CarCreationAttrs>{
+export class Car extends Model<Car, CarCreationAttrs> {
     @ApiProperty({ example: "1", description: "Unique id" })
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     id: number;
