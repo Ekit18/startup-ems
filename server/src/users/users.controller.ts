@@ -41,7 +41,7 @@ export class UsersController {
 
 
     @ApiOperation({ summary: 'Updating user information' })
-    @ApiResponse({ status: 200})
+    @ApiResponse({ status: 200 })
     @Put(':id')
     update(@Param('id') id: number, @Body() userDto: UpdateUserDto) {
         return this.usersService.updateUser(id, userDto);
