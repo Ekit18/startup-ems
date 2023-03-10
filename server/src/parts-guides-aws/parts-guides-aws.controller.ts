@@ -1,6 +1,7 @@
-import { Controller, FileTypeValidator, HttpException, HttpStatus, Param, ParseFilePipe, Post, Req, UploadedFile, UploadedFiles, UseInterceptors, ExceptionFilter, Inject, ArgumentsHost } from '@nestjs/common';
+import { Controller, FileTypeValidator, HttpException, HttpStatus, Param, ParseFilePipe, Post, Req, UploadedFile, UploadedFiles, UseInterceptors, ExceptionFilter, Inject, ArgumentsHost, Get, Delete } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { AllExceptionsFilter } from 'src/filters/all-exceptions.filter';
+import { DeleteStaticDTO } from './dto/delete-static.dto';
 import { PartsGuidesAwsService } from './parts-guides-aws.service';
 
 
@@ -46,5 +47,11 @@ export class PartsGuidesAwsController {
         }
         const urls: string[] = await Promise.all(files.map((file) => this.partsGuidesAwsService.addGuideImg(partId, file.buffer, file.originalname)));
         return urls;
+    }
+    @Delete(':key')
+    deleteStaticFile(@Param() key: DeleteStaticDTO) {
+        console.log(key.key);
+        this.partsGuidesAwsService.deletePublicFile(key.key);
+        return true;
     }
 }

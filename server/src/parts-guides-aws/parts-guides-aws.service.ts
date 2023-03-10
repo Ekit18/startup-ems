@@ -1,4 +1,4 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/sequelize';
@@ -17,7 +17,20 @@ export class PartsGuidesAwsService {
         private readonly s3Client: S3Client
     ) { }
 
-    async uploadPublicFile(dataBuffer: Buffer, filename: string, fileType: string, partId: number) {
+    async deletePublicFile(key: string) {
+        const candidate = this.partsGuidesAWSRepository.findOne({ where: { key } });
+        if (!candidate) {
+            throw new HttpException("Such key does not exist!", HttpStatus.BAD_REQUEST);
+        }
+        const delParams = {
+            Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
+            Key: key,
+        };
+        await this.s3Client.send(new DeleteObjectCommand(delParams));
+        this.partsGuidesAWSRepository.destroy({ where: { key } });
+    }
+
+    private async uploadPublicFile(dataBuffer: Buffer, filename: string, fileType: string, partId: number) {
         const uploadParams = {
             Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
             Body: dataBuffer,
