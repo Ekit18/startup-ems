@@ -13,9 +13,9 @@ export class UsersService {
 
     async createUser(dto: CreateUserDto) {
         const user = await this.userRepository.create(dto);
-        const role = await this.roleService.getRoleByValue("USER")
-        await user.$set('roles', [role.id])
-        user.roles = [role]
+        const role = await this.roleService.getRoleByValue("USER");
+        await user.$set('roles', [role.id]);
+        user.roles = [role];
         return user;
     }
 
@@ -23,30 +23,26 @@ export class UsersService {
         const user = await this.userRepository.findOne({ where: { email }, include: { all: true } });
         return user;
     }
-
-    async addRole(dto: AddRoleDto) {
+    async addRole(dto:AddRoleDto) {
         const user = await this.userRepository.findByPk(dto.userId);
         const role = await this.roleService.getRoleByValue(dto.value);
         if (role && user) {
-            await user.$add('role', role.id)
+            await user.$add('role', role.id);
             return dto;
         }
-        throw new HttpException('User or role does not exist', HttpStatus.NOT_FOUND)
+        throw new HttpException('User or role does not exist', HttpStatus.NOT_FOUND);
     }
-
     async getAllUsers() {
         const users = await this.userRepository.findAll({ include: { all: true } });
         return users;
     }
-
-    async updateUser(id: number, dto: UpdateUserDto) {
+    async updateUser(id: number, dto:UpdateUserDto) {
         if (!Object.keys(dto).length) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
-        return User.update({ ...dto }, { where: { id: id } });
+        return User.update({ ...dto }, { where: { id } });
     }
-
-    async remove(id: number) {
+    async remove(id:number) {
         return User.destroy({ where: { id } });
     }
 

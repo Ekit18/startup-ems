@@ -15,7 +15,7 @@ import { UserCars } from 'src/user-cars/user-cars.model';
   imports: [
     SequelizeModule.forFeature([User, Role, UserRoles, UserCars]),
     RolesModule,
-    forwardRef(()=> AuthModule)
+    forwardRef(() => AuthModule)
   ],
   exports: [UsersService]
 })

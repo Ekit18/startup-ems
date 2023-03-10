@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Car } from './car.model';
 import { CarDto } from './dto/car.dto';
 import { GetCarByBrandIdDto } from './dto/get-car-by-brand-id.dto';
-import {  GetCarByModelDto } from './dto/get-car-by-model-id.dto';
+import { GetCarByModelDto } from './dto/get-car-by-model-id.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 
 @Injectable()
@@ -15,8 +15,11 @@ export class CarService {
         return car;
     }
 
-    async getCarById(id:number) {
-        const car = await this.carRepository.findOne({ where: { id },include:{all:true}});
+    async getCarById(id: number) {
+        const car = await this.carRepository.findOne({ where: { id }, include: { all: true } });
+        if (!car) {
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+        }
         return car;
     }
 
@@ -41,16 +44,21 @@ export class CarService {
 
 
     async updateCar(id: number, dto: UpdateCarDto) {
-        if(!Object.keys(dto).length) {
+        if (!Object.keys(dto).length) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
-        return Car.update({ ...dto }, { where: { id: id } });
+        const car = await this.carRepository.findOne({ where: { id } });
+        if (!car) {
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+        }
+        return Car.update({ ...dto }, { where: { id } });
     }
 
     async remove(id: number) {
+        const car = await this.carRepository.findOne({ where: { id } });
+        if (!car) {
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+        }
         return Car.destroy({ where: { id } });
     }
-
-
-
 }

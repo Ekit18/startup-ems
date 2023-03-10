@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Brand } from './brand.model';
 import { BrandService } from './brand.service';
 import { BrandDto } from './dto/brand.dto';
@@ -24,24 +24,24 @@ export class BrandController {
     }
 
 
-    @ApiOperation({summary:'Getting all brands from database'})
-    @ApiResponse({status:200, type:[Brand]})
+    @ApiOperation({ summary: 'Getting all brands from database' })
+    @ApiResponse({ status: 200, type: [Brand] })
     @Get()
     getAll() {
         return this.brandService.getAllBrands();
     }
 
 
-    @ApiOperation({summary:'Changing information in brand'})
-    @ApiResponse({status:200})
+    @ApiOperation({ summary: 'Changing information in brand' })
+    @ApiResponse({ status: 200 })
     @Put(':id')
     update(@Param('id') id: number, @Body() brandDto: BrandDto) {
         return this.brandService.updateBrand(id, brandDto);
     }
 
 
-    @ApiOperation({summary:'Deleting brand from database'})
-    @ApiResponse({status:200})
+    @ApiOperation({ summary: 'Deleting brand from database' })
+    @ApiResponse({ status: 200 })
     @Delete(':id')
     remove(@Param('id') id: number) {
         return this.brandService.remove(id);

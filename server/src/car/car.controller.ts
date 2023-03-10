@@ -12,7 +12,7 @@ import { UpdateCarDto } from './dto/update-car.dto';
 
 class ModelResponse {
     @ApiProperty({ example: 'Octavia' })
-    model: string
+    model: string;
 }
 
 @ApiTags("Cars")
@@ -44,17 +44,16 @@ export class CarController {
     }
 
     @ApiOperation({ summary: "Changing car by car id" })
-    @ApiResponse({ status: 200})
+    @ApiResponse({ status: 200 })
     @Put(':id')
     update(@Param('id') id: number, @Body() carDto: UpdateCarDto) {
         return this.carService.updateCar(id, carDto);
     }
 
     @ApiOperation({ summary: "Deleting car by car id" })
-    @ApiResponse({ status: 200})
+    @ApiResponse({ status: 200 })
     @Delete(':id')
     remove(@Param('id') id: number) {
         return this.carService.remove(id);
     }
-
 }
