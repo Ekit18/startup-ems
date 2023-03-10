@@ -11,7 +11,6 @@ export class CarsParts extends Model<CarsParts>{
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     id: number;
 
-
     @ApiProperty({example: "28", description:"Car ID to which part belongs to"})
     @ForeignKey(() => Car)
     @Column({ type: DataType.INTEGER })

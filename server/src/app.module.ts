@@ -23,7 +23,11 @@ import { Part } from "./parts/parts.model";
 import { CarsParts } from "./parts/cars-parts.model";
 import { UserCarsModule } from './user-cars/user-cars.module';
 import { UserCars } from "./user-cars/user-cars.model";
-
+import { ShopStockListService } from './shop_stock_list/shop_stock_list.service';
+import { ShopStockListModule } from './shop_stock_list/shop_stock_list.module';
+import { ShopStockList } from "./shop_stock_list/shop_stock_list.model";
+import { Parts_Shop } from "./parts_shop/parts_shop.model";
+import { PartsShopModule } from "./parts_shop/parts_shop.module";
 @Module({
     controllers: [],
     providers: [
@@ -50,7 +54,7 @@ import { UserCars } from "./user-cars/user-cars.model";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles,Brand,Car,Part,CarsParts, UserCars],
+            models: [User, Role, UserRoles,Brand,Car,Part,CarsParts, UserCars,ShopStockList,Parts_Shop],
             autoLoadModels: true
         }),
         UsersModule,
@@ -60,6 +64,8 @@ import { UserCars } from "./user-cars/user-cars.model";
         CarModule,
         PartsModule,
         UserCarsModule,
+        ShopStockListModule,
+        PartsShopModule
     ]
 })
 export class AppModule { }

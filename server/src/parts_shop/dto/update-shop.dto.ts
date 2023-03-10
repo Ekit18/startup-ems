@@ -1,17 +1,19 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNumberString, IsOptional, IsString } from "class-validator";
 
-export class UpdatePartDTO{
-    @ApiProperty({example: "Yokohama", description:"Part brand"})
-    @IsOptional()
-    @IsString({ message:"$property must be string!"} )
-    brand: string;
-    @ApiProperty({example: "W.Drive V905 215/65 R16 98H", description:"Unique part factory name"})
+export class UpdateShopDTO{
+    @ApiProperty({example: "John's parts", description:"Unique shop name"})
     @IsOptional()
     @IsString({ message:"$property must be string!"} )
     name: string;
-    @ApiProperty({example: "Tire", description:"Part type"})
+
+    @ApiProperty({example: "https://johnparts.com", description:"Shop URL"})
     @IsOptional()
     @IsString({ message:"$property must be string!"} )
-    type:string;
+    siteLink: string;
+
+    @ApiProperty({example: "49.6721819,14.2466009", description:"Coordinates of the shop"})
+    @IsOptional()
+    @IsString({ message:"$property must be string!"} )
+    gpsCoords:string;
 }

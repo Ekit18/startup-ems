@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumberString, IsString } from "class-validator";
+import { IsNumber, IsNumberString, IsString } from "class-validator";
 
 export class CreatePartDTO{
     @ApiProperty({example: "Yokohama", description:"Part brand"})
@@ -12,6 +12,6 @@ export class CreatePartDTO{
     @IsString({ message:"$property must be string!"} )
     type:string;
     @ApiProperty({example: "1", description:"Car ID to which that part belongs to"})
-    @IsNumberString({},{ message:"$property must be numeric string!"} )
+    @IsNumber({},{ message:"$property must be numeric string!"} )
     carId:number;
 }

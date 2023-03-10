@@ -17,7 +17,6 @@ import { UserCars } from 'src/user-cars/user-cars.model';
     RolesModule,
     forwardRef(()=> AuthModule)
   ],
-  exports: [UsersService
-    ]
+  exports: [UsersService]
 })
 export class UsersModule { }

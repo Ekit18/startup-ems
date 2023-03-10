@@ -18,7 +18,7 @@ export class PartsService {
 
     async getAllPartsByCarID(getPartsDTO: GetPartsDTO) {
         let candidateCar = await this.carService.getCarById(getPartsDTO.carId);
-        if(!candidateCar){
+        if (!candidateCar) {
             throw new HttpException({ message: 'Car with such parts does not exist in the system' }, HttpStatus.BAD_REQUEST)
         }
         return (await this.carService.getCarById(getPartsDTO.carId)).parts;
@@ -27,39 +27,43 @@ export class PartsService {
         return this.partRepository.findOne({ where: { name } });
     }
     async createPart(createPartDTO: CreatePartDTO) {
-        const candidate = await this.getPartByName(createPartDTO.name)
-        if (candidate) {
-            throw new HttpException({ message: 'Part is already in the system' }, HttpStatus.BAD_REQUEST)
+        try {
+            var part = await this.partRepository.create({ brand:createPartDTO.brand,name:createPartDTO.name,type:createPartDTO.type })
         }
-
-        const part = await this.partRepository.create({ ...createPartDTO })
-
-        const car = await this.carService.getCarById(createPartDTO.carId)
+        catch (err) {
+            throw new HttpException(err.name, HttpStatus.BAD_REQUEST)
+        }
+        try{
+        var car = await this.carService.getCarById(createPartDTO.carId)
+        }
+        catch(err){
+            throw new HttpException(err.name, HttpStatus.BAD_REQUEST)
+        }
         await part.$set('cars', [car.id])
         part.cars = [car]
         return part;
     }
-    async updatePart(updatePartDTO: UpdatePartDTO) {
-        if (Object.keys(updatePartDTO).length == 1) {
+    async updatePart(partId: number, updatePartDTO: UpdatePartDTO) {
+        if (!Object.keys(updatePartDTO).length) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
         try {
-            const updateResult = await Part.update({ ...updatePartDTO }, { where: { partId:updatePartDTO.partId } });
+            const updateResult = await Part.update({ ...updatePartDTO }, { where: { partId } });
             if (updateResult[0] == 0) {
-                throw new Error()
+                throw new HttpException({ message: "No rows were updated!" }, HttpStatus.BAD_REQUEST)
             }
             return updateResult
         }
-        catch{
-            throw new HttpException({ message: "Part doesn't exist or trying to make duplicate names" }, HttpStatus.BAD_REQUEST)
+        catch(err) {
+            throw new HttpException(err.name, HttpStatus.BAD_REQUEST)
         }
-        
+
 
     }
     async remove(partId: number) {
         let destroyResult = await Part.destroy({ where: { partId } })
-        if(!destroyResult){
-            throw new HttpException({message:"No rows were deleted!"},HttpStatus.BAD_REQUEST)
+        if (!destroyResult) {
+            throw new HttpException({ message: "No rows were deleted!" }, HttpStatus.BAD_REQUEST)
         }
         return destroyResult;
     }
