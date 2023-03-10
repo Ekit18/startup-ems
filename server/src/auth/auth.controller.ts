@@ -10,7 +10,7 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) { }
-    
+
     @ApiOperation({ summary: 'Login in the system' })
     @ApiResponse({ status: 200, type: TokenResponseDto })
     @Post('/login')

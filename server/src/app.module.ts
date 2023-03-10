@@ -31,6 +31,8 @@ import { CarServiceModule } from "./car-service/car-service.module";
 import { CarServices } from "./car-service/car-service.model";
 import { CarOperationModule } from './car-operation/car-operation.module';
 import { CarOperation } from "./car-operation/car-operation.model";
+import { RepairsHistoryModule } from './repairs-history/repairs-history.module';
+import { RepairsHistory } from "./repairs-history/repairs-history.model";
 @Module({
     controllers: [],
     providers: [
@@ -57,7 +59,7 @@ import { CarOperation } from "./car-operation/car-operation.model";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles, Brand, Car, Part, CarsParts, UserCars, ShopStockList, PartsShop, CarServices, CarOperation],
+            models: [User, Role, UserRoles, Brand, Car, Part, CarsParts, UserCars, ShopStockList, PartsShop, CarServices, CarOperation, RepairsHistory],
             autoLoadModels: true
         }),
         UsersModule,
@@ -72,6 +74,8 @@ import { CarOperation } from "./car-operation/car-operation.model";
         CarOperationModule,
         PartsShopModule,
         GoogleAuthModule,
+        RepairsHistoryModule,
+        RepairsHistoryModule
     ]
 })
 export class AppModule { }

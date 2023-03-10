@@ -9,6 +9,9 @@ import { CarOperationService } from './car-operation.service';
   providers: [CarOperationService],
   imports: [
     SequelizeModule.forFeature([CarOperation])
+  ],
+  exports: [
+    CarOperationService
   ]
 })
 export class CarOperationModule { }
