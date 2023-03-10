@@ -16,14 +16,14 @@ export class ShopStockListService {
         return stock;
     }
     async createStock(createStockDto: CreateStockDTO) {
-        try {
+        const candidate = await this.shopStockRepository.findOne({ where: { partId: createStockDto.partId, shopId: createStockDto.shopId } });
+        if (candidate) {
+            throw new HttpException({ message: 'Such stock with partId, shopId already exists' }, HttpStatus.BAD_REQUEST);
+        }
         const stock = await this.shopStockRepository.create(createStockDto);
         return stock;
-        } catch (err) {
-            throw new HttpException(err.name, HttpStatus.BAD_REQUEST);
-        }
     }
-    async updateStock(shopId:number, partId:number, updateStockDto: UpdateStockDTO) {
+    async updateStock(shopId: number, partId: number, updateStockDto: UpdateStockDTO) {
         if (!Object.keys(updateStockDto).length) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
@@ -34,7 +34,7 @@ export class ShopStockListService {
         }
         return updatedStock;
     }
-    async deleteStock(shopId:number, partId:number) {
+    async deleteStock(shopId: number, partId: number) {
         const result = await this.shopStockRepository.destroy({ where: { shopId, partId } });
         if (!result) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);

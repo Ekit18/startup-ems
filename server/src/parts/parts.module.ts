@@ -12,7 +12,7 @@ import { PartsShop } from 'src/parts_shop/parts_shop.model';
 @Module({
   controllers: [PartsController],
   providers: [PartsService],
-  imports:[SequelizeModule.forFeature([Part,CarsParts,ShopStockList,PartsShop]),CarModule],
-  exports:[PartsService]
+  imports: [SequelizeModule.forFeature([Part, CarsParts, ShopStockList, PartsShop]), CarModule],
+  exports: [PartsService]
 })
-export class PartsModule {}
+export class PartsModule { }

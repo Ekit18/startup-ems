@@ -17,12 +17,12 @@ export class PartsShopService {
         return shop;
     }
     async createShop(createShopDto: CreateShopDTO) {
-        try {
-            const shop = await this.PartsShopRepository.create(createShopDto);
-            return shop;
-        } catch (err) {
-            throw new HttpException(err.name, HttpStatus.BAD_REQUEST);
+        const candidateShop = await PartsShop.findOne({ where: { ...createShopDto } });
+        if (candidateShop) {
+            throw new HttpException({ message: 'Such shop with name, gps and site already exists' }, HttpStatus.BAD_REQUEST);
         }
+        const shop = await this.PartsShopRepository.create(createShopDto);
+        return shop;
     }
     async updateShop(id: number, updateShopDto: UpdateShopDTO) {
         if (!Object.keys(updateShopDto).length) {
@@ -30,7 +30,7 @@ export class PartsShopService {
         }
         const updatedShop = await this.PartsShopRepository.update({ ...updateShopDto }, { where: { shopId: id } });
         if (updatedShop[0] === 0) {
-                throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
         return updatedShop;
     }
