@@ -10,7 +10,7 @@ export class PartsShopService {
     constructor(@InjectModel(PartsShop) private PartsShopRepository: typeof PartsShop) { }
 
     async getShopByShopId(getShopDTO: GetShopDTO) {
-        const shop = await this.PartsShopRepository.findOne({ where: { shopId: getShopDTO.shopId } });
+        const shop = await this.PartsShopRepository.findOne({ where: { shopId: getShopDTO.shopId }, include: { all: true } });
         if (!shop) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }

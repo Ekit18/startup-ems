@@ -2,7 +2,6 @@ import { Part } from 'src/parts/parts.model';
 import { ApiProperty } from "@nestjs/swagger";
 import { Matches } from "class-validator";
 import { BelongsToMany, Column, DataType, Model, Table } from "sequelize-typescript";
-import { UserCars } from 'src/user-cars/user-cars.model';
 import { ShopStockList } from 'src/shop_stock_list/shop_stock_list.model';
 
 @Table({ tableName: 'parts_shop' })

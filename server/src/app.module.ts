@@ -1,3 +1,4 @@
+import { PartsGuidesAWS } from 'src/parts-guides-aws/parts-guides-aws.model';
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -31,6 +32,7 @@ import { CarServiceModule } from "./car-service/car-service.module";
 import { CarServices } from "./car-service/car-service.model";
 import { CarOperationModule } from './car-operation/car-operation.module';
 import { CarOperation } from "./car-operation/car-operation.model";
+import { PartsGuidesAwsModule } from './parts-guides-aws/parts-guides-aws.module';
 @Module({
     controllers: [],
     providers: [
@@ -57,7 +59,7 @@ import { CarOperation } from "./car-operation/car-operation.model";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles, Brand, Car, Part, CarsParts, UserCars, ShopStockList, PartsShop, CarServices, CarOperation],
+            models: [User, Role, UserRoles, Brand, Car, Part, CarsParts, UserCars, ShopStockList, PartsShop, CarServices, CarOperation, PartsGuidesAWS],
             autoLoadModels: true
         }),
         UsersModule,
@@ -72,6 +74,7 @@ import { CarOperation } from "./car-operation/car-operation.model";
         CarOperationModule,
         PartsShopModule,
         GoogleAuthModule,
+        PartsGuidesAwsModule
     ]
 })
 export class AppModule { }

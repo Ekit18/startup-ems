@@ -5,6 +5,7 @@ import { CreatePartDTO } from './dto/create-part.dto';
 import { GetPartsDTO } from './dto/get-part.dto';
 import { UpdatePartDTO } from './dto/update-part.dto';
 import { PartsService } from './parts.service';
+import { GetPartDetailsDTO } from './dto/get-part-details.dto';
 
 @ApiTags("Parts")
 @Controller('parts')
@@ -16,6 +17,12 @@ export class PartsController {
     @Get(':carId')
     getAllPartsByCarID(@Param() getPartDTO: GetPartsDTO) {
         return this.partService.getAllPartsByCarID(getPartDTO);
+    }
+    @ApiOperation({ summary: 'Get detailed info about the part by partId' })
+    @ApiResponse({ status: 200, type: Part })
+    @Get('part_info/:partId')
+    getPartDetails(@Param() getPartDetailsDTO: GetPartDetailsDTO) {
+        return this.partService.getPartById(getPartDetailsDTO.partId);
     }
 
     @ApiOperation({ summary: 'Add part to the database. Returns added Part' })
