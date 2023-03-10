@@ -7,12 +7,12 @@ import { Part } from './parts.model';
 import { PartsService } from './parts.service';
 import { PartsShopModule } from 'src/parts_shop/parts_shop.module';
 import { ShopStockList } from 'src/shop_stock_list/shop_stock_list.model';
-import { Parts_Shop } from 'src/parts_shop/parts_shop.model';
+import { PartsShop } from 'src/parts_shop/parts_shop.model';
 
 @Module({
   controllers: [PartsController],
   providers: [PartsService],
-  imports:[SequelizeModule.forFeature([Part,CarsParts,ShopStockList,Parts_Shop]),CarModule],
+  imports:[SequelizeModule.forFeature([Part,CarsParts,ShopStockList,PartsShop]),CarModule],
   exports:[PartsService]
 })
 export class PartsModule {}

@@ -8,9 +8,8 @@ import { RolesModule } from './roles/roles.module';
 import { Role } from "./roles/roles.model";
 import { UserRoles } from "./roles/user-roles.model";
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_FILTER } from '@nestjs/core';
 import { JwtAuthGuard } from "./auth/jwt-auth.guard";
-import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from "./filters/all-exceptions.filter";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join, resolve } from 'path';
@@ -23,10 +22,9 @@ import { Part } from "./parts/parts.model";
 import { CarsParts } from "./parts/cars-parts.model";
 import { UserCarsModule } from './user-cars/user-cars.module';
 import { UserCars } from "./user-cars/user-cars.model";
-import { ShopStockListService } from './shop_stock_list/shop_stock_list.service';
 import { ShopStockListModule } from './shop_stock_list/shop_stock_list.module';
 import { ShopStockList } from "./shop_stock_list/shop_stock_list.model";
-import { Parts_Shop } from "./parts_shop/parts_shop.model";
+import { PartsShop } from "./parts_shop/parts_shop.model";
 import { PartsShopModule } from "./parts_shop/parts_shop.module";
 import { GoogleAuthModule } from "./auth/google/googleAuth.module";
 import { CarServiceModule } from "./car-service/car-service.module";
@@ -59,7 +57,7 @@ import { CarOperation } from "./car-operation/car-operation.model";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles,Brand,Car,Part,CarsParts, UserCars],
+            models: [User, Role, UserRoles, Brand, Car, Part, CarsParts, UserCars, ShopStockList, PartsShop, CarServices, CarOperation],
             autoLoadModels: true
         }),
         UsersModule,
@@ -69,6 +67,11 @@ import { CarOperation } from "./car-operation/car-operation.model";
         CarModule,
         PartsModule,
         UserCarsModule,
+        ShopStockListModule,
+        CarServiceModule,
+        CarOperationModule,
+        PartsShopModule,
+        GoogleAuthModule,
     ]
 })
 export class AppModule { }

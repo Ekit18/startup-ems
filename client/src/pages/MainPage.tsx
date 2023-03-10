@@ -1,13 +1,12 @@
 import { googleLogout } from '@react-oauth/google'
 import { observer } from 'mobx-react-lite'
-import React, { useContext, useEffect, useReducer } from 'react'
+import React, { useContext, useEffect, useReducer, useState } from 'react'
 import { Button, Col, Container, Row } from 'react-bootstrap'
 import { Context } from '..'
 
 
 const MainPage = observer(() => {
   const { user } = useContext(Context)
-
 
   return (
     <>

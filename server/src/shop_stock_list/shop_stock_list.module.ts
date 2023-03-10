@@ -9,7 +9,7 @@ import { ShopStockListService } from './shop_stock_list.service';
 @Module({
   controllers: [ShopStockListController],
   providers: [ShopStockListService],
-  imports:[SequelizeModule.forFeature([ShopStockList]),PartsShopModule,PartsModule],
-  exports:[ShopStockListService]
+  imports: [SequelizeModule.forFeature([ShopStockList]), PartsShopModule, PartsModule],
+  exports: [ShopStockListService]
 })
-export class ShopStockListModule {}
+export class ShopStockListModule { }

@@ -9,23 +9,19 @@ export class ShopStockListController {
     constructor(private shopStockListService: ShopStockListService) {}
 
     @Get(':shopId/:partId')
-    getStockByShopIdPartId(@Param() id: GetStockDTO){
+    getStockByShopIdPartId(@Param() id: GetStockDTO) {
         return this.shopStockListService.getStockByShopIdPartId(id);
     }
     @Post()
-    createStock(@Body() createStockDto: CreateStockDTO){
+    createStock(@Body() createStockDto: CreateStockDTO) {
         return this.shopStockListService.createStock(createStockDto);
     }
     @Put(':shopId/:partId')
-    updateStock(@Param('shopId') shopId:number, @Param('partId') partId:number, @Body() updateStockDto: UpdateStockDTO){
-        console.log("SHOPID: "+shopId)
-        console.log("PARTID: "+partId)
-        console.log("DTO: "+updateStockDto)
-        return this.shopStockListService.updateStock(shopId,partId,updateStockDto);
+    updateStock(@Param('shopId') shopId:number, @Param('partId') partId:number, @Body() updateStockDto: UpdateStockDTO) {
+        return this.shopStockListService.updateStock(shopId, partId, updateStockDto);
     }
     @Delete(':shopId/:partId')
-    deleteStock(@Param('shopId') shopId:number, @Param('partId') partId:number){
-        return this.shopStockListService.deleteStock(shopId,partId);
+    deleteStock(@Param('shopId') shopId:number, @Param('partId') partId:number) {
+        return this.shopStockListService.deleteStock(shopId, partId);
     }
-
 }

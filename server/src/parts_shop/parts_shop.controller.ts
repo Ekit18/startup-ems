@@ -10,22 +10,22 @@ import { PartsShopService } from './parts_shop.service';
 export class PartsShopController {
     constructor(private partShopService: PartsShopService) { }
 
-    @ApiOperation({summary:'Get parts shop by its id'})
+    @ApiOperation({ summary: 'Get parts shop by its id' })
     @Get(':shopId')
     getShopByShopId(@Param() id: GetShopDTO) {
         return this.partShopService.getShopByShopId(id);
     }
-    @ApiOperation({summary:'Create parts shop'})
+    @ApiOperation({ summary: 'Create parts shop' })
     @Post()
     createShop(@Body() createShopDto: CreateShopDTO) {
         return this.partShopService.createShop(createShopDto);
     }
-    @ApiOperation({summary:'Update parts shop by its id'})
+    @ApiOperation({ summary: 'Update parts shop by its id' })
     @Put(':shopId')
     updateShop(@Param('shopId') id: number, @Body() updateShopDto: UpdateShopDTO) {
         return this.partShopService.updateShop(id, updateShopDto);
     }
-    @ApiOperation({summary:'Delete parts shop by its id'})
+    @ApiOperation({ summary: 'Delete parts shop by its id' })
     @Delete(':shopId')
     removeShop(@Param('shopId') id: number) {
         return this.partShopService.removeShop(id);

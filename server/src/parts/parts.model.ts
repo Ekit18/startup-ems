@@ -1,4 +1,4 @@
-import { Parts_Shop } from 'src/parts_shop/parts_shop.model';
+import { PartsShop } from 'src/parts_shop/parts_shop.model';
 import { ApiProperty } from "@nestjs/swagger";
 import { Model, Table, Column, DataType, BelongsToMany, ForeignKey } from "sequelize-typescript";
 import { Col } from "sequelize/types/utils";
@@ -37,6 +37,6 @@ export class Part extends Model<Part>{
 
    
 
-    @BelongsToMany(() => Parts_Shop, () => ShopStockList)
-    shops: Parts_Shop[];
+    @BelongsToMany(() => PartsShop, () => ShopStockList)
+    shops: PartsShop[];
 }
