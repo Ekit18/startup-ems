@@ -1,5 +1,6 @@
 import { Controller, FileTypeValidator, HttpException, HttpStatus, Param, ParseFilePipe, Post, Req, UploadedFile, UploadedFiles, UseInterceptors, ExceptionFilter, Inject, ArgumentsHost, Get, Delete } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { ApiOperation } from '@nestjs/swagger';
 import { AllExceptionsFilter } from 'src/filters/all-exceptions.filter';
 import { DeleteStaticDTO } from './dto/delete-static.dto';
 import { PartsGuidesAwsService } from './parts-guides-aws.service';
@@ -24,6 +25,7 @@ export class PartsGuidesAwsController {
         }
         callback(null, true);
     }
+    @ApiOperation({ summary: 'Push static image of a part to S3' })
     @Post('part/:partId')
     @UseInterceptors(FilesInterceptor('file', 10, { limits: { fieldSize: 3000 }, fileFilter: PartsGuidesAwsController.imageFilter }))
     async addPartImg(
@@ -36,6 +38,7 @@ export class PartsGuidesAwsController {
         const urls: string[] = await Promise.all(files.map((file) => this.partsGuidesAwsService.addPartImg(partId, file.buffer, file.originalname)));
         return urls;
     }
+    @ApiOperation({ summary: 'Push static image of a repair guide to S3' })
     @Post('guide/:partId')
     @UseInterceptors(FilesInterceptor('file', 10, { limits: { fieldSize: 3000 }, fileFilter: PartsGuidesAwsController.imageFilter }))
     async addGuideImg(
@@ -48,6 +51,7 @@ export class PartsGuidesAwsController {
         const urls: string[] = await Promise.all(files.map((file) => this.partsGuidesAwsService.addGuideImg(partId, file.buffer, file.originalname)));
         return urls;
     }
+    @ApiOperation({ summary: 'Delete static file from S3 and DB' })
     @Delete(':key')
     deleteStaticFile(@Param() key: DeleteStaticDTO) {
         console.log(key.key);

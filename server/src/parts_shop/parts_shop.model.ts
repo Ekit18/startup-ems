@@ -15,6 +15,7 @@ export class PartsShop extends Model<PartsShop> {
     name: string;
 
     @ApiProperty({ example: "https://johnparts.com", description: "Shop URL" })
+    // eslint-disable-next-line no-useless-escape
     @Matches(/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/)
     @Column({ type: DataType.STRING, unique: true, allowNull: false })
     siteLink: string;
@@ -24,6 +25,7 @@ export class PartsShop extends Model<PartsShop> {
     @Column({ type: DataType.STRING, unique: true, allowNull: false })
     gpsCoords: string;
 
+    @ApiProperty({ description: "Array of parts the shop is selling", type: [Part] })
     @BelongsToMany(() => Part, () => ShopStockList)
     parts: Part[];
 }

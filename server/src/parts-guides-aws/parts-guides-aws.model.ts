@@ -16,7 +16,7 @@ export class PartsGuidesAWS extends Model<PartsGuidesAWS> {
     @Column({ type: DataType.STRING, unique: true })
     url: string;
 
-    @ApiProperty({ example: "uuid-s.txt", description: "Unique file key (name) in the bucket" })
+    @ApiProperty({ example: "part-uuid-partname.png", description: "Unique file key (name) in the bucket" })
     @Column({ type: DataType.STRING, unique: true })
     key: string;
 
