@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { Query} from '@nestjs/common/decorators';
+import { Query } from '@nestjs/common/decorators';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GoogleCodeDto } from '../dto/googleCode.dto';
 import { TokenResponseDto } from '../dto/token.dto';

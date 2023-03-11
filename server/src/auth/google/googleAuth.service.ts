@@ -30,7 +30,7 @@ export class GoogleAuthService {
         const tokenInfo = await this.oauthClient.getTokenInfo(tokens.access_token);
         const user = await this.userService.getUserByEmail(tokenInfo.email);
         if (user) {
-            return this.authService.login(user);
+            return this.authService.googleLogin(user);
         }
         return this.authService.googleRegistration(tokenInfo.email);
     }
