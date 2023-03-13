@@ -12,7 +12,6 @@ import { UsersService } from './users.service';
 @ApiTags('User')
 @Controller('users')
 export class UsersController {
-
     constructor(private usersService: UsersService) { }
     @ApiOperation({ summary: 'Creating new user' })
     @ApiResponse({ status: 200, type: User })
@@ -34,6 +33,8 @@ export class UsersController {
 
     @ApiOperation({ summary: 'Getting all users from database' })
     @ApiResponse({ status: 200, type: [User] })
+    @Roles("ADMIN")
+    @UseGuards(RolesGuard)
     @Get()
     getAllUsers() {
         return this.usersService.getAllUsers();
@@ -50,6 +51,8 @@ export class UsersController {
 
     @ApiOperation({ summary: 'Deleting user' })
     @ApiResponse({ status: 200 })
+    @Roles("ADMIN")
+    @UseGuards(RolesGuard)
     @Delete(':id')
     remove(@Param('id') id: number) {
         return this.usersService.remove(id);

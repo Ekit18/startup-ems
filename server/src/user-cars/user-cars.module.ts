@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
+import { forwardRef } from '@nestjs/common/utils';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { AuthModule } from 'src/auth/auth.module';
 import { CarModule } from 'src/car/car.module';
 import { UsersModule } from 'src/users/users.module';
 import { UserCarsController } from './user-cars.controller';
@@ -10,7 +12,8 @@ import { UserCarsService } from './user-cars.service';
   controllers: [UserCarsController],
   providers: [UserCarsService],
   imports: [
-    SequelizeModule.forFeature([UserCars]), CarModule, UsersModule
+    SequelizeModule.forFeature([UserCars]), CarModule, UsersModule,
+    forwardRef(() => AuthModule),
   ],
   exports: [
     UserCarsService
