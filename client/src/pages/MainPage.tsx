@@ -5,12 +5,12 @@ import { Button, Col, Container, Row } from 'react-bootstrap'
 import { Context } from '..'
 
 
-const MainPage = observer(() => {
+const MainPage:React.FC = observer(() => {
   const { user } = useContext(Context)
 
   return (
     <>
-      <h2>test {user.userId}</h2>
+      <h2>user id: {user.userId}</h2>
       <Button onClick={() => user.logOut()}>log out</Button>
     </>
   )

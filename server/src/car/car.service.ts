@@ -23,6 +23,14 @@ export class CarService {
         return car;
     }
 
+    async getCarByIdWithoutIncludeAll(id: number) {
+        const car = await this.carRepository.findOne({ where: { id } });
+        if (!car) {
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+        }
+        return car;
+    }
+
 
     async getAllCarByModel(dto: GetCarByModelDto) {
         const { model } = dto;

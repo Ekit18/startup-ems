@@ -1,5 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
+import { UseGuards } from '@nestjs/common/decorators';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Roles } from 'src/auth/roles-auth.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
 import { CreateStockDTO } from './dto/create-stock.dto';
 import { GetPartsByShopDTO } from './dto/get-parts-by-shop';
 import { GetShopsByPartDTO } from './dto/get-shops-by-part';
@@ -11,6 +15,8 @@ import { ShopStockListService } from './shop_stock_list.service';
 export class ShopStockListController {
     constructor(private shopStockListService: ShopStockListService) { }
     @ApiOperation({ summary: 'Get stock info of a part in a shop by shopId and partId' })
+    constructor(private shopStockListService: ShopStockListService) {}
+    @UseGuards(JwtAuthGuard)
     @Get(':shopId/:partId')
     getStockByShopIdPartId(@Param() id: GetStockDTO) {
         return this.shopStockListService.getStockByShopIdPartId(id);
@@ -25,16 +31,22 @@ export class ShopStockListController {
     getShopsByPartId(@Param() id: GetShopsByPartDTO) {
         return this.shopStockListService.getShopsByPartId(id);
     }
+    @Roles("PARTSHOP")
+    @UseGuards(RolesGuard)
     @Post()
     createStock(@Body() createStockDto: CreateStockDTO) {
         return this.shopStockListService.createStock(createStockDto);
     }
     @ApiOperation({ summary: 'Update stock info of a part in a shop by shopId and partId' })
+    @Roles("PARTSHOP")
+    @UseGuards(RolesGuard)
     @Put(':shopId/:partId')
     updateStock(@Param('shopId') shopId: number, @Param('partId') partId: number, @Body() updateStockDto: UpdateStockDTO) {
         return this.shopStockListService.updateStock(shopId, partId, updateStockDto);
     }
     @ApiOperation({ summary: 'Delete stock info of a part in a shop by shopId and partId' })
+    @Roles("PARTSHOP")
+    @UseGuards(RolesGuard)
     @Delete(':shopId/:partId')
     deleteStock(@Param('shopId') shopId: number, @Param('partId') partId: number) {
         return this.shopStockListService.deleteStock(shopId, partId);

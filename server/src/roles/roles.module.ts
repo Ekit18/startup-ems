@@ -13,11 +13,11 @@ import { forwardRef } from '@nestjs/common/utils/forward-ref.util';
   controllers: [RolesController],
   imports: [
     SequelizeModule.forFeature([Role, User, UserRoles]),
-    forwardRef(()=> AuthModule)
+    forwardRef(() => AuthModule)
   ],
   exports: [
     RolesService
   ],
-  
+
 })
 export class RolesModule { }

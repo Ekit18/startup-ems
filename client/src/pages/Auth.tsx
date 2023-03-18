@@ -9,7 +9,7 @@ import { Context } from '../index';
 import { LOGIN_ROUTE, MAIN_ROUTE, REGISTRATION_ROUTE } from '../utils/constants';
 import GoogleAuth from './GoogleAuth';
 
-const Auth = observer(() => {
+const Auth:React.FC = observer(() => {
   const { user } = useContext(Context)
   const location = useLocation()
   const navigate = useNavigate()
@@ -31,14 +31,20 @@ const Auth = observer(() => {
       user.setIsAuth(true)
       console.log(user.isAuth)
       navigate(MAIN_ROUTE)
-    } catch (e: any) {
-      // Array.isArray(e.response.data.message)
-      //   ? e.response.data.message.forEach((element: Object) => {
-      //     alert(Object.values(element))
-      //   })
-      //   : alert(e.response.data.message);
-        // alert(e.response.data.message);
-      // TODO: Implement correct error handling
+    } catch (error:any) {
+      if (error.response && error.response.data && error.response.data.message) {
+        const message = error.response.data.message
+        if (Array.isArray(message)) {
+          message.forEach((element: { [key: string]: any }) => {
+            alert(Object.values(element))
+          })
+        } else {
+          alert(message)
+        }
+      } else {
+        console.error(error)
+        alert("An error occurred")
+      }
     }
   }
 

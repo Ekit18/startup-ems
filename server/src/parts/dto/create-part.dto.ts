@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsNumberString, IsString } from "class-validator";
+import { IsNumber, IsNumberString, IsString, IsUrl } from "class-validator";
 
 export class CreatePartDTO {
     @ApiProperty({ example: "Yokohama", description: "Part brand" })

@@ -35,12 +35,17 @@ import { CarOperation } from "./car-operation/car-operation.model";
 import { RepairsHistoryModule } from './repairs-history/repairs-history.module';
 import { RepairsHistory } from "./repairs-history/repairs-history.model";
 import { PartsGuidesAwsModule } from './parts-guides-aws/parts-guides-aws.module';
+import { RolesGuard } from "./auth/roles.guard";
 @Module({
     controllers: [],
     providers: [
-        //     {
-        //     provide:APP_GUARD,
-        //     useClass:JwtAuthGuard
+        // {
+        //     provide: APP_GUARD,
+        //     useClass: JwtAuthGuard
+        // },
+        // {
+        //     provide: APP_GUARD,
+        //     useClass: RolesGuard
         //  },
         {
             provide: APP_FILTER,

@@ -13,7 +13,6 @@ export class RolesGuard implements CanActivate {
 
 
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-
         try {
             const requiredRoles = this.reflector.getAllAndOverride<string[]>(ROLES_KEY,
                 [
@@ -28,14 +27,14 @@ export class RolesGuard implements CanActivate {
             const bearer = authHeader.split(' ')[0];
             const token = authHeader.split(' ')[1];
             if (bearer !== 'Bearer' || !token) {
-                throw new UnauthorizedException({ message: 'User is not authorized' })
+                throw new UnauthorizedException({ message: 'User is not authorized' });
             }
 
             const user = this.jwtService.verify(token);
             req.user = user;
-            return user.roles.some(role => requiredRoles.includes(role.value));
+            return user.roles.some((role) => requiredRoles.includes(role.value));
         } catch (e) {
-            throw new HttpException("Access forbidden", HttpStatus.FORBIDDEN)
+            throw new HttpException("Access forbidden", HttpStatus.FORBIDDEN);
         }
     }
 }

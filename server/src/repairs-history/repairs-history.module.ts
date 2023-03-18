@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
+import { forwardRef } from '@nestjs/common/utils';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { AuthModule } from 'src/auth/auth.module';
 import { CarOperationModule } from 'src/car-operation/car-operation.module';
 import { CarServiceModule } from 'src/car-service/car-service.module';
 import { RepairsHistoryController } from './repairs-history.controller';
@@ -10,7 +12,8 @@ import { RepairsHistoryService } from './repairs-history.service';
   controllers: [RepairsHistoryController],
   providers: [RepairsHistoryService],
   imports: [
-    SequelizeModule.forFeature([RepairsHistory]), CarServiceModule, CarOperationModule
+    SequelizeModule.forFeature([RepairsHistory]), CarServiceModule, CarOperationModule,
+    forwardRef(() => AuthModule),
   ]
 })
 export class RepairsHistoryModule {}
