@@ -55,15 +55,16 @@ export class PartsGuidesAwsService {
     }
 
     async addPartImg(partId: number, fileBuffer: Buffer, fileOriginalname: string) {
-        const part = await this.partRepository.findOne({ where: { partId } });
-        if (!part) {
-            throw new HttpException({ message: 'Part with such id does not exist!' }, HttpStatus.BAD_REQUEST);
-        }
+        
+        // const part = await this.partRepository.findOne({ where: { partId } });
+        // if (!part) {
+        //     throw new HttpException({ message: 'Part with such id does not exist!' }, HttpStatus.BAD_REQUEST);
+        // }
 
-        const newFile = await this.uploadPublicFile(fileBuffer, fileOriginalname, "Part", partId);
+        // const newFile = await this.uploadPublicFile(fileBuffer, fileOriginalname, "Part", partId);
 
-        part.$add('static', [newFile.id]);
-        return newFile.url;
+        // part.$add('static', [newFile.id]);
+        // return newFile.url;
     }
     async addGuideImg(partId: number, fileBuffer: Buffer, fileOriginalname: string) {
         const part = await this.partRepository.findOne({ where: { partId } });
