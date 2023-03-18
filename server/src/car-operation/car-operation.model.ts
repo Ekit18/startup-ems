@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Model, Table, Column, DataType } from "sequelize-typescript";
+import { Model, Table, Column, DataType, HasMany } from "sequelize-typescript";
+import { RepairsHistory } from "src/repairs-history/repairs-history.model";
 
 
 interface CarOperationCreationAttrs {
@@ -25,4 +26,6 @@ export class CarOperation extends Model<CarOperation, CarOperationCreationAttrs>
     @ApiProperty({ example: "15000", description: "Price of the operation" })
     @Column({ type: DataType.INTEGER, allowNull: false })
     price: number;
+    @HasMany(() => RepairsHistory)
+    repairsHistory:RepairsHistory[];
 }
