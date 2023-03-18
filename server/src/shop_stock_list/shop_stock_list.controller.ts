@@ -14,8 +14,8 @@ import { ShopStockListService } from './shop_stock_list.service';
 @Controller('shop_stock_list')
 export class ShopStockListController {
     constructor(private shopStockListService: ShopStockListService) { }
+
     @ApiOperation({ summary: 'Get stock info of a part in a shop by shopId and partId' })
-    constructor(private shopStockListService: ShopStockListService) {}
     @UseGuards(JwtAuthGuard)
     @Get(':shopId/:partId')
     getStockByShopIdPartId(@Param() id: GetStockDTO) {
