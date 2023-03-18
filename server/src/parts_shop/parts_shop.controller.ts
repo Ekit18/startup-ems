@@ -17,8 +17,9 @@ export class PartsShopController {
     @ApiOperation({ summary: 'Get parts shop by its id' })
     @UseGuards(JwtAuthGuard)
     @Get(':shopId')
-    getShopByShopId(@Param() id: GetShopDTO) {
-        return this.partShopService.getShopByShopId(id);
+    async getShopByShopId(@Param() id: GetShopDTO) {
+        const shop = await this.partShopService.getShopByShopId(id);
+        return shop.parts;
     }
     @ApiOperation({ summary: 'Create parts shop' })
     @Roles("PARTSHOP")

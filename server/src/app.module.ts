@@ -1,3 +1,4 @@
+import { PartsGuidesAWS } from 'src/parts-guides-aws/parts-guides-aws.model';
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -33,6 +34,7 @@ import { CarOperationModule } from './car-operation/car-operation.module';
 import { CarOperation } from "./car-operation/car-operation.model";
 import { RepairsHistoryModule } from './repairs-history/repairs-history.module';
 import { RepairsHistory } from "./repairs-history/repairs-history.model";
+import { PartsGuidesAwsModule } from './parts-guides-aws/parts-guides-aws.module';
 import { RolesGuard } from "./auth/roles.guard";
 @Module({
     controllers: [],
@@ -64,7 +66,7 @@ import { RolesGuard } from "./auth/roles.guard";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles, Brand, Car, Part, CarsParts, UserCars, ShopStockList, PartsShop, CarServices, CarOperation, RepairsHistory],
+            models: [User, Role, UserRoles, Brand, Car, Part, CarsParts, UserCars, ShopStockList, PartsShop, CarServices, CarOperation, PartsGuidesAWS, RepairsHistory],
             autoLoadModels: true
         }),
         UsersModule,
@@ -80,7 +82,8 @@ import { RolesGuard } from "./auth/roles.guard";
         PartsShopModule,
         GoogleAuthModule,
         RepairsHistoryModule,
-        RepairsHistoryModule
+        RepairsHistoryModule,
+        PartsGuidesAwsModule
     ]
 })
 export class AppModule { }

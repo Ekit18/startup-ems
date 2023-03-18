@@ -22,8 +22,8 @@ export class PartsService {
         }
         return (await this.carService.getCarById(getPartsDTO.carId)).parts;
     }
-    getPartByName(name: string) {
-        return this.partRepository.findOne({ where: { name } });
+    getPartById(partId: number) {
+        return this.partRepository.findOne({ where: { partId }, include: { all: true } });
     }
     async createPart(createPartDTO: CreatePartDTO) {
         const candidate = await this.partRepository.findOne({ where: { name: createPartDTO.name } });
