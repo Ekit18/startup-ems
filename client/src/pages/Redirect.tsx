@@ -5,7 +5,7 @@ import { googleLogin } from "../http/userApi";
 import { UserData } from "../store/UserStore";
 import { MAIN_ROUTE } from "../utils/constants";
 
-export const Redirect = () => {
+export const Redirect:React.FC = () => {
     const [searchParams] = useSearchParams();
     const { user } = useContext(Context)
     const navigate = useNavigate()

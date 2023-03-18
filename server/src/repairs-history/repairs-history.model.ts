@@ -10,7 +10,7 @@ interface RepairsHistoryCreationAttrs {
     carServiceId: number;
     carOperationId: number;
 }
-@Table({ tableName: 'repairs_history', createdAt: false, updatedAt: false })
+@Table({ tableName: 'repairs_history' })
 export class RepairsHistory extends Model<RepairsHistory, RepairsHistoryCreationAttrs> {
     @ApiProperty({ example: '1', description: 'Unique ID' })
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })

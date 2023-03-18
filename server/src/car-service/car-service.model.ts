@@ -3,14 +3,14 @@ import { Matches } from "class-validator";
 import { Model, Column, DataType, Table, HasMany } from "sequelize-typescript";
 import { RepairsHistory } from "src/repairs-history/repairs-history.model";
 
-interface CarServiceCreationAttrs {
+interface CarServiceCreationAttributes {
     name: string;
     location: string;
     rating: number;
 }
 
 @Table({ tableName: 'car_service', createdAt: false, updatedAt: false })
-export class CarServices extends Model<CarServices, CarServiceCreationAttrs> {
+export class CarServices extends Model<CarServices, CarServiceCreationAttributes> {
     @ApiProperty({ example: '1', description: 'Unique ID' })
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     id: number;

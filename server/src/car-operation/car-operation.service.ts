@@ -15,7 +15,6 @@ export class CarOperationService {
 
     async getCarOperationById(id: number) {
         const carOperation = await this.carOperationRepository.findOne({ where: { id } });
-        console.log(carOperation);
         if (!carOperation) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
