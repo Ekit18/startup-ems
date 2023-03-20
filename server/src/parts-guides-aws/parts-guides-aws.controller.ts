@@ -4,14 +4,17 @@ import { ApiOperation } from '@nestjs/swagger';
 import { AllExceptionsFilter } from 'src/filters/all-exceptions.filter';
 import { DeleteStaticDTO } from './dto/delete-static.dto';
 import { PartsGuidesAwsService } from './parts-guides-aws.service';
+import getStream = require('get-stream');
 
+
+export type FilesErrorObject = {
+    isError: boolean,
+    msg: string
+}
 
 @Controller('parts-guides-aws')
 export class PartsGuidesAwsController {
-    static errObj: {
-        isError: boolean,
-        msg: string
-    } = Object();
+    static errObj: FilesErrorObject = Object();
     constructor(private partsGuidesAwsService: PartsGuidesAwsService) { }
     static imageFilter(req: Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) {
         PartsGuidesAwsController.errObj.isError = false;
@@ -23,6 +26,7 @@ export class PartsGuidesAwsController {
             PartsGuidesAwsController.errObj.isError = true;
             PartsGuidesAwsController.errObj.msg = "Wrong data size";
         }
+
         callback(null, true);
     }
     @ApiOperation({ summary: 'Push static image of a part to S3' })
@@ -32,6 +36,7 @@ export class PartsGuidesAwsController {
         @Param('partId') partId: number,
         @UploadedFiles() files: Array<Express.Multer.File>
     ) {
+        await PartsGuidesAwsService.checkNSFWFiles(files, PartsGuidesAwsController.errObj);
         if (PartsGuidesAwsController.errObj.isError) {
             throw new HttpException(PartsGuidesAwsController.errObj.msg, HttpStatus.BAD_REQUEST);
         }
@@ -45,6 +50,7 @@ export class PartsGuidesAwsController {
         @Param('partId') partId: number,
         @UploadedFiles() files: Array<Express.Multer.File>
     ) {
+        PartsGuidesAwsService.checkNSFWFiles(files, PartsGuidesAwsController.errObj);
         if (PartsGuidesAwsController.errObj.isError) {
             throw new HttpException(PartsGuidesAwsController.errObj.msg, HttpStatus.BAD_REQUEST);
         }
