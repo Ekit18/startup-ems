@@ -1,17 +1,12 @@
-import { Axios } from 'axios';
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/sequelize';
-import { S3 } from 'aws-sdk';
-import { PartsGuidesAWS, staticType } from './parts-guides-aws.model';
+import { PartsGuidesAWS } from './parts-guides-aws.model';
 import { v4 as uuid } from 'uuid';
 import { Part } from 'src/parts/parts.model';
-import fs from 'fs';
-import { Readable } from 'stream';
 import FormData = require('form-data');
 import { HttpService } from '@nestjs/axios';
-import { Inject } from '@nestjs/common/decorators';
 import { FilesErrorObject } from './parts-guides-aws.controller';
 
 

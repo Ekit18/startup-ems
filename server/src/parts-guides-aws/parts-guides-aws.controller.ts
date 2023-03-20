@@ -1,10 +1,8 @@
-import { Controller, FileTypeValidator, HttpException, HttpStatus, Param, ParseFilePipe, Post, Req, UploadedFile, UploadedFiles, UseInterceptors, ExceptionFilter, Inject, ArgumentsHost, Get, Delete } from '@nestjs/common';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { Controller, HttpException, HttpStatus, Param, Post, UploadedFiles, UseInterceptors, Delete } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiOperation } from '@nestjs/swagger';
-import { AllExceptionsFilter } from 'src/filters/all-exceptions.filter';
 import { DeleteStaticDTO } from './dto/delete-static.dto';
 import { PartsGuidesAwsService } from './parts-guides-aws.service';
-import getStream = require('get-stream');
 
 
 export type FilesErrorObject = {
