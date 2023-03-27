@@ -1,13 +1,13 @@
-import { Part } from './../parts/parts.model';
+import { Part } from '../parts/parts.model';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateStockDTO } from './dto/create-stock.dto';
 import { GetPartsByShopDTO } from './dto/get-parts-by-shop';
 import { GetStockDTO } from './dto/get-stock.dto';
 import { UpdateStockDTO } from './dto/update-stock.dto';
-import { ShopStockList } from './shop_stock_list.model';
+import { ShopStockList } from './shop-stock-list.model';
 import { GetShopsByPartDTO } from './dto/get-shops-by-part';
-import { PartsShop } from 'src/parts_shop/parts_shop.model';
+import { PartsShop } from 'src/parts_shop/parts-shop.model';
 
 @Injectable()
 export class ShopStockListService {

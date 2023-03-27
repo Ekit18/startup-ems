@@ -1,7 +1,7 @@
 import { Part } from 'src/parts/parts.model';
 import { ApiProperty } from "@nestjs/swagger";
 import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
-import { PartsShop } from 'src/parts_shop/parts_shop.model';
+import { PartsShop } from 'src/parts_shop/parts-shop.model';
 
 @Table({ tableName: 'shop_stock_list' })
 export class ShopStockList extends Model<ShopStockList> {

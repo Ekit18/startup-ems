@@ -3,15 +3,12 @@ import { InjectModel } from '@nestjs/sequelize';
 import { CarOperation } from 'src/car-operation/car-operation.model';
 import { CarOperationService } from 'src/car-operation/car-operation.service';
 import { CarServicesServices } from 'src/car-service/car-service.service';
+import { CarService } from 'src/car/car.service';
 import { CreateRepairsHistory } from './dto/create-repairs-history.dto';
 import { RepairsHistory } from './repairs-history.model';
 
-export interface CarHistoryByService {
+export interface CarHistoryByService extends CarService {
     operations: CarOperation[];
-    id: number;
-    name: string;
-    location: string;
-    rating: number;
 }
 
 @Injectable()
@@ -42,7 +39,7 @@ export class RepairsHistoryService {
         }));
         const servicesMap = new Map(services.map((item) => [item.id, item]));
         const operationsMap = new Map(operations.map((item) => [item.id, item]));
-        const result = carHistory.reduce((acc, obj) => {
+        const result:CarHistoryByService[] = carHistory.reduce((acc, obj) => {
             const existingObj = acc.find((item) => item.id === obj.carServiceId);
             const service = servicesMap.get(obj.carServiceId);
             const operation = operationsMap.get(obj.carOperationId);

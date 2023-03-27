@@ -5,9 +5,9 @@ import { CarsParts } from './cars-parts.model';
 import { PartsController } from './parts.controller';
 import { Part } from './parts.model';
 import { PartsService } from './parts.service';
-import { PartsShopModule } from 'src/parts_shop/parts_shop.module';
-import { ShopStockList } from 'src/shop_stock_list/shop_stock_list.model';
-import { PartsShop } from 'src/parts_shop/parts_shop.model';
+import { PartsShopModule } from 'src/parts_shop/parts-shop.module';
+import { ShopStockList } from 'src/shop_stock_list/shop-stock-list.model';
+import { PartsShop } from 'src/parts_shop/parts-shop.model';
 import { forwardRef } from '@nestjs/common/utils';
 import { AuthModule } from 'src/auth/auth.module';
 

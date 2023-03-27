@@ -1,11 +1,11 @@
-import { PartsShop } from 'src/parts_shop/parts_shop.model';
+import { PartsShop } from 'src/parts_shop/parts-shop.model';
 import { ApiProperty } from "@nestjs/swagger";
 import { Model, Table, Column, DataType, BelongsToMany, ForeignKey, HasMany } from "sequelize-typescript";
 import { Col } from "sequelize/types/utils";
 import { Car } from "src/car/car.model";
 import { Role } from "src/roles/roles.model";
 import { UserRoles } from "src/roles/user-roles.model";
-import { ShopStockList } from "src/shop_stock_list/shop_stock_list.model";
+import { ShopStockList } from "src/shop_stock_list/shop-stock-list.model";
 import { CarsParts } from "./cars-parts.model";
 import { PartsGuidesAWS } from 'src/parts-guides-aws/parts-guides-aws.model';
 

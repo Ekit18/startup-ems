@@ -9,9 +9,9 @@ import { GetPartsByShopDTO } from './dto/get-parts-by-shop';
 import { GetShopsByPartDTO } from './dto/get-shops-by-part';
 import { GetStockDTO } from './dto/get-stock.dto';
 import { UpdateStockDTO } from './dto/update-stock.dto';
-import { ShopStockListService } from './shop_stock_list.service';
+import { ShopStockListService } from './shop-stock-list.service';
 
-@Controller('shop_stock_list')
+@Controller('shop-stock-list')
 export class ShopStockListController {
     constructor(private shopStockListService: ShopStockListService) { }
 

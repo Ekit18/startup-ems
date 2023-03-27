@@ -23,10 +23,10 @@ import { Part } from "./parts/parts.model";
 import { CarsParts } from "./parts/cars-parts.model";
 import { UserCarsModule } from './user-cars/user-cars.module';
 import { UserCars } from "./user-cars/user-cars.model";
-import { ShopStockListModule } from './shop_stock_list/shop_stock_list.module';
-import { ShopStockList } from "./shop_stock_list/shop_stock_list.model";
-import { PartsShop } from "./parts_shop/parts_shop.model";
-import { PartsShopModule } from "./parts_shop/parts_shop.module";
+import { ShopStockListModule } from './shop_stock_list/shop-stock-list.module';
+import { ShopStockList } from "./shop_stock_list/shop-stock-list.model";
+import { PartsShop } from "./parts_shop/parts-shop.model";
+import { PartsShopModule } from "./parts_shop/parts-shop.module";
 import { GoogleAuthModule } from "./auth/google/googleAuth.module";
 import { CarServiceModule } from "./car-service/car-service.module";
 import { CarServices } from "./car-service/car-service.model";
@@ -67,7 +67,13 @@ import { RolesGuard } from "./auth/roles.guard";
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
             models: [User, Role, UserRoles, Brand, Car, Part, CarsParts, UserCars, ShopStockList, PartsShop, CarServices, CarOperation, PartsGuidesAWS, RepairsHistory],
-            autoLoadModels: true
+            autoLoadModels: true,
+            dialectOptions: {
+                ssl: {
+                    require: true,
+                    rejectUnauthorized: false,
+                }
+            }
         }),
         UsersModule,
         RolesModule,

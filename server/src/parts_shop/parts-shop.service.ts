@@ -1,4 +1,4 @@
-import { PartsShop } from './parts_shop.model';
+import { PartsShop } from './parts-shop.model';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { GetShopDTO } from './dto/get-shop.dto';
