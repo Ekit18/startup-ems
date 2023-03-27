@@ -22,6 +22,13 @@ export class BrandService {
         }
         return brand;
     }
+    async getBrandById(id: number) {
+        const brand = await this.brandRepository.findOne({ where: { id } });
+        if (!brand) {
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+        }
+        return brand;
+    }
     async getAllBrands() {
         const brands = await this.brandRepository.findAll();
         return brands;

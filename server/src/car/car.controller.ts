@@ -1,9 +1,11 @@
+import { HttpService } from '@nestjs/axios/dist/http.service';
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { UseGuards } from '@nestjs/common/decorators';
 import { ApiOperation, ApiParam, ApiProperty, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { BrandService } from 'src/brand/brand.service';
 import { CreatePartDTO } from 'src/parts/dto/create-part.dto';
 import { GetPartsDTO } from 'src/parts/dto/get-part.dto';
 import { Car } from './car.model';
@@ -22,7 +24,7 @@ class ModelResponse {
 @ApiTags("Cars")
 @Controller('car')
 export class CarController {
-    constructor(private carService: CarService) { }
+    constructor(private carService: CarService, private readonly httpService: HttpService, private readonly brandService:BrandService) { }
 
 
     @ApiOperation({ summary: "Creating car" })
@@ -30,8 +32,21 @@ export class CarController {
     @Roles("ADMIN")
     @UseGuards(RolesGuard)
     @Post()
-    create(@Body() carDto: CarDto) {
-        return this.carService.createCar(carDto);
+    async create(@Body() carDto: CarDto) {
+        const car = await this.carService.createCar(carDto);
+        const brand = await this.brandService.getBrandById(carDto.brandId);
+        const hookData = { brand: brand.brand, model: car.model, fuelType: car.fuelType, bodyType: car.bodyType, year: car.year };
+        this.httpService
+        .post('https://webhook.site/4b06c166-2ada-4ea4-86f0-2f9f0461503d', hookData)
+        .subscribe({
+            complete: () => {
+                console.log('completed');
+            },
+            error: (err) => {
+                console.log(err);
+            },
+        });
+        return car;
     }
 
 
