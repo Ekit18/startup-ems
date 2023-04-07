@@ -36,6 +36,7 @@ import { RepairsHistoryModule } from './repairs-history/repairs-history.module';
 import { RepairsHistory } from "./repairs-history/repairs-history.model";
 import { PartsGuidesAwsModule } from './parts-guides-aws/parts-guides-aws.module';
 import { RolesGuard } from "./auth/roles.guard";
+import { UserSignatureModule } from './user_signature/user_signature.module';
 @Module({
     controllers: [],
     providers: [
@@ -68,12 +69,12 @@ import { RolesGuard } from "./auth/roles.guard";
             database: process.env.POSTGRES_DB,
             models: [User, Role, UserRoles, Brand, Car, Part, CarsParts, UserCars, ShopStockList, PartsShop, CarServices, CarOperation, PartsGuidesAWS, RepairsHistory],
             autoLoadModels: true,
-            dialectOptions: {
-                ssl: {
-                    require: true,
-                    rejectUnauthorized: false,
-                }
-            }
+            // dialectOptions: {
+            //     ssl: {
+            //         require: true,
+            //         rejectUnauthorized: false,
+            //     }
+            // }
         }),
         UsersModule,
         RolesModule,
@@ -89,7 +90,8 @@ import { RolesGuard } from "./auth/roles.guard";
         GoogleAuthModule,
         RepairsHistoryModule,
         RepairsHistoryModule,
-        PartsGuidesAwsModule
+        PartsGuidesAwsModule,
+        UserSignatureModule
     ]
 })
 export class AppModule { }

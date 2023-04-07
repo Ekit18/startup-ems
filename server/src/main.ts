@@ -8,6 +8,7 @@ import { ValidationPipe } from "./pipes/validation.pipe";
 import { ConfigService } from '@nestjs/config';
 // import entire SDK
 import AWS from 'aws-sdk';
+import { WsExceptionFilter } from "./filters/ws-exceptions.filter";
 
 async function start() {
     const PORT = process.env.PORT || 5000;
@@ -22,6 +23,7 @@ async function start() {
     app.useGlobalPipes(new ValidationPipe());
     const httpAdapter = app.get(HttpAdapterHost);
     app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+    app.useGlobalFilters(new WsExceptionFilter());
     await app.listen(PORT, () => console.log(`Server started on port = ${PORT}`));
 }
 

@@ -8,11 +8,6 @@ import {
 import { HttpAdapterHost } from '@nestjs/core';
 
 
-type ResponseObject = {
-  message: object,
-}
-
-
 @Catch(HttpException)
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) { }

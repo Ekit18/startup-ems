@@ -7,10 +7,11 @@ import { CarServiceModule } from 'src/car-service/car-service.module';
 import { RepairsHistoryController } from './repairs-history.controller';
 import { RepairsHistory } from './repairs-history.model';
 import { RepairsHistoryService } from './repairs-history.service';
+import { RepairsHistoryGateway } from './repairs-history.gateway';
 
 @Module({
   controllers: [RepairsHistoryController],
-  providers: [RepairsHistoryService],
+  providers: [RepairsHistoryService, RepairsHistoryGateway],
   imports: [
     SequelizeModule.forFeature([RepairsHistory]), CarServiceModule, CarOperationModule,
     forwardRef(() => AuthModule),
