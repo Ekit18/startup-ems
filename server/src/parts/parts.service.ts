@@ -26,7 +26,7 @@ export class PartsService {
         return this.partRepository.findOne({ where: { partId }, include: { all: true } });
     }
     async createPart(createPartDTO: CreatePartDTO) {
-        const candidate = await this.partRepository.findOne({ where: { name: createPartDTO.name } });
+        const candidate = await this.partRepository.findOne({ where: { name: createPartDTO.name, brand: createPartDTO.brand } });
         if (candidate) {
             throw new HttpException({ message: 'Part with such name already exists' }, HttpStatus.BAD_REQUEST);
         }

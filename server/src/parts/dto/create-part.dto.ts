@@ -12,6 +12,6 @@ export class CreatePartDTO {
     @IsString({ message: "$property must be string!" })
     type:string;
     @ApiProperty({ example: "1", description: "Car ID to which that part belongs to" })
-    @IsNumber({}, { message: "$property must be numeric string!" })
+    @IsNumberString({}, { message: "$property must be numeric string!" })
     carId:number;
 }
