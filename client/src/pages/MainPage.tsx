@@ -13,6 +13,7 @@ const MainPage:React.FC = observer(() => {
     <>
       <h2>user id: {user.userId}</h2>
       <Button onClick={() => user.logOut()}>log out</Button>
+      <SocketsTest/>
     </>
   )
 })

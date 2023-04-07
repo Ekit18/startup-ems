@@ -54,7 +54,7 @@ export const SocketsTest: React.FC = observer(() => {
     }
 
     const handleError = (data: any) => {
-        console.log(data)
+        console.error(data)
     }
 
     useEffect(() => {

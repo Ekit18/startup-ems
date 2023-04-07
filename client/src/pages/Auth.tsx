@@ -98,7 +98,6 @@ const Auth:React.FC = observer(() => {
   </Row>
 
 </Container>
-  <SocketsTest/>
 </>
 
 

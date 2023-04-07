@@ -26,7 +26,7 @@ export class RepairsHistoryGateway {
         socket.use((event: any, next: (err?: any) => void) => {
             const client = event as Socket;
             WsAuthMiddleware(this.jwtService)(client, next);
-          });
+        });
     }
 
     @UseFilters(new WsExceptionFilter())
