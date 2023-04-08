@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useReducer, useState } from 'react'
 import { Button, Col, Container, Row } from 'react-bootstrap'
 import { Context } from '..'
 import { SocketsTest } from '../components/SocketsTest'
+import { RepairSigning } from './RepairSigning'
 
 
 const MainPage:React.FC = observer(() => {
@@ -13,7 +14,8 @@ const MainPage:React.FC = observer(() => {
     <>
       <h2>user id: {user.userId}</h2>
       <Button onClick={() => user.logOut()}>log out</Button>
-      <SocketsTest/>
+      <hr />
+      <RepairSigning/>
     </>
   )
 })

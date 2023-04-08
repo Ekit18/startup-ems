@@ -2,17 +2,16 @@ import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, } fro
 import { HttpAdapterHost } from '@nestjs/core';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-@Catch(WsException)
+import { WsValidatorException } from 'src/exception/ws-validation.exception';
+@Catch(WsException, WsValidatorException)
 export class WsExceptionFilter implements ExceptionFilter {
     catch(exception: WsException, host: ArgumentsHost) {
-        console.log("tetetet");
         const ctx = host.switchToWs();
         const client: Socket = ctx.getClient();
         const errorMessage = exception.getError();
-
         client.emit('exception', {
             message: errorMessage,
-            status: errorMessage,
+            status: "error",
         });
         client.disconnect(true);
     }

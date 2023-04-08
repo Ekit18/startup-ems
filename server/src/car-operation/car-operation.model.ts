@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Model, Table, Column, DataType, HasMany } from "sequelize-typescript";
+import { Model, Table, Column, DataType, HasMany, ForeignKey } from "sequelize-typescript";
+import { Part } from "src/parts/parts.model";
 import { RepairsHistory } from "src/repairs-history/repairs-history.model";
 
 
@@ -28,4 +29,8 @@ export class CarOperation extends Model<CarOperation, CarOperationCreationAttrs>
     price: number;
     @HasMany(() => RepairsHistory)
     repairsHistory:RepairsHistory[];
+
+    @ApiProperty({ example: "1", description: "Existing part id" })
+    @ForeignKey(() => Part)
+    partId: number;
 }

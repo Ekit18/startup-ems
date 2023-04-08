@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import io, { Socket } from 'socket.io-client';
 import { Button, Form } from 'react-bootstrap';
-import Canvas from './Canvas';
 
 interface FormData {
     name: string;
@@ -11,7 +10,7 @@ interface FormData {
     updates: boolean;
     room?:string;
 }
-export const SocketsTest: React.FC = observer(() => {
+export const RepairSigningItem: React.FC = observer(() => {
     const [socket, setSocket] = useState<Socket>()
     const [value, setValue] = useState<string>("")
     const [messages, setMessages] = useState<string[]>([])
@@ -107,6 +106,17 @@ export const SocketsTest: React.FC = observer(() => {
     }
 
     return <>
+
+    <Form>
+    <Form.Control
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            type="text"
+            name="message"
+            placeholder="Enter your message..." className="mt-2"
+        />
+    </Form>
+
         <Form.Control
             value={value}
             onChange={(e) => setValue(e.target.value)}
@@ -119,7 +129,6 @@ export const SocketsTest: React.FC = observer(() => {
         )}
         <div>
             <input type="checkbox" checked={checked} onChange={handleCheckboxClick} />
-            <Canvas />
         </div>
 
         <form>

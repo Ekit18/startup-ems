@@ -8,6 +8,7 @@ import { UserRoles } from "src/roles/user-roles.model";
 import { ShopStockList } from "src/shop_stock_list/shop-stock-list.model";
 import { CarsParts } from "./cars-parts.model";
 import { PartsGuidesAWS } from 'src/parts-guides-aws/parts-guides-aws.model';
+import { CarOperation } from 'src/car-operation/car-operation.model';
 
 
 @Table({ tableName: 'parts' })
@@ -39,4 +40,7 @@ export class Part extends Model<Part> {
     @ApiProperty({ name: "ShopStockList", example: { id: 5, shopId: 1, partId: 1, price: 1000, isAvailable: true }, type: ShopStockList, description: "ShopStockList row" })
     @BelongsToMany(() => PartsShop, () => ShopStockList)
     shops: PartsShop[];
+
+    @HasMany(() => CarOperation)
+    operations:CarOperation[];
 }
