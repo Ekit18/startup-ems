@@ -4,7 +4,7 @@ import { IsNumber, IsNumberString, IsOptional, IsString, IsUrl } from "class-val
 export class UpdateCrashDTO {
     @ApiProperty({ example: "Yokohama", description: "Part brand" })
     @IsOptional()
-    @IsString({ message: "$property must be string!" })
+    @IsNumber({}, { message: "$property must be string!" })
     userCarId: number;
     @ApiProperty({ example: "W.Drive V905 215/65 R16 98H", description: "Unique part factory name" })
     @IsOptional()

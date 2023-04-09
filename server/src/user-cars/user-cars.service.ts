@@ -7,11 +7,12 @@ import { GetAllUserCars } from './dto/get-all-user-cars.dto';
 import { GetUserCar } from './dto/get-user-car.dto';
 import { updateMileage } from './dto/update-mileage.dto';
 import { UserCars } from './user-cars.model';
+import { BrandService } from 'src/brand/brand.service';
 
 export interface UserCarsData {
     carMileage: number;
     id: number;
-    brandId: number;
+    brand: string;
     model: string;
     fuelType: string;
     bodyType: string;
@@ -20,7 +21,7 @@ export interface UserCarsData {
 
 @Injectable()
 export class UserCarsService {
-    constructor(@InjectModel(UserCars) private userCarsRepository: typeof UserCars, private userService: UsersService, private carService: CarService) { }
+    constructor(@InjectModel(UserCars) private userCarsRepository: typeof UserCars, private userService: UsersService, private carService: CarService, private brandService: BrandService) { }
 
     async createUserCar(dto: CreateUserCarsDto) {
         const user = await this.userService.getUserById(dto.userId);
@@ -40,7 +41,9 @@ export class UserCarsService {
         const userCars = await this.userCarsRepository.findAll({ where: { userId: dto.userId } });
         const cars = await Promise.all(userCars.map(async (car) => {
             const carData = await this.carService.getCarByIdWithoutIncludeAll(car.carId);
-            return { ...carData.get(), carMileage: car.carMileage };
+            const brand = await this.brandService.getBrandById(carData.get().brandId);
+            delete carData.get().brandId;
+            return { ...carData.get(), brand: brand.brand, carMileage: car.carMileage };
         }
         ));
         return cars;
@@ -54,7 +57,9 @@ export class UserCarsService {
         }
         const car = await this.userCarsRepository.findOne({ where: { userId: dto.userId, carId: dto.carId } });
         const carInfo = await this.carService.getCarByIdWithoutIncludeAll(car.carId);
-        return { ...carInfo.get(), carMileage: car.carMileage };
+        const brand = await this.brandService.getBrandById(carInfo.get().brandId);
+        delete carInfo.get().brandId;
+        return { ...carInfo.get(), brand: brand.brand, carMileage: car.carMileage };
     }
 
     updateMileage(params: GetUserCar, dto: updateMileage) {
@@ -63,5 +68,18 @@ export class UserCarsService {
 
     remove(params: GetUserCar) {
         return UserCars.destroy({ where: { userId: params.userId, carId: params.carId } });
+    }
+
+    async getUserCarById(id: number): Promise<UserCarsData> {
+        const userCar = await this.userCarsRepository.findOne({ where: { id } });
+        const user = await this.userService.getUserById(userCar.userId);
+        const checkCar = await this.carService.getCarById(userCar.carId);
+        if (!user || !checkCar) {
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+        }
+        const carInfo = await this.carService.getCarByIdWithoutIncludeAll(userCar.carId);
+        const brand = await this.brandService.getBrandById(carInfo.get().brandId);
+        delete carInfo.get().brandId;
+        return { ...carInfo.get(), brand: brand.brand, carMileage: userCar.carMileage };
     }
 }

@@ -11,23 +11,23 @@ export class CrashesController {
         return this.crashesService.createCrash(dto);
     }
 
-    @Get('/:userId')
-    getCrashByUserId(@Param('userId') userId: number) {
-        return this.crashesService.getCrashByUserId(userId);
+    @Get('/:userCarId')
+    getCrashByUserId(@Param('userCarId') userCarId: number) {
+        return this.crashesService.getCrashByUserId(userCarId);
     }
 
-    // @Get('getAllCrashes')
-    // getAllCrashes() {
-    //     return this.crashesService.getAllCrashes();
-    // }
+    @Get()
+    getAllCrashes() {
+        return this.crashesService.getAllCrashesWithCars();
+    }
 
-    // @Put('/:id')
-    // update(@Param('id') id: number, @Body() params: UpdateCrashDTO) {
-    //     return this.crashesService.updateCrash(id, params);
-    // }
+    @Put('/:id')
+    update(@Param('id') id: number, @Body() params: UpdateCrashDTO) {
+        return this.crashesService.updateCrash(id, params);
+    }
 
-    // @Delete(':id')
-    // remove(@Param('id') id: number) {
-    //     return this.crashesService.removeCrash(id);
-    // }
+    @Delete(':id')
+    remove(@Param('id') id: number) {
+        return this.crashesService.removeCrash(id);
+    }
 }

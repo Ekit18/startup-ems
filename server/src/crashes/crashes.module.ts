@@ -5,12 +5,13 @@ import { Crashes } from './crashes.model';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthModule } from 'src/auth/auth.module';
 import { forwardRef } from '@nestjs/common/utils';
+import { UserCarsModule } from 'src/user-cars/user-cars.module';
 
 @Module({
   controllers: [CrashesController],
   providers: [CrashesService],
   imports: [
-    SequelizeModule.forFeature([Crashes]),
+    SequelizeModule.forFeature([Crashes]), UserCarsModule,
     forwardRef(() => AuthModule)
   ]
 })

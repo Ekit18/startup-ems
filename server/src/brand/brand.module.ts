@@ -12,7 +12,7 @@ import { AuthModule } from 'src/auth/auth.module';
   imports: [
     SequelizeModule.forFeature([Brand]),
     forwardRef(() => AuthModule)
-  ], exports:[
+  ], exports: [
     BrandService
   ]
 })

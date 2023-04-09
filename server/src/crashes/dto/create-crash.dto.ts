@@ -3,7 +3,7 @@ import { IsNumber, IsNumberString, IsString, IsUrl } from "class-validator";
 
 export class CreateCrashDTO {
     @ApiProperty({ example: "Yokohama", description: "Part brand" })
-    @IsString({ message: "$property must be string!" })
+    @IsNumber({}, { message: "$property must be string!" })
     userCarId: number;
     @ApiProperty({ example: "W.Drive V905 215/65 R16 98H", description: "Unique part factory name" })
     @IsString({ message: "$property must be string!" })
