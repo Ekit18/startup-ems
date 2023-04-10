@@ -1,30 +1,3 @@
-// await queryInterface.createTable('crashes', {
-//     id: {
-//       allowNull: false,
-//       autoIncrement: true,
-//       primaryKey: true,
-//       type: Sequelize.INTEGER
-//     },
-//     userCarId: {
-//       type: Sequelize.INTEGER,
-//       allowNull: false,
-//       references: {
-//         model: 'user_cars',
-//         key: 'id'
-//       },
-//       onUpdate: 'CASCADE',
-//       onDelete: 'CASCADE'
-//     },
-//     description: {
-//       type: Sequelize.TEXT,
-//       allowNull: false
-//     },
-//     location: {
-//       type: Sequelize.STRING,
-//       allowNull: false
-//     }
-//   });
-
 import { ApiProperty } from "@nestjs/swagger";
 import { Model, Table, Column, DataType, HasMany, ForeignKey } from "sequelize-typescript";
 import { Part } from "src/parts/parts.model";

@@ -43,11 +43,18 @@ export default class UserStore {
     }
 
     get userId() {
+        if (!this._user.id) {
+            throw new Error("no userId")
+        }
         return this._user.id
     }
 
     get user() {
         return this._user
+    }
+
+    isService() {
+        return this._user.roles?.find((role) => role.value === "ADMIN")
     }
 
     logOut() {
