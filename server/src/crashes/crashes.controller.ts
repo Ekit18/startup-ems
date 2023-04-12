@@ -11,9 +11,9 @@ export class CrashesController {
         return this.crashesService.createCrash(dto);
     }
 
-    @Get('user-car-crashes/:userCarId')
-    getCrashByUserId(@Param('userCarId') userCarId: number) {
-        return this.crashesService.getAllUserCrashes(userCarId);
+    @Get('user-crashes/:userId')
+    getCrashByUserId(@Param('userId') userId: number) {
+        return this.crashesService.getAllUserCrashes(userId);
     }
 
     @Get()

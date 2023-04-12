@@ -6,21 +6,27 @@ import { CreateUserCarsDto } from './dto/create-user-cars.dto';
 import { GetAllUserCars } from './dto/get-all-user-cars.dto';
 import { GetUserCar } from './dto/get-user-car.dto';
 import { updateMileage } from './dto/update-mileage.dto';
-import { UserCars } from './user-cars.model';
+import { UserCars, UserCarsCreationAttrs } from './user-cars.model';
 import { BrandService } from 'src/brand/brand.service';
+import { Car, CarCreationAttrs } from 'src/car/car.model';
 
-export interface UserCarsData {
-    carMileage: number;
-    id: number;
-    brand: string;
-    model: string;
-    fuelType: string;
-    bodyType: string;
-    year: number;
+// export interface UserCarsData {
+//     carMileage: typeof UserCars.prototype.carMileage;
+//     id: number; // id of row in user_cars
+//     brand: string; // will be got from compound request
+//     model: typeof Car.prototype.model;
+//     fuelType: typeof Car.prototype.fuelType;
+//     bodyType: typeof Car.prototype.bodyType;
+//     year: typeof Car.prototype.year;
+// }
+export interface UserCarsData extends Omit<CarCreationAttrs, 'brandId'>, Pick<UserCarsCreationAttrs, 'carMileage'> {
+    // Without those extensions, it would be boilerplate/hard-code
+    id: number; // id of row in user_cars
+    brand: string; // will be got from compound request
 }
 
-export interface UserCarsDataWithUserId extends UserCarsData {
-    userCarId: number;
+export interface UserCarsDataWithUserCarId extends UserCarsData {
+    userCarId: typeof UserCars.prototype.id;
 }
 
 @Injectable()
@@ -37,7 +43,7 @@ export class UserCarsService {
         return userCar;
     }
 
-    async getAllUserCars(userId: number): Promise<UserCarsDataWithUserId[]> {
+    async getAllUserCars(userId: number): Promise<UserCarsDataWithUserCarId[]> {
         const user = await this.userService.getUserById(userId);
         if (!user) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);

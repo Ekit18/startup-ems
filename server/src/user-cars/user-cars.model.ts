@@ -6,7 +6,7 @@ import { RepairsHistory } from "src/repairs-history/repairs-history.model";
 import { User } from "src/users/users.model";
 
 
-interface UserCarsCreationAttrs {
+export interface UserCarsCreationAttrs {
     userId: number;
     carId: number;
     carMileage: number;

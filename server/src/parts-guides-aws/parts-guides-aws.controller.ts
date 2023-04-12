@@ -1,9 +1,10 @@
-import { Controller, HttpException, HttpStatus, Param, Post, UploadedFiles, UseInterceptors, Delete } from '@nestjs/common';
+import { Controller, HttpException, HttpStatus, Param, Post, UploadedFiles, UseInterceptors, Delete, Inject } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiOperation } from '@nestjs/swagger';
 import { DeleteStaticDTO } from './dto/delete-static.dto';
 import { PartsGuidesAwsService } from './parts-guides-aws.service';
-
+import { ConfigService } from '@nestjs/config';
+import { config } from './file-options';
 
 export type FilesErrorObject = {
     isError: boolean,
@@ -13,41 +14,57 @@ export type FilesErrorObject = {
 @Controller('parts-guides-aws')
 export class PartsGuidesAwsController {
     static errObj: FilesErrorObject = Object();
-    constructor(private partsGuidesAwsService: PartsGuidesAwsService) { }
+    @Inject()
+    static configService: ConfigService;
+    constructor(
+        private partsGuidesAwsService: PartsGuidesAwsService
+    ) { }
+
     static imageFilter(req: Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) {
         PartsGuidesAwsController.errObj.isError = false;
-        if (!file.mimetype.match(/(image\/)?(jpg|jpeg|png)/)) {
+        if (!file.mimetype.match(/(image\/)?(jpg|jpeg|png)/) || !file.originalname.match(/\.(jpg|jpeg|png)/)) {
             PartsGuidesAwsController.errObj.isError = true;
             PartsGuidesAwsController.errObj.msg = "Wrong data type";
         }
-        if (file.size > 3000) {
+        if (file.size > config.MAX_FILE_SIZE) {
             PartsGuidesAwsController.errObj.isError = true;
             PartsGuidesAwsController.errObj.msg = "Wrong data size";
         }
+        console.log(config.MAX_FILE_SIZE);
 
         callback(null, true);
     }
     @ApiOperation({ summary: 'Push static image of a part to S3' })
     @Post('part/:partId')
-    @UseInterceptors(FilesInterceptor('file', 10, { limits: { fieldSize: 3000 }, fileFilter: PartsGuidesAwsController.imageFilter }))
+    @UseInterceptors(FilesInterceptor('file', config.MAX_NUM_FILES, { limits: { fieldSize: config.MAX_FILE_SIZE }, fileFilter: PartsGuidesAwsController.imageFilter }))
     async addPartImg(
         @Param('partId') partId: number,
         @UploadedFiles() files: Array<Express.Multer.File>
     ) {
+        if (PartsGuidesAwsController.errObj.isError) {
+            throw new HttpException(PartsGuidesAwsController.errObj.msg, HttpStatus.BAD_REQUEST);
+        }
         await PartsGuidesAwsService.checkNSFWFiles(files, PartsGuidesAwsController.errObj);
         if (PartsGuidesAwsController.errObj.isError) {
             throw new HttpException(PartsGuidesAwsController.errObj.msg, HttpStatus.BAD_REQUEST);
         }
-        const urls: string[] = await Promise.all(files.map((file) => this.partsGuidesAwsService.addPartImg(partId, file.buffer, file.originalname)));
+        const urls: string[] = await Promise.all(
+            files.map(
+                (file) => this.partsGuidesAwsService.addPartImg(partId, file.buffer, file.originalname)
+            )
+        );
         return urls;
     }
     @ApiOperation({ summary: 'Push static image of a repair guide to S3' })
     @Post('guide/:partId')
-    @UseInterceptors(FilesInterceptor('file', 10, { limits: { fieldSize: 3000 }, fileFilter: PartsGuidesAwsController.imageFilter }))
+    @UseInterceptors(FilesInterceptor('file', config.MAX_NUM_FILES, { limits: { fieldSize: config.MAX_FILE_SIZE }, fileFilter: PartsGuidesAwsController.imageFilter }))
     async addGuideImg(
         @Param('partId') partId: number,
         @UploadedFiles() files: Array<Express.Multer.File>
     ) {
+        if (PartsGuidesAwsController.errObj.isError) {
+            throw new HttpException(PartsGuidesAwsController.errObj.msg, HttpStatus.BAD_REQUEST);
+        }
         PartsGuidesAwsService.checkNSFWFiles(files, PartsGuidesAwsController.errObj);
         if (PartsGuidesAwsController.errObj.isError) {
             throw new HttpException(PartsGuidesAwsController.errObj.msg, HttpStatus.BAD_REQUEST);
