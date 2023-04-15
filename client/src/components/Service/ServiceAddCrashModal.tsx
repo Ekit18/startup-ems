@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import { useEffect, useState } from "react"
 import { Modal, Button, Form } from "react-bootstrap"
 import { Socket } from "socket.io-client"
-import { CarInfo, CrashInfo, CrashModalState } from "./CrashMap"
+import { CarInfo, CrashInfo, CrashModalState } from "../CrashMap"
 import { LatLngTuple } from "leaflet"
 
 export interface ModalData {
@@ -18,9 +18,14 @@ interface CrashModalProps {
 }
 
 
-export const AddCrashModal: React.FC<CrashModalProps> = observer(({ show, setShow, onSubmit, userCars }) => {
-    const [modalData, setModalData] = useState<ModalData>({ description: "", userCarId: 0 })
-    const handleClose = () => setShow((prevState) => ({ ...prevState, show: false }));
+export const ServiceAddCrashModal: React.FC<CrashModalProps> = observer(({ show, setShow, onSubmit, userCars }) => {
+    const [modalData, setModalData] = useState<ModalData>({ description: "", userCarId: -1 })
+    const [user, setUser] = useState<string>('');
+    const handleClose = () => setShow((prevState) => {
+        resetState();
+        return ({ ...prevState, show: false })
+    }
+    );
     const handleOpen = () => setShow((prevState) => ({ ...prevState, show: true }));
 
     const handleInputChange = (event: any) => {
@@ -34,14 +39,27 @@ export const AddCrashModal: React.FC<CrashModalProps> = observer(({ show, setSho
         setModalData((modalData) => ({ ...modalData, [name]: value }))
     };
 
+    const handleUserChange = (event: any) => {
+        if (!event.target.value) {
+            return;
+        }
+        setUser(event.target.value);
+    }
 
     const handleSubmit = () => {
-        if (!modalData.userCarId) {
+        if (modalData.userCarId === -1 || !modalData.description) {
             return
         }
         onSubmit(modalData)
+        resetState();
         handleClose();
     }
+
+    const resetState = () => {
+        setModalData({ description: "", userCarId: -1 });
+        setUser('');
+    }
+
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
@@ -58,9 +76,18 @@ export const AddCrashModal: React.FC<CrashModalProps> = observer(({ show, setSho
                 <Form.Text id="passwordHelpBlock" muted>
                     Your description of problem.
                 </Form.Text>
+                <Form.Select name="user" onChange={(e) => handleUserChange(e)}>
+                    <option >Select User</option>
+                    {Array.from(new Set(userCars.filter((car) => !((car as CrashInfo).location)).map((car) => car.user))).map((user) =>
+                        <option value={user}>{user}</option>
+                    )}
+                </Form.Select>
+                <Form.Text id="passwordHelpBlock" muted>
+                    Select User whose car has just broken.
+                </Form.Text>
                 <Form.Select name="userCarId" onChange={(e) => handleInputChange(e)}>
                     <option >Select Your car</option>
-                    {userCars.filter((car) => !((car as CrashInfo).location)).map((car) =>
+                    {userCars.filter((car) => !((car as CrashInfo).location) && car.user === user).map((car) =>
                         <option value={car.userCarId} >{car.userCarId}-{car.brand}-{car.model}-{car.year}-{car.fuelType}-{car.carMileage}</option>
                     )}
                 </Form.Select>

@@ -6,10 +6,11 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthModule } from 'src/auth/auth.module';
 import { forwardRef } from '@nestjs/common/utils';
 import { UserCarsModule } from 'src/user-cars/user-cars.module';
+import { RepairsHistoryGateway } from './crashes.gateway';
 
 @Module({
   controllers: [CrashesController],
-  providers: [CrashesService],
+  providers: [CrashesService, RepairsHistoryGateway],
   imports: [
     SequelizeModule.forFeature([Crashes]), UserCarsModule,
     forwardRef(() => AuthModule)

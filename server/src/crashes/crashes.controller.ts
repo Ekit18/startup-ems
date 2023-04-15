@@ -16,14 +16,14 @@ export class CrashesController {
         return this.crashesService.getAllUserCrashes(userId);
     }
 
-    @Get()
-    getAllCrashes() {
-        return this.crashesService.getAllCrashesWithCars();
-    }
+    // @Get()
+    // getAllCrashes() {
+    //     return this.crashesService.getAllCrashesWithCars();
+    // }
 
-    @Get('all-user-crashes/:id')
-    getAllUserCrashes(@Param('id') id:number) {
-        return this.crashesService.getAllUserCrashes(id);
+    @Get('all-user-crashes/:userId')
+    getAllUserCrashes(@Param('userId') userId: number) {
+        return this.crashesService.getAllUserCrashes(userId);
     }
 
     @Put('/:id')

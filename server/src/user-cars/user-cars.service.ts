@@ -9,10 +9,11 @@ import { updateMileage } from './dto/update-mileage.dto';
 import { UserCars, UserCarsCreationAttrs } from './user-cars.model';
 import { BrandService } from 'src/brand/brand.service';
 import { Car, CarCreationAttrs } from 'src/car/car.model';
+import { User } from 'src/users/users.model';
 
 // export interface UserCarsData {
 //     carMileage: typeof UserCars.prototype.carMileage;
-//     id: number; // id of row in user_cars
+//     id: number; // id of row in cars
 //     brand: string; // will be got from compound request
 //     model: typeof Car.prototype.model;
 //     fuelType: typeof Car.prototype.fuelType;
@@ -21,12 +22,13 @@ import { Car, CarCreationAttrs } from 'src/car/car.model';
 // }
 export interface UserCarsData extends Omit<CarCreationAttrs, 'brandId'>, Pick<UserCarsCreationAttrs, 'carMileage'> {
     // Without those extensions, it would be boilerplate/hard-code
-    id: number; // id of row in user_cars
+    id: number; // id of row in cars
     brand: string; // will be got from compound request
 }
 
 export interface UserCarsDataWithUserCarId extends UserCarsData {
     userCarId: typeof UserCars.prototype.id;
+    user: typeof User.prototype.email;
 }
 
 @Injectable()
@@ -53,10 +55,28 @@ export class UserCarsService {
             const carData = await this.carService.getCarByIdWithoutIncludeAll(car.carId);
             const brand = await this.brandService.getBrandById(carData.get().brandId);
             delete carData.get().brandId;
-            return { ...carData.get(), brand: brand.brand, carMileage: car.carMileage, userCarId: car.id };
+            return { ...carData.get(), brand: brand.brand, carMileage: car.carMileage, userCarId: car.id, user: user.email, };
         }
         ));
+        console.log(`\nUSER EMAIL: ${user.email}\n`);
         return cars;
+    }
+    async getUserCarForCrashInfo(userCarId: number): Promise<UserCarsDataWithUserCarId> {
+        const userCar = await this.userCarsRepository.findOne({ where: { id: userCarId } });
+        const carData = await this.carService.getCarByIdWithoutIncludeAll(userCar.carId);
+        const brand = await this.brandService.getBrandById(carData.get().brandId);
+        delete carData.get().brandId;
+
+        const user = await this.userService.getUserById(userCar.userId);
+
+        return { ...carData.get(), brand: brand.brand, carMileage: userCar.carMileage, userCarId: userCar.id, user: user.email, };
+    }
+
+    async getAllUserIds(): Promise<number[]> {
+        const userIds = await await this.userCarsRepository.findAll({ attributes: ['userId'], group: 'userId' });
+        console.log("USERIDS: ");
+        console.log(userIds);
+        return userIds.map((userCar) => userCar.dataValues.userId);
     }
 
     async getUserCar(dto: GetUserCar): Promise<UserCarsData> {
@@ -93,8 +113,8 @@ export class UserCarsService {
         return { ...carInfo.get(), brand: brand.brand, carMileage: userCar.carMileage };
     }
 
-    async getUserByUserCarId(userId: number) {
-        const userCar = await this.userCarsRepository.findOne({ where: { userId } });
-        return userCar;
-    }
+    // async getUserByUserCarId(userId: number) { ?????
+    //     const userCar = await this.userCarsRepository.findOne({ where: { userId } });
+    //     return userCar;
+    // }
 }

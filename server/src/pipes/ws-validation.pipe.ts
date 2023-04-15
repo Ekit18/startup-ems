@@ -9,7 +9,9 @@ import { WsValidatorException } from "src/exception/ws-validation.exception";
 export class WsValidationPipe implements PipeTransform<any> {
     async transform(value: any, metadata: ArgumentMetadata): Promise<any> {
         const obj = plainToClass(metadata.metatype, value);
-
+        console.log("\n\n\n")
+        console.log(obj)
+        console.log("\n\n\n")
         const errors = await validate(obj);
         if (errors.length) {
             const messages = errors.map((error) => ({

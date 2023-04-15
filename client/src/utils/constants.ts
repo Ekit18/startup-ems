@@ -7,3 +7,5 @@ export const SERVICE_MAP_ROUTE = '/service/map'
 export const USER_MAP_ROUTE = '/main/map'
 export const MAP_X_ROTATE = 22.136912295000077
 export const MAP_Y_ROTATE = 44.38641133100012
+export const MARKER_ZOOM = 13
+export const MAP_ZOOM = 13

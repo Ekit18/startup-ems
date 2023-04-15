@@ -32,6 +32,15 @@ export class UserCarsController {
         return this.userCarsService.getAllUserCars(userId);
     }
 
+    @ApiOperation({ summary: "Getting all users who own car(-s)" })
+    @ApiResponse({ status: 200, type: [UserCars] })
+    @UseGuards(JwtAuthGuard)
+    @Get('all-users')
+    getAllUsers() {
+        console.log("\nHERERERRRRRRRRRRRRRRRRRRRRRRRRRRRRRR\n");
+        return this.userCarsService.getAllUserIds();
+    }
+
     @ApiOperation({ summary: "Getting user car" })
     @ApiResponse({ status: 200, type: UserCars })
     @UseGuards(JwtAuthGuard)

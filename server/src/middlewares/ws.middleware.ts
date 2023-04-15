@@ -9,6 +9,7 @@ export type SocketIOMiddleWare = {
 // eslint-disable-next-line func-style
 export const WsAuthMiddleware = (jwtService): SocketIOMiddleWare => (client, next) => {
     try {
+        console.log("HERE IN AUTH");
         WsJwtAuthGuard.validateToken(client, jwtService);
         next();
     } catch (error) {

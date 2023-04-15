@@ -26,3 +26,8 @@ export const check = async (): Promise<UserData> => {
     localStorage.setItem('token', data.token);
     return jwt_decode(data.token);
 };
+
+export const getAllUserIds = async (): Promise<number[]> => {
+    const { data } = await $authHost.get('user-cars/all-users/');
+    return data;
+};

@@ -9,8 +9,9 @@ import { UpdateCrashDTO } from './dto/update-crash.dto';
 // Changed from UserCarsData to UserCarsDataWithUserCarId because return object of getAllUserCrashes() corresponds to it,
 // and due to additional userCarId field it couldn't relate to CrashInfo and hence was returned as object of unknown type
 export interface CrashInfo extends UserCarsDataWithUserCarId {
-    description: string;
-    location: string;
+    description?: string;
+    location?: string;
+    date: Date;
 }
 
 
@@ -23,48 +24,53 @@ export class CrashesService {
         return crash;
     }
 
-    async getCrashByUserCarId(userCarId: number): Promise<CrashInfo | null> {
-        // eslint-disable-next-line prefer-template
-        console.log("\n\n\nHERE IS USERCARID: " + userCarId + "\n\n\n");
+    async getCrashByUserCarId(userCarId: number): Promise<Pick<CrashInfo, 'description' | 'location' | 'date'> | null> {
         const crash = await this.crashRepository.findOne({ where: { userCarId } });
         if (!crash) { // may return null if user's car is not broken at the moment
             return null;
         }
-        // eslint-disable-next-line prefer-template
-        console.log(`\n\n\nHERE IS CRASH OF USERCARID ${userCarId}: ` + crash + "\n\n\n");
-        const car = await this.userCarsRepository.getUserCarById(crash.userCarId);
-        return { ...car, description: crash.description, location: crash.location, userCarId };
+        // const car = await this.userCarsRepository.getUserCarById(crash.userCarId);
+        // ?? Car info is already in car (line `userCars.map(async (car)` )
+        return { description: crash.description, location: crash.location, date: crash.createdAt };
     }
 
-    async getAllCrashesWithCars(): Promise<CrashInfo[]> {
-        const crashes = await this.crashRepository.findAll();
-        const carsCrashes = await Promise.all(crashes.map(async (car) => {
-            const carData = await this.userCarsRepository.getUserCarById(car.userCarId);
-            return { ...carData, description: car.description, location: car.location, userCarId: car.userCarId };
-        }));
-        return carsCrashes;
-    }
+    // async getAllCrashesWithCars(): Promise<CrashInfo[]> {
+    //     const crashes = await this.crashRepository.findAll();
+    //     const carsCrashes = await Promise.all(crashes.map(async (car) => {
+    //         const carData = await this.userCarsRepository.getUserCarById(car.userCarId);
+    //         return { ...carData, description: car.description, location: car.location, userCarId: car.userCarId };
+    //     }));
+    //     return carsCrashes;
+    // }
 
     updateCrash(id: number, params: UpdateCrashDTO) {
         return Crashes.update({ ...params }, { where: { id } });
     }
 
-    removeCrash(id: number) {
-        return Crashes.destroy({ where: { id } });
+    removeCrash(userCarId: number) {
+        return Crashes.destroy({ where: { userCarId } });
     }
 
-    async getAllUserCrashes(userId: number): Promise<CrashInfo[]> {
+    async getAllUserCrashes(userId: number): Promise<(CrashInfo | UserCarsDataWithUserCarId)[]> {
         const userCars: UserCarsDataWithUserCarId[] = await this.userCarsRepository.getAllUserCars(userId);
         const carsCrashInfo = await Promise.all(userCars.map(async (car) => {
             const crashInfo = await this.getCrashByUserCarId(car.userCarId);
             if (!crashInfo) {
-                return null;
+                return { ...car }; // User's car data will still be used in crash addition form, where list of all user cars will be needed
             }
-            return { ...car, description: crashInfo.description, location: crashInfo.location };
+            return { ...car, ...crashInfo } as CrashInfo;
         }));
-        console.log("ALL USER CRASHES:\n\n");
-        carsCrashInfo.forEach((crash) => console.log(`${crash}\n`));
-        console.log("\n\n");
-        return carsCrashInfo.filter((crashInfo) => Boolean(crashInfo));
+        // console.log("ALL USER CRASHES:\n");
+        // carsCrashInfo.forEach((crash: CrashInfo) => {
+        //     console.log(crash.userCarId);
+        //     console.log(crash.description);
+        // });
+        // console.log("\n");
+        return carsCrashInfo;
+    }
+    async getUserCrash(userCarId: number): Promise<CrashInfo> {
+        const userCar: UserCarsDataWithUserCarId = await this.userCarsRepository.getUserCarForCrashInfo(userCarId);
+        const crashInfo = await this.getCrashByUserCarId(userCar.userCarId);
+        return { ...userCar, ...crashInfo } as CrashInfo;
     }
 }
