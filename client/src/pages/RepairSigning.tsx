@@ -1,47 +1,52 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Socket, io } from 'socket.io-client'
+import { RepairSigningShowItem } from '../components/RepairSigning/RepairSigningShowItem';
+import { RepairSigningAddItem } from '../components/RepairSigning/RepairSigningAddItem';
+import { Button } from 'react-bootstrap';
+import { RepairSigningSignatureCanvas } from '../components/RepairSigning/RepairSigningSignatureCanvas';
 
 
-type RepairSigningItem = {
+export type CarOperationItem = {
+    id: number;
     name: string;
     symptom: string;
     repair: string;
     price: number;
+    partId?: number;
 }
 
 interface RepairSigningData {
-    items: [RepairSigningItem];
-    repairHistoryId:number;
+    items: CarOperationItem[];
+    repairHistoryId: number;
     room?: string;
+    isSigning: boolean;
 }
 
 export const RepairSigning: React.FC = observer(() => {
     const [signingFormData, setSigningFormData] = useState<RepairSigningData>(
         {
             items: [
-                {
-                    name: "",
-                    symptom: "",
-                    repair: "",
-                    price: 0,
-                }
+                // {
+                //     id: 1,
+                //     name: "oil change",
+                //     symptom: "drove 6000km",
+                //     repair: "gearbox and engine oil change",
+                //     price: 200,
+                // }
             ],
-            repairHistoryId: 0
+            repairHistoryId: 0,
+            isSigning: false,
         }
     )
     const [socket, setSocket] = useState<Socket>()
 
-
     useEffect(() => {
-        const socket = io("http://localhost:5000", {
+        const socket = io("http://localhost:5001", {
             extraHeaders: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
         })
-        if (!socket?.active) {
-            console.error("test not connected")
-        }
         setSocket(socket)
         return () => {
             socket.disconnect();
@@ -49,50 +54,61 @@ export const RepairSigning: React.FC = observer(() => {
     }, [setSocket])
 
 
-    const newSigningFormData = (data: RepairSigningData) => {
+    const handleSigningUpdate = (data: any) => {
         setSigningFormData(data);
-        console.log(`tes${data}`)
+        console.log(data)
     }
 
-    const handleError = (data: any) => {
+    const handleException = (data: any) => {
         alert(data.message)
         console.error(data)
     }
+
 
     useEffect(() => {
         if (!socket) {
             return
         }
-        socket.on("form_update", newSigningFormData)
-        socket.on("exception", handleError)
+
+        socket.on("signing_update", handleSigningUpdate);
+        socket.on("exception", handleException);
+
         return () => {
             if (!socket) {
                 return
             }
-            socket.off("signing_update", newSigningFormData)
-            socket.off("exception", handleError)
+            socket.off("signing_update", handleSigningUpdate);
+            socket.off("exception", handleException);
         }
-    }, [])
+    }, [socket, handleSigningUpdate]);
 
-    const handleInputChange = (event: any) => {
-        const value = event.target.type === "checkbox"
-            ? event.target.checked
-            : event.target.value;
-        const name = event.target.name;
+
+    const handleCarOperationAdd = (carOperation: CarOperationItem) => {
+        if (!signingFormData.items.find((item) => item.id === carOperation.id)) {
+            setSigningFormData((prevFormData) => {
+                console.log("submit")
+                const newFormData = {
+                    ...prevFormData,
+                    items: [...prevFormData.items, carOperation],
+                };
+                socket?.emit("form_submit", newFormData)
+                return newFormData;
+            });
+        }
+    };
+
+    const handleCarOperationDelete = (id: number) => {
         setSigningFormData((prevFormData) => {
-            const newFormData = { ...prevFormData, [name]: value };
-            console.log(newFormData);
-            socket?.emit("form_submit", newFormData);
+            console.log("submit")
+            const newFormData = {
+                ...prevFormData,
+                items: prevFormData.items.filter((item) => item.id !== id),
+            }
+            socket?.emit("form_submit", newFormData)
             return newFormData;
         });
     };
 
-
-    const handleCheckboxClick = (event: any) => {
-        console.log("test")
-        const { checked } = event.target;
-        socket?.emit('send_check', checked);
-    };
 
     const handleJoinRoom = () => {
         setSigningFormData((prevFormData) => {
@@ -101,9 +117,33 @@ export const RepairSigning: React.FC = observer(() => {
         });
         socket?.emit("join_room", "test")
     }
+
+    const getTotalPriceSum = useCallback(() => {
+        return signingFormData.items.reduce((total, item) => total + item.price, 0);
+    }, [signingFormData.items]);
+
+    const handleIsSigningChange = () => {
+        setSigningFormData((prevFormData) => {
+            const newFormData = { ...prevFormData, isSigning: !signingFormData.isSigning }
+            socket?.emit("form_submit", newFormData)
+            return newFormData;
+        })
+    }
+
     return (
         <>
-        <h4>{signingFormData.repairHistoryId}</h4>
+            <button onClick={() => handleIsSigningChange()}>test </button >
+            <h4>{signingFormData.repairHistoryId}</h4>
+            <h4 className="text-center">Added Operations</h4>
+    {
+        signingFormData.items.map((item) => {
+            return <RepairSigningShowItem key={item.id} item={item} handleCarOperationDelete={handleCarOperationDelete} isSigning={signingFormData.isSigning} />
+        })
+    }
+            <Button onClick={() => handleJoinRoom()}>Test</Button>
+            <h2>{getTotalPriceSum()}</h2>
+            <RepairSigningAddItem handleInputChange={handleCarOperationAdd} isSigning={signingFormData.isSigning} />
+    { signingFormData.isSigning && <RepairSigningSignatureCanvas socket={socket} room="test"/> }
         </>
     );
 })

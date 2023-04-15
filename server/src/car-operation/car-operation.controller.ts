@@ -23,13 +23,22 @@ export class CarOperationController {
         return this.carOperationService.createCarOperation(dto);
     }
 
-    @ApiOperation({ summary: 'Getting car operation from database' })
+    @ApiOperation({ summary: 'Getting one car operation from database' })
     @ApiResponse({ status: 200, type: CarOperation })
     @UseGuards(JwtAuthGuard)
     @Get('/:id')
-    getCarServiceById(@Param('id') id: number) {
+    getCarOperationById(@Param('id') id: number) {
         return this.carOperationService.getCarOperationById(id);
     }
+
+    @ApiOperation({ summary: 'Getting all car operation from database' })
+    @ApiResponse({ status: 200, type: CarOperation })
+    @UseGuards(JwtAuthGuard)
+    @Get()
+    getAllCarOperationById() {
+        return this.carOperationService.getAllCarOperationById();
+    }
+
 
     @ApiOperation({ summary: 'Updating car operation in database' })
     @ApiResponse({ status: 200, type: Number })

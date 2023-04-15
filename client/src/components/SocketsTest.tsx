@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import io, { Socket } from 'socket.io-client';
 import { Button, Form } from 'react-bootstrap';
-import Canvas from './Canvas';
+// import RepairSigningSignatureCanvas from './RepairSigning/RepairSigningSignatureCanvas';
 
 interface FormData {
     name: string;
@@ -119,7 +119,7 @@ export const SocketsTest: React.FC = observer(() => {
         )}
         <div>
             <input type="checkbox" checked={checked} onChange={handleCheckboxClick} />
-            <Canvas />
+            {/* <RepairSigningSignatureCanvas /> */}
         </div>
 
         <form>

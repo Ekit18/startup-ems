@@ -28,7 +28,7 @@ export class PartsShopController {
       adType: "visit",
       slotName: "/parts"
     };
-    this.httpService.post("https://webhook.site/664c1095-bc9d-476a-91e9-1da74454d611", googleAds).subscribe({
+    this.httpService.post("https://webhook.site/746da94f-4324-4390-ad6d-43b897812d3f", googleAds).subscribe({
       complete: () => {
         console.log('sent to adSense');
       },

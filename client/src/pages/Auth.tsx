@@ -8,7 +8,7 @@ import { login, registration } from '../http/userApi';
 import { Context } from '../index';
 import { LOGIN_ROUTE, MAIN_ROUTE, REGISTRATION_ROUTE } from '../utils/constants';
 import GoogleAuth from './GoogleAuth';
-import { SocketsTest } from '../components/SocketsTest';
+// import { SocketsTest } from '../components/SocketsTest';
 
 const Auth:React.FC = observer(() => {
   const { user } = useContext(Context)

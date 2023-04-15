@@ -21,6 +21,11 @@ export class CarOperationService {
         return carOperation;
     }
 
+    async getAllCarOperationById() {
+        const carOperations = await this.carOperationRepository.findAll();
+        return carOperations;
+    }
+
     updateCarOperation(id: number, dto: UpdateCarOperationDto) {
         return this.carOperationRepository.update({ ...dto }, { where: { id } });
     }

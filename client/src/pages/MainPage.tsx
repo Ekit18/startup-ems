@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import React, { useContext, useEffect, useReducer, useState } from 'react'
 import { Button, Col, Container, Row } from 'react-bootstrap'
 import { Context } from '..'
-import { SocketsTest } from '../components/SocketsTest'
+// import { SocketsTest } from '../components/SocketsTest'
 import { RepairSigning } from './RepairSigning'
 
 

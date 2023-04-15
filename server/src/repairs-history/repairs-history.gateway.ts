@@ -20,7 +20,7 @@ import { WsValidationPipe } from 'src/pipes/ws-validation.pipe';
 import { RepairsHistoryService } from './repairs-history.service';
 
 
-@WebSocketGateway({ cors: "*" })
+@WebSocketGateway(5001, { cors: "*" })
 @UseGuards(WsJwtAuthGuard)
 export class RepairsHistoryGateway {
     @WebSocketServer()
@@ -36,33 +36,34 @@ export class RepairsHistoryGateway {
         });
     }
 
-    @UseFilters(new WsExceptionFilter())
-    @SubscribeMessage('send_message')
-    listenForMessages(@MessageBody() data: any) {
-        console.log(data);
-        this.server.sockets.emit('send_message', data);
-    }
-
-
-    @UseFilters(new WsExceptionFilter())
-    @SubscribeMessage('send_check')
-    listenForChecks(@MessageBody() data: boolean) {
-        console.log(data);
-        this.server.sockets.emit('send_check', data);
-    }
-
 
     @UseFilters(new WsExceptionFilter())
     @SubscribeMessage('form_submit')
-    listenForFormSubmit(@MessageBody(new WsValidationPipe()) data: TestDto) {
+    listenForFormSubmit(@MessageBody() data: any) {
         console.log(data);
-        this.server.sockets.to(data.room).emit('form_update', data);
+        // .to(data.room)
+        this.server.sockets.to(data.room).emit("signing_update", data);
     }
 
     @UseFilters(new WsExceptionFilter())
     @SubscribeMessage('join_room')
     listenJoinRoom(client: any, room: string) {
-        console.log(room);
+        console.log(`JOINED${room}`);
         client.join(room);
+    }
+
+    @UseFilters(new WsExceptionFilter())
+    @SubscribeMessage('draw')
+    listenForOnDraw(@MessageBody() data: any) {
+        console.log(data);
+        // .to(data.room)
+        this.server.sockets.to(data.room).emit("ondraw", { x: data.x, y: data.y });
+    }
+    @UseFilters(new WsExceptionFilter())
+    @SubscribeMessage('down')
+    listenForOnDown(@MessageBody() data: any) {
+        console.log(data);
+        // .to(data.room)
+        this.server.sockets.to(data.room).emit("ondown", { x: data.x, y: data.y });
     }
 }
