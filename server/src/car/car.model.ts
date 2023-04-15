@@ -8,7 +8,7 @@ import { UserCars } from "src/user-cars/user-cars.model";
 import { User } from "src/users/users.model";
 
 
-interface CarCreationAttrs {
+export interface CarCreationAttrs {
     brandId: number;
     model: string;
     fuelType: string;

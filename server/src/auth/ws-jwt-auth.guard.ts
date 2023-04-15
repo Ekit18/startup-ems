@@ -46,7 +46,7 @@ export class WsJwtAuthGuard implements CanActivate {
                 req.disconnect(true);
                 throw new WsException('Invalid credentials.');
             }
-            console.log(bearer, token === null, typeof token, token, authHeader.split(' '));
+            // console.log(bearer, token === null, typeof token, token, authHeader.split(' '));
             const user = this.jwtService.verify(token);
             return true;
         } catch (e) {

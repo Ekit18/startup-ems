@@ -19,8 +19,8 @@ export class CarServices extends Model<CarServices, CarServiceCreationAttributes
     @Column({ type: DataType.STRING, allowNull: false, unique: true })
     name: string;
 
-    @ApiProperty({ example: "49.6721819;14.2466009", description: "Coordinates of the car service" })
-    @Matches(/^[-+]?([1-8]?\d(.\d+)?|90(.0+)?);\s[-+]?(180(.0+)?|((1[0-7]\d)|([1-9]?\d))(.\d+)?)$/)
+    @ApiProperty({ example: "49.6721819, 14.2466009", description: "Coordinates of the car service" })
+    @Matches(/^[-+]?([1-8]?\d(.\d+)?|90(.0+)?), \s[-+]?(180(.0+)?|((1[0-7]\d)|([1-9]?\d))(.\d+)?)$/)
     @Column({ type: DataType.STRING, allowNull: false })
     location: string;
 

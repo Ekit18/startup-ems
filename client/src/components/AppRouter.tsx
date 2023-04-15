@@ -9,7 +9,6 @@ import { LOGIN_ROUTE } from '../utils/constants';
 const AppRouter = observer(() => {
   const { user } = useContext(Context)
 
-  console.log(user)
   return (
 
     <Routes>

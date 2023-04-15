@@ -21,6 +21,10 @@ export class CarServicesServices {
         return carService;
     }
 
+    // async getCarServices(){
+    //     const carServices = await this.carServiceRepository.findAll({ include: { id } });
+    // }
+
     updateCarService(id: number, dto: UpdateCarServiceDto) {
         return this.carServiceRepository.update({ ...dto }, { where: { id } });
     }

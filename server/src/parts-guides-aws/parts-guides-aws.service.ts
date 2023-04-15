@@ -41,15 +41,16 @@ export class PartsGuidesAwsService {
             ContentType: `image/${filename.split('.')[1]}`
         };
         await this.s3Client.send(new PutObjectCommand(uploadParams));
+        const fileUrl = `https://${uploadParams.Bucket}.s3.${await this.s3Client.config.region()}.amazonaws.com/${uploadParams.Key}`;
         await this.partsGuidesAWSRepository.create({
-            url: `https://${uploadParams.Bucket}.s3.${await this.s3Client.config.region()}.amazonaws.com/${uploadParams.Key}`,
+            url: fileUrl,
             key: uploadParams.Key,
             partId,
             type: fileType,
         });
         const newFile: PartsGuidesAWS = await this.partsGuidesAWSRepository.findOne({
             where: {
-                url: `https://${uploadParams.Bucket}.s3.${await this.s3Client.config.region()}.amazonaws.com/${uploadParams.Key}`
+                url: fileUrl
             },
             include: { all: true }
         });

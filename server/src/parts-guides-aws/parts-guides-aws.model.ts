@@ -24,7 +24,7 @@ export class PartsGuidesAWS extends Model<PartsGuidesAWS> {
     @ForeignKey(() => Part)
     partId: number;
 
-    @ApiProperty({ example: "Part", description: "Type of static file" })
+    @ApiProperty({ example: "Part/Guide", description: "Type of static file" })
     @Column({ type: DataType.STRING })
     type: string;
 }

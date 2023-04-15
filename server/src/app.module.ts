@@ -53,11 +53,11 @@ import { Crashes } from './crashes/crashes.model';
         {
             provide: APP_FILTER,
             useClass: AllExceptionsFilter,
-        }
+        },
     ],
     imports: [
         ConfigModule.forRoot({
-            envFilePath: '.env'
+            envFilePath: ['.env']
         }),
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, '..', '/src/', 'static'),
