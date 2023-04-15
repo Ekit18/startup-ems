@@ -13,7 +13,16 @@ import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [PartsController],
-  providers: [PartsService],
+  providers: [
+    // {
+    //   // provide: PartsService,
+    //   // useFactory(partRepository: typeof Part, carService: CarService, carsParts: typeof CarsParts) {
+    //   //   return new PartsService(partRepository, carService, carsParts);
+    //   // },
+    //   // inject:[Part,]
+    // }
+    PartsService],
+
   imports: [SequelizeModule.forFeature([Part, CarsParts, ShopStockList, PartsShop]), CarModule, forwardRef(() => AuthModule)],
   exports: [PartsService]
 })
