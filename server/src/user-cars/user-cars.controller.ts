@@ -28,8 +28,8 @@ export class UserCarsController {
     @ApiResponse({ status: 200, type: [UserCars] })
     @UseGuards(JwtAuthGuard)
     @Get('all-cars/:userId')
-    getAllUserCarsById(@Param() params: GetAllUserCars) {
-        return this.userCarsService.getAllUserCars(params);
+    getAllUserCarsById(@Param('userId') userId: number) {
+        return this.userCarsService.getAllUserCars(userId);
     }
 
     @ApiOperation({ summary: "Getting user car" })

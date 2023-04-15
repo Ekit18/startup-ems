@@ -97,8 +97,8 @@ export class PartsGuidesAwsService {
         formData.append("image", fileBuffer);
         const headers = {
             'Content-Type': 'multipart/form-data',
-            'X-RapidAPI-Key': '795a24d60amsh70c7a2ad8cc3586p149a03jsn035c0f30972a',
-            'X-RapidAPI-Host': 'nsfw3.p.rapidapi.com',
+            'X-RapidAPI-Key': process.env.X_RAPIDAPI_KEY,
+            'X-RapidAPI-Host': process.env.X_RAPIDAPI_HOST
         };
         const httpService = new HttpService();
         await httpService.axiosRef.post('https://nsfw3.p.rapidapi.com/v1/results', formData, { headers }).then((response) => {

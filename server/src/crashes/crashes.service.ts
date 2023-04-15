@@ -26,7 +26,7 @@ export class CrashesService {
         return crash;
     }
 
-    async getCrashByUserId(userCarId: number): Promise<CrashInfo> {
+    async getCrashByUserCarId(userCarId: number): Promise<CrashInfo> {
         const crash = await this.crashRepository.findOne({ where: { userCarId } });
         const car = await this.userCarsRepository.getUserCarById(crash.userCarId);
         return { ...car, description: crash.description, location: crash.location };
@@ -47,5 +47,15 @@ export class CrashesService {
 
     removeCrash(id: number) {
         return Crashes.destroy({ where: { id } });
+    }
+
+    async getAllUserCrashes(userId: number): Promise<CrashInfo[]> {
+        const userCars = await this.userCarsRepository.getAllUserCars(userId);
+        const carsCrashInfo = await Promise.all(userCars.map(async (car) => {
+            console.log(car.userCarId);
+            const crashInfo = await this.getCrashByUserCarId(car.userCarId);
+            return { ...car, description: crashInfo.description, location: crashInfo.location };
+        }));
+        return carsCrashInfo;
     }
 }

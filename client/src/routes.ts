@@ -1,8 +1,10 @@
+import { CrashMap } from './components/CrashMap';
+import { ServiceCrashMap } from "./components/Service/ServiceCrashMap"
 import Auth from "./pages/Auth"
 import MainPage from "./pages/MainPage"
 import { Redirect } from "./pages/Redirect"
 import { RepairSigning } from "./pages/RepairSigning"
-import { GOOGLE_REDIRECT_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, REGISTRATION_ROUTE, REPAIR_SIGNING_ROUTE, } from "./utils/constants"
+import { GOOGLE_REDIRECT_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, USER_MAP_ROUTE, SERVICE_MAP_ROUTE, REGISTRATION_ROUTE, REPAIR_SIGNING_ROUTE, } from "./utils/constants"
 
 export const authRoutes = [
     {
@@ -12,7 +14,19 @@ export const authRoutes = [
     {
         path: REPAIR_SIGNING_ROUTE,
         Component: RepairSigning
+    },
+    {
+        path: USER_MAP_ROUTE,
+        Component: CrashMap
     }
+]
+
+
+export const roleAuthRoutes = [
+    {
+        path: SERVICE_MAP_ROUTE,
+        Component: ServiceCrashMap
+    },
 ]
 
 

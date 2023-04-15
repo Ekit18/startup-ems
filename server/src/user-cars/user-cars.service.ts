@@ -19,6 +19,10 @@ export interface UserCarsData {
     year: number;
 }
 
+export interface UserCarsDataWithUserId extends UserCarsData {
+    userCarId: number;
+}
+
 @Injectable()
 export class UserCarsService {
     constructor(@InjectModel(UserCars) private userCarsRepository: typeof UserCars, private userService: UsersService, private carService: CarService, private brandService: BrandService) { }
@@ -33,17 +37,17 @@ export class UserCarsService {
         return userCar;
     }
 
-    async getAllUserCars(dto: GetAllUserCars): Promise<UserCarsData[]> {
-        const user = await this.userService.getUserById(dto.userId);
+    async getAllUserCars(userId: number): Promise<UserCarsDataWithUserId[]> {
+        const user = await this.userService.getUserById(userId);
         if (!user) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
-        const userCars = await this.userCarsRepository.findAll({ where: { userId: dto.userId } });
+        const userCars = await this.userCarsRepository.findAll({ where: { userId } });
         const cars = await Promise.all(userCars.map(async (car) => {
             const carData = await this.carService.getCarByIdWithoutIncludeAll(car.carId);
             const brand = await this.brandService.getBrandById(carData.get().brandId);
             delete carData.get().brandId;
-            return { ...carData.get(), brand: brand.brand, carMileage: car.carMileage };
+            return { ...carData.get(), brand: brand.brand, carMileage: car.carMileage, userCarId: car.id };
         }
         ));
         return cars;
@@ -81,5 +85,10 @@ export class UserCarsService {
         const brand = await this.brandService.getBrandById(carInfo.get().brandId);
         delete carInfo.get().brandId;
         return { ...carInfo.get(), brand: brand.brand, carMileage: userCar.carMileage };
+    }
+
+    async getUserByUserCarId(userId: number) {
+        const userCar = await this.userCarsRepository.findOne({ where: { userId } });
+        return userCar;
     }
 }
