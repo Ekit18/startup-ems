@@ -2,12 +2,21 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_FILTER } from "@nestjs/core";
 import { SequelizeModule } from "@nestjs/sequelize";
-import { AllExceptionsFilter, User, Role, UserRoles, Brand, Car, CarOperation, CarServices, CarsParts, Crashes, Part, PartsGuidesAWS, PartsShop, RepairsHistory, ShopStockList, UserCars, RmqModule, RmqService } from "inq-shared-lib";
-import { join } from "path";
-import { AuthModule } from "./auth/auth.module";
-import { GoogleAuthModule } from "./auth/google/googleAuth.module";
-import { RolesModule } from "./roles/roles.module";
-import { UsersModule } from "./users/users.module";
+import {
+    AllExceptionsFilter,
+    Car,
+    Part,
+    PartsShop,
+    ShopStockList,
+    RmqService,
+    PartsGuidesAWS,
+    CarsParts
+} from "inq-shared-lib";
+import { PartsModule } from "./parts/parts.module";
+import { PartsShopModule } from "./parts_shop/parts-shop.module";
+import { ShopStockListModule } from "./shop_stock_list/shop-stock-list.module";
+import { PartsGuidesAwsModule } from "../../aws/src/parts-guides-aws/parts-guides-aws.module";
+import { ClientsModule } from "@nestjs/microservices";
 
 @Module({
     controllers: [],
@@ -25,7 +34,7 @@ import { UsersModule } from "./users/users.module";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [User, Role, UserRoles, Brand, Car, Part, CarsParts, UserCars, ShopStockList, PartsShop, CarServices, CarOperation, PartsGuidesAWS, RepairsHistory, Crashes],
+            models: [Part, ShopStockList, PartsShop, Car, PartsGuidesAWS, CarsParts],
             autoLoadModels: true,
             // dialectOptions: {
             //     ssl: {
@@ -34,10 +43,10 @@ import { UsersModule } from "./users/users.module";
             //     }
             // }
         }),
-        UsersModule,
-        RolesModule,
-        AuthModule,
-        GoogleAuthModule,
+        PartsModule,
+        PartsShopModule,
+        ShopStockListModule,
+        PartsGuidesAwsModule
     ],
     providers: [
         // {

@@ -12,9 +12,6 @@ import {
     PartsGuidesAWS,
     CarsParts
 } from "inq-shared-lib";
-import { PartsModule } from "./parts/parts.module";
-import { PartsShopModule } from "./parts_shop/parts-shop.module";
-import { ShopStockListModule } from "./shop_stock_list/shop-stock-list.module";
 import { PartsGuidesAwsModule } from "../../aws/src/parts-guides-aws/parts-guides-aws.module";
 import { ClientsModule } from "@nestjs/microservices";
 
@@ -34,7 +31,7 @@ import { ClientsModule } from "@nestjs/microservices";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [Part, ShopStockList, PartsShop, Car, PartsGuidesAWS, CarsParts],
+            models: [Part, PartsGuidesAWS, CarsParts],
             autoLoadModels: true,
             // dialectOptions: {
             //     ssl: {
@@ -43,9 +40,7 @@ import { ClientsModule } from "@nestjs/microservices";
             //     }
             // }
         }),
-        PartsModule,
-        PartsShopModule,
-        ShopStockListModule,
+
         PartsGuidesAwsModule
     ],
     providers: [

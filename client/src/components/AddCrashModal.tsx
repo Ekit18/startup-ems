@@ -1,4 +1,3 @@
-/* eslint-disable no-extra-parens */
 import { observer } from "mobx-react-lite"
 import { useEffect, useState } from "react"
 import { Modal, Button, Form } from "react-bootstrap"
@@ -60,9 +59,9 @@ export const AddCrashModal: React.FC<CrashModalProps> = observer(({ show, setSho
                 </Form.Text>
                 <Form.Select name="userCarId" onChange={(e) => handleInputChange(e)}>
                     <option >Select Your car</option>
-                    {userCars.filter((car) => !((car as CrashInfo).location)).map((car) =>
-                        <option value={car.userCarId} >{car.userCarId}-{car.brand}-{car.model}-{car.year}-{car.fuelType}-{car.carMileage}</option>
-                    )}
+                    {/* {userCars.filter((car) => !((car as CrashInfo).location)).map((car) =>*/}
+                    {/*    <option value={car.userCarId} >{car.userCarId}-{car.brand}-{car.model}-{car.year}-{car.fuelType}-{car.carMileage}</option>*/}
+                    {/* )} */}
                 </Form.Select>
                 <Form.Text id="passwordHelpBlock" muted>
                     Your broken car.
