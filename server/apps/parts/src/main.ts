@@ -1,5 +1,5 @@
-import { NestFactory } from "@nestjs/core";
-import { RmqService, PARTS_QUEUE } from "inq-shared-lib";
+import { NestFactory, HttpAdapterHost } from "@nestjs/core";
+import { RmqService, PARTS_QUEUE, ValidationPipe, AllExceptionsFilter } from "inq-shared-lib";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
@@ -10,6 +10,9 @@ async function bootstrap() {
   app.connectMicroservice(rmqService.getOptions(PARTS_QUEUE));
   await app.startAllMicroservices();
   await app.listen(PORT, () => console.log(`Started PARTS server on port ${PORT}...🚀🌟 `));
+  app.useGlobalPipes(new ValidationPipe());
+  const httpAdapter = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 }
 
 bootstrap();

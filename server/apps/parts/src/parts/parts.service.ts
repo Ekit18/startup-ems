@@ -2,13 +2,13 @@ import { Injectable, HttpException, HttpStatus, Inject } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { InjectModel } from "@nestjs/sequelize";
 import { CarService } from "apps/car/src/car/car.service";
-import { Part, CarsParts, GetPartsDTO, CreatePartDTO, UpdatePartDTO } from "inq-shared-lib";
+import { Part, CarsParts, GetPartsDTO, CreatePartDTO, UpdatePartDTO, CAR_QUEUE } from "inq-shared-lib";
 import { lastValueFrom } from "rxjs";
 
 @Injectable()
 export class PartsService {
     constructor(@InjectModel(Part) private partRepository: typeof Part,
-        @Inject('car') private CarClient: ClientProxy,
+        @Inject(CAR_QUEUE) private CarClient: ClientProxy,
         @InjectModel(CarsParts) private carsParts: typeof CarsParts) { }
 
     async getAllPartsByCarID(getPartsDTO: GetPartsDTO) {

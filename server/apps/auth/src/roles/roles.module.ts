@@ -1,5 +1,5 @@
 import { Module, forwardRef } from "@nestjs/common";
-import { Role, User, UserRoles } from "inq-shared-lib";
+import { JWTGuardRegisterModule, Role, User, UserRoles } from "inq-shared-lib";
 import { AuthModule } from "../auth/auth.module";
 import { RolesController } from "./roles.controller";
 import { RolesService } from "./roles.service";
@@ -10,7 +10,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
   controllers: [RolesController],
   imports: [
     SequelizeModule.forFeature([Role, User, UserRoles]),
-    forwardRef(() => AuthModule)
+    JWTGuardRegisterModule.register(),
   ],
   exports: [
     RolesService

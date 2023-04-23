@@ -8,6 +8,10 @@ import { CarOperationRmqController } from "./car-operation/car-operation-rmq.con
 import { CarServicesRmqController } from "./car-service/car-service-rmq.controller";
 import { CrashesRmqController } from "./crashes/crashes-rmq.controller";
 import { RepairsHistoryRmqController } from "./repairs-history/repairs-history-rmq.controller";
+import { CarOperationModule } from "./car-operation/car-operation.module";
+import { CrashesModule } from "./crashes/crashes.module";
+import { RepairsHistoryModule } from "./repairs-history/repairs-history.module";
+import { CarServiceModule } from "./car-service/car-service.module";
 
 
 @Module({
@@ -36,10 +40,10 @@ import { RepairsHistoryRmqController } from "./repairs-history/repairs-history-r
             //     }
             // }
         }),
-        CarOperation,
-        CarServices,
-        Crashes,
-        RepairsHistory
+        CarOperationModule,
+        CarServiceModule,
+        CrashesModule,
+        RepairsHistoryModule
     ],
     providers: [
         // {

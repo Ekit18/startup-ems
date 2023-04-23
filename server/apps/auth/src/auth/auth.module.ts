@@ -3,18 +3,14 @@ import { JwtModule } from "@nestjs/jwt";
 import { UsersModule } from "../users/users.module";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
+import { JWTGuardRegisterModule } from "inq-shared-lib";
 
 @Module({
   providers: [AuthService],
   controllers: [AuthController],
   imports: [
     forwardRef(() => UsersModule),
-    JwtModule.register({
-      secret: process.env.PRIVATE_KEY || 'SECRET',
-      signOptions: {
-        expiresIn: '24h'
-      }
-    })
+    JWTGuardRegisterModule.register(),
   ],
   exports: [
     AuthService,

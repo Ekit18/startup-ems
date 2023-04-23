@@ -4,7 +4,7 @@
 import { Injectable, Inject } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { UserCarsDataWithUserCarId, UserCarsService } from "apps/car/src/user-cars/user-cars.service";
-import { Crashes, CreateCrashDTO, UpdateCrashDTO } from "inq-shared-lib";
+import { CAR_QUEUE, Crashes, CreateCrashDTO, UpdateCrashDTO } from "inq-shared-lib";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";
 
@@ -18,7 +18,7 @@ export interface CrashInfo extends UserCarsDataWithUserCarId {
 @Injectable()
 export class CrashesService {
     constructor(@InjectModel(Crashes) private crashRepository: typeof Crashes,
-        @Inject('car') private UserCarClient: ClientProxy) { }
+        @Inject(CAR_QUEUE) private UserCarClient: ClientProxy) { }
 
     async createCrash(dto: CreateCrashDTO) {
         const crash = await this.crashRepository.create(dto);

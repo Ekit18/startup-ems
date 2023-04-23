@@ -8,9 +8,9 @@ export class CardRmqController {
     constructor(private carService: CarService, private readonly rmqService: RmqService) { }
 
     @MessagePattern({ role: "car", cmd: 'getCarById' })
-    findOneByPartId(@Payload() carid: number, @Ctx() context: RmqContext) {
+    findOneByPartId(@Payload() carId: number, @Ctx() context: RmqContext) {
         this.rmqService.ack(context);
-        console.log(carid);
-        return this.carService.getCarById(carid);
+        console.log(carId);
+        return this.carService.getCarById(carId);
     }
 }
