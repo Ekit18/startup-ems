@@ -2,30 +2,18 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_FILTER } from "@nestjs/core";
 import { SequelizeModule } from "@nestjs/sequelize";
-import {
-    AllExceptionsFilter,
-    Car,
-    Part,
-    PartsShop,
-    ShopStockList,
-    RmqService,
-    PartsGuidesAWS,
-    CarsParts,
-    CarOperation,
-    UserCars,
-    User,
-    RepairsHistory,
-    Crashes,
-    UserRoles,
-    Brand,
-    CarServices,
-    Role
-} from "inq-shared-lib";
-import { PartsGuidesAwsModule } from "../../aws/src/parts-guides-aws/parts-guides-aws.module";
-import { PartsGuidesAwsRmqController } from "./parts-guides-aws/parts-guides-aws-rmq.controller";
+import { AllExceptionsFilter, User, Role, UserRoles, Brand, Car, CarOperation, CarServices, CarsParts, Crashes, Part, PartsGuidesAWS, PartsShop, RepairsHistory, ShopStockList, UserCars, RmqModule, RmqService } from "inq-shared-lib";
+import { join } from "path";
+import { BrandModule } from "./brand/brand.module";
+import { CarModule } from "./car/car.module";
+import { UserCarsModule } from "./user-cars/user-cars.module";
+import { BrandRmqController } from "./brand/brand-rmq.controller";
+import { CardRmqController } from "./car/car-rmq.controller";
+import { UserCarsRmqController } from "./user-cars/user-cars-rmq.controller";
+
 
 @Module({
-    controllers: [PartsGuidesAwsRmqController],
+    controllers: [BrandRmqController, CardRmqController, UserCarsRmqController],
     imports: [
         ConfigModule.forRoot({
             envFilePath: ['.env'],
@@ -50,7 +38,9 @@ import { PartsGuidesAwsRmqController } from "./parts-guides-aws/parts-guides-aws
             //     }
             // }
         }),
-        PartsGuidesAwsModule
+        BrandModule,
+        CarModule,
+        UserCarsModule,
     ],
     providers: [
         // {

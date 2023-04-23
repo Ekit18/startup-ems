@@ -1,16 +1,19 @@
 import { ConfigModule } from "@nestjs/config";
-import { Module } from "@nestjs/common";
-import { RmqModule } from "inq-shared-lib";
+import { Module, forwardRef } from "@nestjs/common";
+import { AUTH_QUEUE, RmqModule } from "inq-shared-lib";
 import { TestingController } from "./testing.controller";
 import { TestingService } from "./testing.service";
 
 
 @Module({
-    imports: [ConfigModule.forRoot({
+    imports: [
+        ConfigModule.forRoot({
         isGlobal: true,
         envFilePath: ['.env']
     }),
-        RmqModule],
+        RmqModule.register({ name: AUTH_QUEUE }),
+        forwardRef(() => TestingModule),
+    ],
     controllers: [TestingController],
     providers: [TestingService],
 })

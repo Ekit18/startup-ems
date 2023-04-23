@@ -4,11 +4,11 @@ import { S3Client, DeleteObjectCommand, PutObjectCommand } from '@aws-sdk/client
 import { HttpService } from '@nestjs/axios';
 import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { PartsGuidesAWS, PARTS_QUEUE } from 'inq-shared-lib';
+import { PartsGuidesAWS, PARTS_QUEUE, Part } from 'inq-shared-lib';
 import { FilesErrorObject } from './parts-guides-aws.controller';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from "@nestjs/microservices";
-
+import { lastValueFrom } from 'rxjs';
 @Injectable()
 export class PartsGuidesAwsService {
     constructor(
@@ -58,21 +58,7 @@ export class PartsGuidesAwsService {
     }
 
     async addPartImg(partId: number, fileBuffer: Buffer, fileOriginalname: string) {
-        let part = null;
-        await this.PartsClient.send("findOneByPartId", partId).subscribe(
-            {
-                next(x) {
-                    console.log(`got value ${x}`);
-                    part = x;
-                },
-                error(err) {
-                    console.error(`something wrong occurred: ${err}`);
-                },
-                complete() {
-                    console.log('done');
-                }
-            }
-        );
+        const part: Part = await lastValueFrom(this.PartsClient.send({ cmd: "findOneByPartId" }, partId));
         if (!part) {
             throw new HttpException({ message: 'Part with such id does not exist!' }, HttpStatus.BAD_REQUEST);
         }
@@ -84,21 +70,7 @@ export class PartsGuidesAwsService {
     }
 
     async addGuideImg(partId: number, fileBuffer: Buffer, fileOriginalname: string) {
-        let part = null;
-        await this.PartsClient.send("findOneByPartId", partId).subscribe(
-            {
-                next(x) {
-                    console.log(`got value ${x}`);
-                    part = x;
-                },
-                error(err) {
-                    console.error(`something wrong occurred: ${err}`);
-                },
-                complete() {
-                    console.log('done');
-                }
-            }
-        );
+        const part: Part = await lastValueFrom(this.PartsClient.send({ cmd: "findOneByPartId" }, partId));
         if (!part) {
             throw new HttpException({ message: 'Part with such id does not exist!' }, HttpStatus.BAD_REQUEST);
         }
@@ -112,13 +84,13 @@ export class PartsGuidesAwsService {
     static async checkNSFWFiles(files: Array<Express.Multer.File>, errObj: FilesErrorObject) {
         errObj.isError = false;
         await Promise.all(await files.map(async (file) => {
-                const result = await PartsGuidesAwsService.isNSFW(file.buffer);
-                if (result) {
-                    errObj.isError = true;
-                    errObj.msg = "NSFW detected";
-                }
-                return null;
+            const result = await PartsGuidesAwsService.isNSFW(file.buffer);
+            if (result) {
+                errObj.isError = true;
+                errObj.msg = "NSFW detected";
             }
+            return null;
+        }
         ));
     }
 

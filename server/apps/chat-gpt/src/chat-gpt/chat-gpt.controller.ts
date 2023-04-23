@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get } from "@nestjs/common";
 import { GetModelAnswerDTO, SetModelDTO, SetTemperatureDTO, SetMaxTokensDTO } from "inq-shared-lib";
-import { ChatGptService } from "./chat_gpt.service";
+import { ChatGptService } from "./chat-gpt.service";
 
 @Controller('chat-gpt')
 export class ChatGptController {

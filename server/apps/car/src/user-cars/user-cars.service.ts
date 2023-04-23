@@ -28,7 +28,9 @@ export interface UserCarsDataWithUserCarId extends UserCarsData {
 
 @Injectable()
 export class UserCarsService {
-    constructor(@InjectModel(UserCars) private userCarsRepository: typeof UserCars, private userService: UsersService, private carService: CarService, private brandService: BrandService) { }
+    constructor(@InjectModel(UserCars) private userCarsRepository: typeof UserCars,
+    private userService: UsersService,
+    private carService: CarService, private brandService: BrandService) { }
 
     async createUserCar(dto: CreateUserCarsDto) {
         const user = await this.userService.getUserById(dto.userId);

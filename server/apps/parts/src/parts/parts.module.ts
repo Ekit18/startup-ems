@@ -5,6 +5,7 @@ import { CarModule } from "apps/car/src/car/car.module";
 import { Part, CarsParts, ShopStockList, PartsShop, RmqService } from "inq-shared-lib";
 import { PartsController } from "./parts.controller";
 import { PartsService } from "./parts.service";
+import { PartsRMQController } from "./parts-rmq.controller";
 
 @Module({
   controllers: [PartsController],

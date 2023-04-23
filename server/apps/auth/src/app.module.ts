@@ -8,12 +8,16 @@ import { AuthModule } from "./auth/auth.module";
 import { GoogleAuthModule } from "./auth/google/googleAuth.module";
 import { RolesModule } from "./roles/roles.module";
 import { UsersModule } from "./users/users.module";
+import { AuthRmqController } from "./auth/auth-rmq.controller";
+import { RolesRmqController } from "./roles/roles-rmq.controller";
+import { UsersRmqController } from "./users/users-rmq.controller";
 
 @Module({
-    controllers: [],
+    controllers: [AuthRmqController, RolesRmqController, UsersRmqController],
     imports: [
         ConfigModule.forRoot({
-            envFilePath: ['.env']
+            envFilePath: ['.env'],
+            isGlobal: true,
         }),
         // ServeStaticModule.forRoot({
         //     rootPath: join(__dirname, '..', '/src/', 'static'),

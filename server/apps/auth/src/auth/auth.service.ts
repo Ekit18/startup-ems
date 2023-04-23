@@ -71,4 +71,8 @@ export class AuthService {
         const token = this.generateToken(req.user);
         return token;
     }
+
+    test(data:number) {
+        return data;
+    }
 }

@@ -2,30 +2,14 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_FILTER } from "@nestjs/core";
 import { SequelizeModule } from "@nestjs/sequelize";
-import {
-    AllExceptionsFilter,
-    Car,
-    Part,
-    PartsShop,
-    ShopStockList,
-    RmqService,
-    PartsGuidesAWS,
-    CarsParts,
-    CarOperation,
-    UserCars,
-    User,
-    RepairsHistory,
-    Crashes,
-    UserRoles,
-    Brand,
-    CarServices,
-    Role
-} from "inq-shared-lib";
-import { PartsGuidesAwsModule } from "../../aws/src/parts-guides-aws/parts-guides-aws.module";
-import { PartsGuidesAwsRmqController } from "./parts-guides-aws/parts-guides-aws-rmq.controller";
+import { AllExceptionsFilter, User, Role, UserRoles, Brand, Car, CarOperation, CarServices, CarsParts, Crashes, Part, PartsGuidesAWS, PartsShop, RepairsHistory, ShopStockList, UserCars, RmqModule, RmqService } from "inq-shared-lib";
+import { join } from "path";
+import { ChatGptModule } from "./chat-gpt/chat-gpt.module";
+import { ChatGptRmqController } from "./chat-gpt/chat-gpt-rmq.controller";
+
 
 @Module({
-    controllers: [PartsGuidesAwsRmqController],
+    controllers: [ChatGptRmqController],
     imports: [
         ConfigModule.forRoot({
             envFilePath: ['.env'],
@@ -50,7 +34,7 @@ import { PartsGuidesAwsRmqController } from "./parts-guides-aws/parts-guides-aws
             //     }
             // }
         }),
-        PartsGuidesAwsModule
+        ChatGptModule
     ],
     providers: [
         // {

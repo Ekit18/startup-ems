@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { ChatGptController } from "./chat_gpt.controller";
-import { ChatGptService } from "./chat_gpt.service";
+import { ChatGptController } from "./chat-gpt.controller";
+import { ChatGptService } from "./chat-gpt.service";
 
 @Module({
   controllers: [ChatGptController],

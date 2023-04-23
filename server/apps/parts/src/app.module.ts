@@ -10,19 +10,30 @@ import {
     ShopStockList,
     RmqService,
     PartsGuidesAWS,
-    CarsParts
+    CarsParts,
+    CarOperation,
+    UserCars,
+    User,
+    RepairsHistory,
+    Crashes,
+    UserRoles,
+    Brand,
+    CarServices,
+    Role
 } from "inq-shared-lib";
 import { PartsModule } from "./parts/parts.module";
-import { PartsShopModule } from "./parts_shop/parts-shop.module";
-import { ShopStockListModule } from "./shop_stock_list/shop-stock-list.module";
-import { PartsGuidesAwsModule } from "../../aws/src/parts-guides-aws/parts-guides-aws.module";
-import { ClientsModule } from "@nestjs/microservices";
+import { PartsShopModule } from "./parts-shop/parts-shop.module";
+import { ShopStockListModule } from "./shop-stock-list/shop-stock-list.module";
+import { PartsRMQController } from "./parts/parts-rmq.controller";
+import { PartsShopRMQController } from "./parts-shop/parts-shop-rmq.controller";
+import { ShopStockListRMQController } from "./shop-stock-list/shop-stock-list-rmq.controller";
 
 @Module({
-    controllers: [],
+    controllers: [PartsRMQController, PartsShopRMQController, ShopStockListRMQController],
     imports: [
         ConfigModule.forRoot({
-            envFilePath: ['.env']
+            envFilePath: ['.env'],
+            isGlobal: true,
         }),
         // ServeStaticModule.forRoot({
         //     rootPath: join(__dirname, '..', '/src/', 'static'),
@@ -34,7 +45,7 @@ import { ClientsModule } from "@nestjs/microservices";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [Part, ShopStockList, PartsShop, Car, PartsGuidesAWS, CarsParts],
+            models: [User, Role, UserRoles, Car, Part, CarsParts, UserCars, ShopStockList, PartsShop, CarOperation, PartsGuidesAWS, RepairsHistory, Crashes],
             autoLoadModels: true,
             // dialectOptions: {
             //     ssl: {
@@ -46,7 +57,6 @@ import { ClientsModule } from "@nestjs/microservices";
         PartsModule,
         PartsShopModule,
         ShopStockListModule,
-        PartsGuidesAwsModule
     ],
     providers: [
         // {

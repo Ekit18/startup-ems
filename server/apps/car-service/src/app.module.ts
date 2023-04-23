@@ -1,12 +1,46 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_FILTER } from "@nestjs/core";
-import { ServeStaticModule } from "@nestjs/serve-static";
-import { AllExceptionsFilter } from "inq-shared-lib";
+import { SequelizeModule } from "@nestjs/sequelize";
+import { AllExceptionsFilter, User, Role, UserRoles, Brand, Car, CarOperation, CarServices, CarsParts, Crashes, Part, PartsGuidesAWS, PartsShop, RepairsHistory, ShopStockList, UserCars, RmqModule, RmqService } from "inq-shared-lib";
 import { join } from "path";
+import { CarOperationRmqController } from "./car-operation/car-operation-rmq.controller";
+import { CarServicesRmqController } from "./car-service/car-service-rmq.controller";
+import { CrashesRmqController } from "./crashes/crashes-rmq.controller";
+import { RepairsHistoryRmqController } from "./repairs-history/repairs-history-rmq.controller";
+
 
 @Module({
-    controllers: [],
+    controllers: [CarOperationRmqController, CarServicesRmqController, CrashesRmqController, RepairsHistoryRmqController],
+    imports: [
+        ConfigModule.forRoot({
+            envFilePath: ['.env'],
+            isGlobal: true,
+        }),
+        // ServeStaticModule.forRoot({
+        //     rootPath: join(__dirname, '..', '/src/', 'static'),
+        // }),
+        SequelizeModule.forRoot({
+            dialect: 'postgres',
+            host: process.env.POSTGRES_HOST,
+            port: Number(process.env.POSTGRES_PORT),
+            username: process.env.POSTGRES_USER,
+            password: process.env.POSTGRES_PASSWORD,
+            database: process.env.POSTGRES_DB,
+            models: [User, Role, UserRoles, Brand, Car, Part, CarsParts, UserCars, ShopStockList, PartsShop, CarServices, CarOperation, PartsGuidesAWS, RepairsHistory, Crashes],
+            autoLoadModels: true,
+            // dialectOptions: {
+            //     ssl: {
+            //         require: true,
+            //         rejectUnauthorized: false,
+            //     }
+            // }
+        }),
+        CarOperation,
+        CarServices,
+        Crashes,
+        RepairsHistory
+    ],
     providers: [
         // {
         //     provide: APP_GUARD,
@@ -20,14 +54,14 @@ import { join } from "path";
             provide: APP_FILTER,
             useClass: AllExceptionsFilter,
         },
+        {
+            provide: RmqService,
+            useFactory: (configService: ConfigService) => {
+                console.log(`POSTGRES:::::::${process.env.POSTGRES_HOST}`);
+                return new RmqService(configService);
+            },
+            inject: [ConfigService],
+        },
     ],
-    imports: [
-        ConfigModule.forRoot({
-            envFilePath: ['.env']
-        }),
-        ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '..', '/src/', 'static'),
-        }),
-    ]
 })
-export class CarServiceModule { }
+export class AppModule { }
