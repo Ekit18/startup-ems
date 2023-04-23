@@ -7,12 +7,14 @@
 //     bodyType: typeof Car.prototype.bodyType;
 //     year: typeof Car.prototype.year;
 
-import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
+import { Injectable, HttpException, HttpStatus, Inject } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { UsersService } from "apps/auth/src/users/users.service";
-import { CarCreationAttrs, UserCarsCreationAttrs, UserCars, User, CreateUserCarsDto, GetUserCar, updateMileage } from "inq-shared-lib";
+import { CarCreationAttrs, UserCarsCreationAttrs, UserCars, User, CreateUserCarsDto, GetUserCar, updateMileage, AUTH_QUEUE } from "inq-shared-lib";
 import { BrandService } from "../brand/brand.service";
 import { CarService } from "../car/car.service";
+import { lastValueFrom } from "rxjs";
+import { ClientProxy } from "@nestjs/microservices";
 
 // }
 export interface UserCarsData extends Omit<CarCreationAttrs, 'brandId'>, Pick<UserCarsCreationAttrs, 'carMileage'> {
@@ -29,11 +31,11 @@ export interface UserCarsDataWithUserCarId extends UserCarsData {
 @Injectable()
 export class UserCarsService {
     constructor(@InjectModel(UserCars) private userCarsRepository: typeof UserCars,
-    private userService: UsersService,
-    private carService: CarService, private brandService: BrandService) { }
+        @Inject(AUTH_QUEUE) private UserClient: ClientProxy,
+        private carService: CarService, private brandService: BrandService) { }
 
     async createUserCar(dto: CreateUserCarsDto) {
-        const user = await this.userService.getUserById(dto.userId);
+        const user = await lastValueFrom(this.UserClient.send({ role: "user", cmd: "findUserById" }, dto.userId));
         const car = await this.carService.getCarById(dto.carId);
         if (!user || !car) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
@@ -43,7 +45,7 @@ export class UserCarsService {
     }
 
     async getAllUserCars(userId: number): Promise<UserCarsDataWithUserCarId[]> {
-        const user = await this.userService.getUserById(userId);
+        const user = await lastValueFrom(this.UserClient.send({ role: "user", cmd: "findUserById" }, userId));
         if (!user) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
@@ -64,7 +66,7 @@ export class UserCarsService {
         const brand = await this.brandService.getBrandById(carData.get().brandId);
         delete carData.get().brandId;
 
-        const user = await this.userService.getUserById(userCar.userId);
+        const user = await await lastValueFrom(this.UserClient.send({ role: "user", cmd: "findUserById" }, userCar.userId));
 
         return { ...carData.get(), brand: brand.brand, carMileage: userCar.carMileage, userCarId: userCar.id, user: user.email, };
     }
@@ -77,7 +79,7 @@ export class UserCarsService {
     }
 
     async getUserCar(dto: GetUserCar): Promise<UserCarsData> {
-        const user = await this.userService.getUserById(dto.userId);
+        const user = await await lastValueFrom(this.UserClient.send({ role: "user", cmd: "findUserById" }, dto.userId));
         const checkCar = await this.carService.getCarById(dto.carId);
         if (!user || !checkCar) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
@@ -99,7 +101,7 @@ export class UserCarsService {
 
     async getUserCarById(id: number): Promise<UserCarsData> {
         const userCar = await this.userCarsRepository.findOne({ where: { id } });
-        const user = await this.userService.getUserById(userCar.userId);
+        const user = await await lastValueFrom(this.UserClient.send({ role: "user", cmd: "findUserById" }, userCar.userId));
         const checkCar = await this.carService.getCarById(userCar.carId);
         if (!user || !checkCar) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);

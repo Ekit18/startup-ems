@@ -7,10 +7,10 @@ import { CarService } from './car.service';
 export class CardRmqController {
     constructor(private carService: CarService, private readonly rmqService: RmqService) { }
 
-    // @MessagePattern({ role: "auth", cmd: 'test' })
-    // findOneByPartId(@Payload() data: number, @Ctx() context: RmqContext) {
-    //     this.rmqService.ack(context);
-    //     console.log(data);
-    //     return this.authService.test(data);
-    // }
+    @MessagePattern({ role: "car", cmd: 'getCarById' })
+    findOneByPartId(@Payload() carid: number, @Ctx() context: RmqContext) {
+        this.rmqService.ack(context);
+        console.log(carid);
+        return this.carService.getCarById(carid);
+    }
 }

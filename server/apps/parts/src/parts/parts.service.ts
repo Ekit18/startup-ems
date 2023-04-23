@@ -1,20 +1,22 @@
-import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
+import { Injectable, HttpException, HttpStatus, Inject } from "@nestjs/common";
+import { ClientProxy } from "@nestjs/microservices";
 import { InjectModel } from "@nestjs/sequelize";
 import { CarService } from "apps/car/src/car/car.service";
 import { Part, CarsParts, GetPartsDTO, CreatePartDTO, UpdatePartDTO } from "inq-shared-lib";
+import { lastValueFrom } from "rxjs";
 
 @Injectable()
 export class PartsService {
     constructor(@InjectModel(Part) private partRepository: typeof Part,
-        private carService: CarService,
+        @Inject('car') private CarClient: ClientProxy,
         @InjectModel(CarsParts) private carsParts: typeof CarsParts) { }
 
     async getAllPartsByCarID(getPartsDTO: GetPartsDTO) {
-        const candidateCar = await this.carService.getCarById(getPartsDTO.carId);
+        const candidateCar = await lastValueFrom(this.CarClient.send({ role: "car", cmd: 'getCarById' }, getPartsDTO.carId));
         if (!candidateCar) {
             throw new HttpException({ message: 'Car with such parts does not exist in the system' }, HttpStatus.BAD_REQUEST);
         }
-        return (await this.carService.getCarById(getPartsDTO.carId)).parts;
+        return candidateCar.parts;
     }
     getPartById(partId: number) {
         return this.partRepository.findOne({ where: { partId }, include: { all: true } });
@@ -25,7 +27,7 @@ export class PartsService {
             throw new HttpException({ message: 'Part with such name already exists' }, HttpStatus.BAD_REQUEST);
         }
         const part = await this.partRepository.create({ brand: createPartDTO.brand, name: createPartDTO.name, type: createPartDTO.type });
-        const car = await this.carService.getCarById(createPartDTO.carId);
+        const car = await lastValueFrom(this.CarClient.send({ role: "car", cmd: 'getCarById' }, createPartDTO.carId));
         await part.$set('cars', [car.id]);
         part.cars = [car];
         return part;

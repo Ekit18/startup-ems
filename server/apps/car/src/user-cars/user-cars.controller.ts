@@ -29,7 +29,6 @@ export class UserCarsController {
     @UseGuards(JwtAuthGuard)
     @Get('all-users')
     getAllUsers() {
-        console.log("\nHERERERRRRRRRRRRRRRRRRRRRRRRRRRRRRRR\n");
         return this.userCarsService.getAllUserIds();
     }
 

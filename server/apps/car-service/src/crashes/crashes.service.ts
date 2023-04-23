@@ -1,10 +1,12 @@
 
 // Changed from UserCarsData to UserCarsDataWithUserCarId because return object of getAllUserCrashes() corresponds to it,
 
-import { Injectable } from "@nestjs/common";
+import { Injectable, Inject } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { UserCarsDataWithUserCarId, UserCarsService } from "apps/car/src/user-cars/user-cars.service";
 import { Crashes, CreateCrashDTO, UpdateCrashDTO } from "inq-shared-lib";
+import { ClientProxy } from "@nestjs/microservices";
+import { lastValueFrom } from "rxjs";
 
 // and due to additional userCarId field it couldn't relate to CrashInfo and hence was returned as object of unknown type
 export interface CrashInfo extends UserCarsDataWithUserCarId {
@@ -15,7 +17,8 @@ export interface CrashInfo extends UserCarsDataWithUserCarId {
 
 @Injectable()
 export class CrashesService {
-    constructor(@InjectModel(Crashes) private crashRepository: typeof Crashes, private userCarsRepository: UserCarsService) { }
+    constructor(@InjectModel(Crashes) private crashRepository: typeof Crashes,
+        @Inject('car') private UserCarClient: ClientProxy) { }
 
     async createCrash(dto: CreateCrashDTO) {
         const crash = await this.crashRepository.create(dto);
@@ -50,7 +53,7 @@ export class CrashesService {
     }
 
     async getAllUserCrashes(userId: number): Promise<(CrashInfo | UserCarsDataWithUserCarId)[]> {
-        const userCars: UserCarsDataWithUserCarId[] = await this.userCarsRepository.getAllUserCars(userId);
+        const userCars: UserCarsDataWithUserCarId[] = await lastValueFrom(this.UserCarClient.send({ role: "user-cars", cmd: "findAllUserCars" }, userId));
         const carsCrashInfo = await Promise.all(userCars.map(async (car) => {
             const crashInfo = await this.getCrashByUserCarId(car.userCarId);
             if (!crashInfo) {
@@ -58,16 +61,10 @@ export class CrashesService {
             }
             return { ...car, ...crashInfo } as CrashInfo;
         }));
-        // console.log("ALL USER CRASHES:\n");
-        // carsCrashInfo.forEach((crash: CrashInfo) => {
-        //     console.log(crash.userCarId);
-        //     console.log(crash.description);
-        // });
-        // console.log("\n");
         return carsCrashInfo;
     }
     async getUserCrash(userCarId: number): Promise<CrashInfo> {
-        const userCar: UserCarsDataWithUserCarId = await this.userCarsRepository.getUserCarForCrashInfo(userCarId);
+        const userCar: UserCarsDataWithUserCarId = await lastValueFrom(this.UserCarClient.send({ role: "user-cars", cmd: "getUserCarForCrashInfo" }, userCarId));
         const crashInfo = await this.getCrashByUserCarId(userCar.userCarId);
         return { ...userCar, ...crashInfo } as CrashInfo;
     }

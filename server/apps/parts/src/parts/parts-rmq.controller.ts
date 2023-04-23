@@ -7,8 +7,8 @@ import { Part, RmqService } from "inq-shared-lib";
 export class PartsRMQController {
     constructor(private partService: PartsService, private readonly rmqService: RmqService) { }
 
-    @MessagePattern({ cmd: 'findOneByPartId' })
-    findOneByPartId(@Payload() partId: number, @Ctx() context: RmqContext): Promise<Part> {
+    @MessagePattern({ role: "parts", cmd: "findOneById" })
+    findOneById(@Payload() partId: number, @Ctx() context: RmqContext): Promise<Part> {
         this.rmqService.ack(context);
         console.log("TESTSTTTS");
         return this.partService.getPartById(partId);
