@@ -13,8 +13,7 @@ import { JWTGuardRegisterModule } from "inq-shared-lib";
     JWTGuardRegisterModule.register(),
   ],
   exports: [
-    AuthService,
-    JwtModule
+    AuthService
   ]
 })
 export class AuthModule { }
