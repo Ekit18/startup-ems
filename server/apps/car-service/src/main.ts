@@ -7,10 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const rmqService = app.get<RmqService>(RmqService);
   app.connectMicroservice(rmqService.getOptions(CAR_SERVICE_QUEUE));
-  await app.startAllMicroservices();
-  await app.listen(PORT, () => console.log(`Started CAR-SERVICE server on port ${PORT}...🚀🌟 `));
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   const httpAdapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+  await app.startAllMicroservices();
+  await app.listen(PORT, () => console.log(`Started CAR-SERVICE server on port ${PORT}...🚀🌟 `));
 }
 bootstrap();

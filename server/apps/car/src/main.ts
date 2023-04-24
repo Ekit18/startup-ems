@@ -6,6 +6,7 @@ async function bootstrap() {
   const PORT = process.env.PORT || 5002;
   const app = await NestFactory.create(AppModule);
   const rmqService = app.get<RmqService>(RmqService);
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   const httpAdapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
