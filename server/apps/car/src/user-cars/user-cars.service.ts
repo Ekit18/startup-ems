@@ -112,8 +112,8 @@ export class UserCarsService {
         return { ...carInfo.get(), brand: brand.brand, carMileage: userCar.carMileage };
     }
 
-    // async getUserByUserCarId(userId: number) { ?????
-    //     const userCar = await this.userCarsRepository.findOne({ where: { userId } });
-    //     return userCar;
-    // }
+    async getUserByUserCarId(userId: number) {
+        const userCar = await this.userCarsRepository.findOne({ where: { userId } });
+        return userCar;
+    }
 }

@@ -14,7 +14,7 @@ import { WsJwtAuthGuard, WsExceptionFilter, WsAuthMiddleware } from 'inq-shared-
 import { Server, Socket } from 'socket.io';
 import { RepairsHistoryService } from './repairs-history.service';
 
-@WebSocketGateway(5001, { cors: "*" })
+@WebSocketGateway({ cors: "*" })
 @UseGuards(WsJwtAuthGuard)
 export class RepairsHistoryGateway {
     @WebSocketServer()

@@ -8,11 +8,11 @@ import {
     WebSocketGateway,
     WebSocketServer,
 } from '@nestjs/websockets';
-import { WsJwtAuthGuard, WsExceptionFilter, WsAuthMiddleware, WsValidationPipe, CreateCrashDTO } from 'inq-shared-lib';
+import { WsJwtAuthGuard, WsExceptionFilter, WsAuthMiddleware, WsValidationPipe, CreateCrashDTO, UpdateCrashDTO } from 'inq-shared-lib';
 import { Server, Socket } from 'socket.io';
-import { CrashesService } from './crashes.service';
+import { CrashInfo, CrashesService } from './crashes.service';
 
-@WebSocketGateway(5001, { cors: "*" })
+@WebSocketGateway({ cors: "*" })
 @UseGuards(WsJwtAuthGuard)
 export class RepairsHistoryGateway {
     @WebSocketServer()

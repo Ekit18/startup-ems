@@ -26,13 +26,13 @@ export class CarServicesController {
         return this.carServiceService.getCarServiceById(id);
     }
 
-    // @ApiOperation({ summary: 'Getting car services' })
-    // @ApiResponse({ status: 200, type: Array<CarService> })
-    // @UseGuards(JwtAuthGuard)
-    // @Get()
-    // getCarServices() {
-    //     return this.carServiceService.getCarServices();
-    // }
+    @ApiOperation({ summary: 'Getting car services' })
+    @ApiResponse({ status: 200, type: Array<CarService> })
+    @UseGuards(JwtAuthGuard)
+    @Get()
+    getCarServices() {
+        return this.carServiceService.getCarServices();
+    }
 
     @ApiOperation({ summary: 'Updating car service in database' })
     @ApiResponse({ status: 200, type: Number })

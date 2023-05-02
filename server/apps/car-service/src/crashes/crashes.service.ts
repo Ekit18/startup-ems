@@ -21,6 +21,7 @@ export class CrashesService {
         @Inject(CAR_QUEUE) private UserCarClient: ClientProxy) { }
 
     async createCrash(dto: CreateCrashDTO) {
+        console.log(dto);
         const crash = await this.crashRepository.create(dto);
         return crash;
     }
