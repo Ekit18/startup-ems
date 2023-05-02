@@ -4,7 +4,7 @@ import React, { useContext, useState } from 'react'
 
 import { Button, Card, Container, Form, Row } from "react-bootstrap"
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { login, registration } from '../http/userApi';
+import { login, registration } from '../http/authApi/userApi';
 import { Context } from '../index';
 import { LOGIN_ROUTE, MAIN_ROUTE, REGISTRATION_ROUTE } from '../utils/constants';
 import GoogleAuth from './GoogleAuth';

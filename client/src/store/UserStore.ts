@@ -43,9 +43,6 @@ export default class UserStore {
     }
 
     get userId() {
-        if (!this._user.id) {
-            throw new Error("no userId")
-        }
         return this._user.id
     }
 

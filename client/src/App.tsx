@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Context } from '.';
-import { check } from './http/userApi';
+import { check } from './http/authApi/userApi';
 import AppRouter from './components/AppRouter';
 import { UserData } from './store/UserStore';
 

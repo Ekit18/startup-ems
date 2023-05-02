@@ -42,7 +42,7 @@ export const RepairSigning: React.FC = observer(() => {
     const [socket, setSocket] = useState<Socket>()
 
     useEffect(() => {
-        const socket = io("http://localhost:5001", {
+        const socket = io(process.env.REACT_APP_CAR_SERVICE_API_URL || "", {
             extraHeaders: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }

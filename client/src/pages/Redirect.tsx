@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { Context } from "..";
-import { googleLogin } from "../http/userApi";
+import { googleLogin } from "../http/authApi/userApi";
 import { UserData } from "../store/UserStore";
 import { MAIN_ROUTE } from "../utils/constants";
 

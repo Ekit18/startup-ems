@@ -1,6 +1,6 @@
-import { $authHost, $host } from './index';
+import { $authHost, $host } from '../index';
 import jwt_decode from 'jwt-decode';
-import { UserData } from '../store/UserStore';
+import { UserData } from '../../store/UserStore';
 
 
 export const registration = async (email: string, password: string): Promise<UserData> => {
@@ -27,7 +27,3 @@ export const check = async (): Promise<UserData> => {
     return jwt_decode(data.token);
 };
 
-export const getAllUserIds = async (): Promise<number[]> => {
-    const { data } = await $authHost.get('user-cars/all-users/');
-    return data;
-};
