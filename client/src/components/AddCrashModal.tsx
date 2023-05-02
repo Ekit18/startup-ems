@@ -59,9 +59,10 @@ export const AddCrashModal: React.FC<CrashModalProps> = observer(({ show, setSho
                 </Form.Text>
                 <Form.Select name="userCarId" onChange={(e) => handleInputChange(e)}>
                     <option >Select Your car</option>
-                    {/* {userCars.filter((car) => !((car as CrashInfo).location)).map((car) =>*/}
-                    {/*    <option value={car.userCarId} >{car.userCarId}-{car.brand}-{car.model}-{car.year}-{car.fuelType}-{car.carMileage}</option>*/}
-                    {/* )} */}
+                    {/* eslint-disable-next-line no-extra-parens */}
+                    {userCars.filter((car) => !(car as CrashInfo).location).map((car) =>
+                        <option key={car.id} value={car.userCarId} >{car.userCarId}-{car.brand}-{car.model}-{car.year}-{car.fuelType}-{car.carMileage}</option>
+                    )}
                 </Form.Select>
                 <Form.Text id="passwordHelpBlock" muted>
                     Your broken car.

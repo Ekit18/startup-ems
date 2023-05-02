@@ -256,7 +256,7 @@
 import { Container, Row, Col, Button, Modal } from 'react-bootstrap';
 import { Socket, io } from 'socket.io-client';
 import { Context } from '../..';
-import { getAllCrashes, getCrashesByUserId } from '../../http/crashesApi';
+import { getAllCrashes, getCrashesByUserId } from '../../http/carServiceApi/crashesApi';
 
 import React, { useContext, useEffect, useState, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
@@ -269,6 +269,9 @@ import { MAP_ZOOM, MARKER_ZOOM } from '../../utils/constants';
 import { CrashInfo, CarInfo } from '../CrashMap';
 import { ServiceAddCrashModal } from './ServiceAddCrashModal';
 import { CrashDetails } from '../CrashDetails';
+import { CrashesMarkers } from './markers/CrashesMarkers';
+import { CrashesList } from './markers/CrashesList';
+import { MapClickComponent } from './markers/MapClickComponent';
 
 interface CrashMapProps {
   test?: string;
@@ -278,40 +281,22 @@ export interface CrashModalState {
   show: boolean,
   latLngTuple: LatLngTuple
 }
-export const ServiceCrashMap: React.FC<CrashMapProps> = observer(({ test }) => {
+export const ServiceCrashMap: React.FC<CrashMapProps> = observer(() => {
   const [markers, setMarkers] = useState<(CrashInfo | CarInfo)[]>([]);
   const [clickedMarker, setClickedMarker] = useState<number | null>(null);
   const [crashModal, setCrashModal] = useState<CrashModalState>({ show: false, latLngTuple: [-1, -1] })
   const mapRef = useRef<L.Map | null>(null)
 
   const [socket, setSocket] = useState<Socket>();
-  const icon = L.icon({
-    iconSize: [25, 41],
-    iconAnchor: [10, 41],
-    popupAnchor: [2, -40],
-    iconUrl: "https://unpkg.com/leaflet@1.6/dist/images/marker-icon.png",
-    shadowUrl: "https://unpkg.com/leaflet@1.6/dist/images/marker-shadow.png",
-  });
 
 
   useEffect(() => {
     if (!markers.length) {
-      getAllCrashes().then((data: (CrashInfo | CarInfo)[][]) => {
-        const dataFlattened = data.flat()
-        console.log(dataFlattened)
-        const dataWithLatLng: Required<CrashInfo | CarInfo>[] = dataFlattened.map(
-          (crash) => {
-            if ((crash as CrashInfo).location) {
-              const [lat, lng] = (crash as CrashInfo).location.split(" ").map((val) => parseFloat(val));
-              return { ...crash, latLngTuple: [lat, lng] };
-            }
-            return crash;
-          })
-        setMarkers(dataWithLatLng);
+      getAllCrashes().then((data: Required<CrashInfo | CarInfo>[]) => {
+        setMarkers(data);
       });
     }
-    // alert(markers.length)
-    const socket = io("http://localhost:5001", {
+    const socket = io(process.env.REACT_APP_CAR_SERVICE_API_URL || "", {
       extraHeaders: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
@@ -326,7 +311,6 @@ export const ServiceCrashMap: React.FC<CrashMapProps> = observer(({ test }) => {
           if (carOrCrash.userCarId !== userCarId) {
             return { ...carOrCrash };
           }
-          // eslint-disable-next-line no-undefined
           return {
             ...carOrCrash, location: '', description: '', latLngTuple: []
           };
@@ -349,7 +333,6 @@ export const ServiceCrashMap: React.FC<CrashMapProps> = observer(({ test }) => {
   const handleAddCrashEmit = (modalData: ModalData): void => {
     // { ...modalData, location: crashModal.latLngTuple.join(", ") }
     const location = crashModal.latLngTuple.join(", ")
-    // eslint-disable-next-line max-statements-per-line
     let createdAt: Date = new Date();
     socket?.emitWithAck('user_add_crash', { ...modalData, location })!.then(
       (dateStr) => {
@@ -381,63 +364,32 @@ export const ServiceCrashMap: React.FC<CrashMapProps> = observer(({ test }) => {
     })
   }
 
-  interface ClickInterface {
-    setMarkers: typeof setMarkers
-  }
-
-  const MyComponent: React.FC<ClickInterface> = ({ setMarkers }) => {
-    const map = useMapEvents({
-      click: (e) => {
-        // const { lat, lng } = e.latlng;
-        setCrashModal({ show: true, latLngTuple: [e.latlng.lat, e.latlng.lng] })
-        // setMarkers((prevMarker) => [...prevMarker, [lat, lng]]);
-        // TODO:
-        // Make modal show, then user fills form, clicks `submit`, and then it is checked,
-        // and then marker with such data added
-      }
-    });
-    return null;
-  }
-
   const handleClickMarker = (index: number) => {
     setClickedMarker(index);
   };
+
+
   return (
     <>
       <Container fluid>
         <Row>
           <Col md={4} style={{ overflowY: "scroll", height: "100vh" }}>
-            {
-              markers.filter((marker) => {
-                return Boolean((marker as CrashInfo).description)
-              }).map((marker, index) => {
-                return (
-                  <CrashDetails marker={marker} index={index} handleClickMarker={handleClickMarker} handleDeleteCrashEmit={handleDeleteCrashEmit} isListDetails={true} />
-                )
-              })}
+            <CrashesList handleDeleteCrashEmit={handleDeleteCrashEmit} markers={markers} handleClickMarker={handleClickMarker}/>
           </Col>
           <Col md={8}>
             <MapContainer style={{ height: "100vh" }} center={[46.963664, 32.010681]} zoom={MAP_ZOOM} ref={mapRef}>
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <MyComponent setMarkers={setMarkers} />
+              <MapClickComponent clickedMarker={clickedMarker} setCrashModal={setCrashModal}/>
               <MarkerClusterGroup>
-                {markers.filter((marker) => Boolean((marker as CrashInfo).description)).map((marker, index) =>
-                  <Marker key={index} position={(marker as Required<CrashInfo>).latLngTuple} icon={icon} ref={(ref) => {
-                    if (ref && clickedMarker === index) {
-                      ref.openPopup();
-                      if (mapRef.current) {
-                        mapRef.current.setView((marker as Required<CrashInfo>).latLngTuple, MARKER_ZOOM)
-                      }
-                      setClickedMarker(null);
-                    }
-                  }}>
-                    <Popup>
-                      <CrashDetails marker={marker} index={index} handleClickMarker={handleClickMarker} handleDeleteCrashEmit={handleDeleteCrashEmit} isListDetails={false} />
-                    </Popup>
-                  </Marker>
-                )}
+                <CrashesMarkers
+                clickedMarker={clickedMarker}
+                handleClickMarker={handleClickMarker}
+                handleDeleteCrashEmit={handleDeleteCrashEmit}
+                mapRef={mapRef}
+                markers={markers}
+                setClickedMarker={setClickedMarker}/>
               </MarkerClusterGroup>
             </MapContainer>
 

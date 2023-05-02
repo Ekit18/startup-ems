@@ -78,8 +78,8 @@ export const ServiceAddCrashModal: React.FC<CrashModalProps> = observer(({ show,
                 </Form.Text>
                 <Form.Select name="user" onChange={(e) => handleUserChange(e)}>
                     <option >Select User</option>
-                    {Array.from(new Set(userCars.filter((car) => !((car as CrashInfo).location)).map((car) => car.user))).map((user) =>
-                        <option value={user}>{user}</option>
+                    {Array.from(new Set(userCars.filter((car) => !((car as CrashInfo).location)).map((car) => car.user))).map((user, index) =>
+                        <option key={index} value={user}>{user}</option>
                     )}
                 </Form.Select>
                 <Form.Text id="passwordHelpBlock" muted>
@@ -88,7 +88,7 @@ export const ServiceAddCrashModal: React.FC<CrashModalProps> = observer(({ show,
                 <Form.Select name="userCarId" onChange={(e) => handleInputChange(e)}>
                     <option >Select Your car</option>
                     {userCars.filter((car) => !((car as CrashInfo).location) && car.user === user).map((car) =>
-                        <option value={car.userCarId} >{car.userCarId}-{car.brand}-{car.model}-{car.year}-{car.fuelType}-{car.carMileage}</option>
+                        <option key={car.id} value={car.userCarId} >{car.userCarId}-{car.brand}-{car.model}-{car.year}-{car.fuelType}-{car.carMileage}</option>
                     )}
                 </Form.Select>
                 <Form.Text id="passwordHelpBlock" muted>

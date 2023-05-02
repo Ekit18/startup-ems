@@ -1,7 +1,7 @@
 /* eslint-disable no-undefined */
 /* eslint-disable no-extra-parens */
 import { observer } from "mobx-react-lite";
-import { Button } from "react-bootstrap";
+import { Button, Row, Col } from "react-bootstrap";
 import { CarInfo, CrashInfo } from "./CrashMap"
 
 interface DetailsProps {
@@ -30,7 +30,17 @@ export const CrashDetails: React.FC<DetailsProps> = observer(({ marker, index, h
                 FuelType: {marker.fuelType}<br />
                 Year: {marker.year}<br />
             </h4>
-            <Button variant={'success'} onClick={() => handleDeleteCrashEmit(marker.userCarId)}>Mark solved</Button>
+            <Row>
+            <Col md={12} className="mb-3">
+            <Button className="w-100" variant={'danger'} onClick={() => handleDeleteCrashEmit(marker.userCarId)}>Delete</Button>
+            </Col>
+            <Col md={12} className="mb-3">
+            <Button className="w-100" variant={'success'} onClick={() => console.log("STO!!!")} disabled>Mark solved</Button>
+            </Col>
+            <Col md={12} className="mb-3">
+            <Button className="w-100" variant={'primary'} onClick={() => console.log("STO!!!")} disabled>Choose Car service station</Button>
+            </Col>
+            </Row>
             <hr />
 
         </div>
