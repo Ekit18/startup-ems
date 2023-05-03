@@ -1,7 +1,16 @@
-import { Controller, UseGuards, Get, Param, Post, Body, Put, Delete } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from "@nestjs/swagger";
-import { Part, JwtAuthGuard, GetPartsDTO, GetPartDetailsDTO, Roles, RolesGuard, CreatePartDTO, UpdatePartDTO } from "inq-shared-lib";
-import { PartsService } from "./parts.service";
+import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from "@nestjs/common";
+import {ApiOperation, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {
+    CreatePartDTO,
+    GetPartDetailsDTO,
+    GetPartsDTO,
+    JwtAuthGuard,
+    Part,
+    Roles,
+    RolesGuard,
+    UpdatePartDTO
+} from "inq-shared-lib";
+import {PartsService} from "./parts.service";
 
 @ApiTags("Parts")
 @Controller('parts')
@@ -22,8 +31,6 @@ export class PartsController {
         return this.partService.getPartById(getPartDetailsDTO.partId);
     }
 
-    @ApiOperation({ summary: 'Add part to the database. Returns added Part' })
-    @ApiResponse({ status: 200, type: Part })
     @Roles("CARSERVICE", "PARTSHOP")
     @UseGuards(RolesGuard)
     @Post()
@@ -31,7 +38,7 @@ export class PartsController {
         return this.partService.createPart(createPartDTO);
     }
 
-    @ApiOperation({ summary: 'Update part in the database. Returns a number of updated parts' })
+    @ApiOperation({ summary: 'Update part inS the database. Returns a number of updated parts' })
     @ApiResponse({ status: 200, type: [Number] })
     @Roles("CARSERVICE", "PARTSHOP")
     @UseGuards(RolesGuard)

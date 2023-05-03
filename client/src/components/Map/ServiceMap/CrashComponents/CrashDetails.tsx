@@ -1,21 +1,22 @@
 /* eslint-disable no-undefined */
 /* eslint-disable no-extra-parens */
-import { observer } from "mobx-react-lite";
-import { Button, Row, Col } from "react-bootstrap";
-import { CarInfo, CrashInfo } from "./CrashMap"
+import {observer} from "mobx-react-lite";
+import {Button, Col, Row} from "react-bootstrap";
+import {CarInfo, CrashInfo} from "../../UserMap/CrashMap"
 
 interface DetailsProps {
     marker: CrashInfo | CarInfo,
     index: number,
     isListDetails: boolean
     handleDeleteCrashEmit: (userCarId: number) => void,
-    handleClickMarker?: (index: number) => void,
+    handleClickMarker: (index: number) => void,
+    handleChooseCarServiceModeEmit: (flag:boolean) => void
 }
-export const CrashDetails: React.FC<DetailsProps> = observer(({ marker, index, handleClickMarker, handleDeleteCrashEmit, isListDetails }) => {
+export const CrashDetails: React.FC<DetailsProps> = observer(({ marker, index, handleClickMarker, handleDeleteCrashEmit, isListDetails, handleChooseCarServiceModeEmit }) => {
     const formattedDate = new Date(marker.date).toUTCString();
     return (
         <div onClick={isListDetails
-            ? () => handleClickMarker!(index)
+            ? () => handleClickMarker(index)
             : undefined}>
             <hr />
             <h4>
@@ -38,7 +39,7 @@ export const CrashDetails: React.FC<DetailsProps> = observer(({ marker, index, h
             <Button className="w-100" variant={'success'} onClick={() => console.log("STO!!!")} disabled>Mark solved</Button>
             </Col>
             <Col md={12} className="mb-3">
-            <Button className="w-100" variant={'primary'} onClick={() => console.log("STO!!!")} disabled>Choose Car service station</Button>
+            <Button className="w-100" variant={'primary'} onClick={() => handleChooseCarServiceModeEmit(true)} disabled>Choose Car service station</Button>
             </Col>
             </Row>
             <hr />

@@ -1,10 +1,8 @@
 /* eslint-disable no-extra-parens */
-import { observer } from "mobx-react-lite"
-import { useEffect, useState } from "react"
-import { Modal, Button, Form } from "react-bootstrap"
-import { Socket } from "socket.io-client"
-import { CarInfo, CrashInfo, CrashModalState } from "../CrashMap"
-import { LatLngTuple } from "leaflet"
+import {observer} from "mobx-react-lite"
+import {useState} from "react"
+import {Button, Form, Modal} from "react-bootstrap"
+import {CarInfo, CrashInfo, CrashModalState} from "../UserMap/CrashMap"
 
 export interface ModalData {
     description: string,

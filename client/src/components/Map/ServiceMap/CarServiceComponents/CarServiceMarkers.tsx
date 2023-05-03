@@ -1,0 +1,48 @@
+/* eslint-disable no-extra-parens */
+import React from 'react'
+import {observer} from 'mobx-react-lite'
+import {Marker, Popup} from 'react-leaflet';
+import L from 'leaflet';
+import {MARKER_ZOOM} from '../../../../utils/constants';
+import {ServiceIcon} from '../../../../ui/icons';
+import {CarServiceInfo} from "../ServiceCrashMap";
+import {CarServiceDetails} from "./CarServiceDetails";
+
+interface CarServiceMarkersProps {
+    carServiceMarkers: (CarServiceInfo)[],
+    setClickedMarker: React.Dispatch<React.SetStateAction<number | null>>,
+    clickedMarker: number | null,
+    mapRef: React.MutableRefObject<L.Map | null>,
+    handleClickMarker: (index: number) => void,
+}
+
+export const CarServiceMarkers: React.FC<CarServiceMarkersProps> = observer(({ carServiceMarkers, setClickedMarker, clickedMarker, mapRef, handleClickMarker }) => {
+  return (
+    <>
+      {carServiceMarkers.map((marker, index) =>
+        <Marker
+            key={index}
+            position={marker.latLngTuple}
+            eventHandlers={{
+                click: () => setClickedMarker(index),
+                popupclose: () => setClickedMarker(null)
+            }}
+            icon={ServiceIcon}
+            ref={(ref) => {
+                if (ref && clickedMarker === index) {
+                    ref.openPopup();
+                    if (mapRef.current) {
+                        mapRef.current.setView(ref.getLatLng(), MARKER_ZOOM)
+                    }
+                    setClickedMarker(index);
+                }
+            }}
+        >
+          <Popup>
+            <CarServiceDetails carServiceMarker={marker} index={index} handleClickMarker={handleClickMarker} isListDetails={false} />
+          </Popup>
+        </Marker>
+      )}
+    </>
+  );
+})

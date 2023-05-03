@@ -1,12 +1,12 @@
 /* eslint-disable no-extra-parens */
 import React from 'react'
-import { observer } from 'mobx-react-lite'
-import { CarInfo, CrashInfo } from '../../CrashMap';
-import { Marker, Popup } from 'react-leaflet';
-import L, { LatLngTuple } from 'leaflet';
-import { MARKER_ZOOM } from '../../../utils/constants';
-import { CrashDetails } from '../../CrashDetails';
-import { CrashIcon, ServiceIcon } from '../../../ui/icons';
+import {observer} from 'mobx-react-lite'
+import {Marker, Popup} from 'react-leaflet';
+import L from 'leaflet';
+import {CarInfo, CrashInfo} from '../CrashMap';
+import {CrashIcon} from '../../../../ui/icons';
+import {MARKER_ZOOM} from '../../../../utils/constants';
+import {CrashDetails} from './CrashDetails';
 
 interface CrashesMarkersProps {
         markers: (CrashInfo | CarInfo)[],

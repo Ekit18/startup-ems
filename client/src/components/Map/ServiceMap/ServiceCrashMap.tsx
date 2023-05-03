@@ -253,150 +253,177 @@
 //   rotate: [Xrotate, Yrotate, 0],
 //   scale: 2500,
 // }} */
-import { Container, Row, Col, Button, Modal } from 'react-bootstrap';
-import { Socket, io } from 'socket.io-client';
-import { Context } from '../..';
-import { getAllCrashes, getCrashesByUserId } from '../../http/carServiceApi/crashesApi';
+import {Button, Col, Container, Row} from 'react-bootstrap';
+import {io, Socket} from 'socket.io-client';
+import {getAllCrashes} from '../../../http/carServiceApi/crashesApi';
 
-import React, { useContext, useEffect, useState, useRef } from 'react'
-import { observer } from 'mobx-react-lite'
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
-import L, { LatLngTuple } from 'leaflet';
+import React, {useEffect, useRef, useState} from 'react'
+import {observer} from 'mobx-react-lite'
+import {MapContainer, TileLayer} from 'react-leaflet';
+import L, {LatLngTuple} from 'leaflet';
 import "leaflet/dist/leaflet.css"
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import { AddCrashModal, ModalData } from '../AddCrashModal';
-import { MAP_ZOOM, MARKER_ZOOM } from '../../utils/constants';
-import { CrashInfo, CarInfo } from '../CrashMap';
-import { ServiceAddCrashModal } from './ServiceAddCrashModal';
-import { CrashDetails } from '../CrashDetails';
-import { CrashesMarkers } from './markers/CrashesMarkers';
-import { CrashesList } from './markers/CrashesList';
-import { MapClickComponent } from './markers/MapClickComponent';
+import {ModalData} from '../UserMap/AddCrashModal';
+import {MAP_ZOOM} from '../../../utils/constants';
+import {CarInfo, CrashInfo} from '../UserMap/CrashMap';
+import {ServiceAddCrashModal} from './ServiceAddCrashModal';
+import {CrashesMarkers} from './CrashComponents/CrashesMarkers';
+import {CrashesList} from './CrashComponents/CrashesList';
+import {MapClickComponent} from '../MapClickComponent';
+import {getAllCarServices} from "../../../http/carServiceApi/carServiceApi";
+import {
+    crashMarkersHandleAdd,
+    crashMarkersHandleDelete,
+    crashMarkersInit,
+    crashMarkersUserAdded,
+    crashMarkersUserDeleted
+} from "./Reducer/CrashMarkersReducer";
+import {CarServiceList} from "./CarServiceComponents/CarServiceList";
+import {CarServiceMarkers} from "./CarServiceComponents/CarServiceMarkers";
 
 interface CrashMapProps {
-  test?: string;
+    test?: string;
 }
 
 export interface CrashModalState {
-  show: boolean,
-  latLngTuple: LatLngTuple
+    show: boolean,
+    latLngTuple: LatLngTuple
 }
+
+export interface CarServiceInfo {
+    id: number
+    name: string
+    location: string
+    rating: number
+    latLngTuple: LatLngTuple
+}
+
+
 export const ServiceCrashMap: React.FC<CrashMapProps> = observer(() => {
-  const [markers, setMarkers] = useState<(CrashInfo | CarInfo)[]>([]);
-  const [clickedMarker, setClickedMarker] = useState<number | null>(null);
-  const [crashModal, setCrashModal] = useState<CrashModalState>({ show: false, latLngTuple: [-1, -1] })
-  const mapRef = useRef<L.Map | null>(null)
+    const [crashMarkers, setCrashMarkers] = useState<(CrashInfo | CarInfo)[]>([]);
+    const [chooseServiceMode, setChooseServiceMode] = useState<boolean>(false)
+    const [carServiceMarkers, setCarServiceMarkers] = useState<(CarServiceInfo)[]>([])
+    const [clickedMarker, setClickedMarker] = useState<number | null>(null);
+    const [crashModal, setCrashModal] = useState<CrashModalState>({ show: false, latLngTuple: [-1, -1] })
+    const mapRef = useRef<L.Map | null>(null)
+    const [socket, setSocket] = useState<Socket>();
 
-  const [socket, setSocket] = useState<Socket>();
 
-
-  useEffect(() => {
-    if (!markers.length) {
-      getAllCrashes().then((data: Required<CrashInfo | CarInfo>[]) => {
-        setMarkers(data);
-      });
-    }
-    const socket = io(process.env.REACT_APP_CAR_SERVICE_API_URL || "", {
-      extraHeaders: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-    socket.on('connect_error', (err) => {
-      console.log("ERROR: ", err);
-    })
-    socket.on('user_deleted_crash', (userCarId: number) => {
-      console.log("DELETE!")
-      setMarkers((oldMarkers) => {
-        return oldMarkers.map((carOrCrash) => {
-          if (carOrCrash.userCarId !== userCarId) {
-            return { ...carOrCrash };
-          }
-          return {
-            ...carOrCrash, location: '', description: '', latLngTuple: []
-          };
+    useEffect(() => {
+        if (!crashMarkers.length) {
+            getAllCrashes().then((data: Required<CrashInfo | CarInfo>[]) => {
+                crashMarkersInit(setCrashMarkers, { data })
+            });
+        }
+        if (!carServiceMarkers.length) {
+            getAllCarServices().then((data) => {
+                setCarServiceMarkers(data)
+            })
+        }
+        const socket = io(process.env.REACT_APP_CAR_SERVICE_API_URL || "", {
+            extraHeaders: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
         })
-      })
-    })
-    socket.on('user_added_crash', (crashInfo: CrashInfo) => {
-      console.log("ADD!")
-      const [lat, lng] = crashInfo.location.split(" ").map((val) => parseFloat(val));
-      crashInfo.latLngTuple = [lat, lng]
-      setMarkers((oldMarkers) => [...oldMarkers, crashInfo])
-    })
-    setSocket(socket)
-    return () => {
-      socket.disconnect();
-    };
-  }, [setSocket])
-
-
-  const handleAddCrashEmit = (modalData: ModalData): void => {
-    // { ...modalData, location: crashModal.latLngTuple.join(", ") }
-    const location = crashModal.latLngTuple.join(", ")
-    let createdAt: Date = new Date();
-    socket?.emitWithAck('user_add_crash', { ...modalData, location })!.then(
-      (dateStr) => {
-        createdAt = new Date(dateStr)
-      }
-    )
-    console.log(createdAt)
-    setMarkers((oldMarkers) => {
-      return oldMarkers.map((carOrCrash) => {
-        if (carOrCrash.userCarId !== modalData.userCarId) {
-          return { ...carOrCrash };
-        }
-        return { ...carOrCrash, description: modalData.description, location, latLngTuple: crashModal.latLngTuple, date: createdAt };
-      })
-    })
-  }
-  const handleDeleteCrashEmit = (userCarId: number) => {
-    socket?.emit('user_delete_crash', userCarId)
-    setMarkers((oldMarkers) => {
-      return oldMarkers.map((carOrCrash) => {
-        if (carOrCrash.userCarId !== userCarId) {
-          return { ...carOrCrash };
-        }
-        // eslint-disable-next-line no-undefined
-        return {
-          ...carOrCrash, location: '', description: '', latLngTuple: []
+        socket.on('connect_error', (err) => {
+            console.log("ERROR: ", err);
+        })
+        socket.on('user_deleted_crash', (userCarId: number) => {
+            crashMarkersUserDeleted(setCrashMarkers, { userCarId })
+        })
+        socket.on('user_added_crash', (crashInfo: CrashInfo) => {
+            crashMarkersUserAdded(setCrashMarkers, { crashInfo })
+        })
+        setSocket(socket)
+        return () => {
+            socket.disconnect();
         };
-      })
-    })
-  }
-
-  const handleClickMarker = (index: number) => {
-    setClickedMarker(index);
-  };
+    }, [setSocket])
 
 
-  return (
-    <>
-      <Container fluid>
-        <Row>
-          <Col md={4} style={{ overflowY: "scroll", height: "100vh" }}>
-            <CrashesList handleDeleteCrashEmit={handleDeleteCrashEmit} markers={markers} handleClickMarker={handleClickMarker}/>
-          </Col>
-          <Col md={8}>
-            <MapContainer style={{ height: "100vh" }} center={[46.963664, 32.010681]} zoom={MAP_ZOOM} ref={mapRef}>
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <MapClickComponent clickedMarker={clickedMarker} setCrashModal={setCrashModal}/>
-              <MarkerClusterGroup>
-                <CrashesMarkers
-                clickedMarker={clickedMarker}
-                handleClickMarker={handleClickMarker}
-                handleDeleteCrashEmit={handleDeleteCrashEmit}
-                mapRef={mapRef}
-                markers={markers}
-                setClickedMarker={setClickedMarker}/>
-              </MarkerClusterGroup>
-            </MapContainer>
+    const handleAddCrashEmit = (modalData: ModalData): void => {
+        if (!socket) {
+            return
+        }
+        crashMarkersHandleAdd(setCrashMarkers, { modalData, crashModal, socket })
+    }
+    const handleDeleteCrashEmit = (userCarId: number) => {
+        if (!socket) {
+            return
+        }
+        crashMarkersHandleDelete(setCrashMarkers, { socket, userCarId })
+    }
 
-          </Col>
-        </Row>
-        <ServiceAddCrashModal show={crashModal.show} setShow={setCrashModal} onSubmit={handleAddCrashEmit} userCars={markers} />
-      </Container>
-    </>
-  );
+    const handleClickMarker = (index: number) => {
+        setClickedMarker(index);
+    };
+
+    const handleChooseCarServiceModeEmit = (flag:boolean) => {
+      setChooseServiceMode(flag);
+    };
+
+    return (
+        <>
+            <Container fluid>
+                <Row>
+                    <Col md={4} style={{ overflowY: "scroll", height: "100vh" }}>
+                        {
+                            chooseServiceMode &&
+                            <Button variant={'primary'} onClick={() => handleChooseCarServiceModeEmit(false)}>
+                                Back to crashes
+                            </Button>
+                        }
+                        {
+                            (chooseServiceMode &&
+                                <CarServiceList
+                                    carServicemarkers={carServiceMarkers}
+                                    handleClickMarker={handleClickMarker}
+                                />
+                            ) ||
+                            <CrashesList
+                                handleDeleteCrashEmit={handleDeleteCrashEmit}
+                                markers={crashMarkers}
+                                handleClickMarker={handleClickMarker}
+                                handleChooseCarServiceModeEmit={handleChooseCarServiceModeEmit}
+                            />
+                        }
+                    </Col>
+                    <Col md={8}>
+                        <MapContainer style={{ height: "100vh" }} center={[46.963664, 32.010681]} zoom={MAP_ZOOM}
+                                      ref={mapRef}>
+                            <TileLayer
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+                            <MapClickComponent clickedMarker={clickedMarker} setCrashModal={setCrashModal}/>
+                            <MarkerClusterGroup>
+                                {
+                                    (chooseServiceMode &&
+                                        <CarServiceMarkers
+                                            carServiceMarkers={carServiceMarkers}
+                                            setClickedMarker={setClickedMarker}
+                                            clickedMarker={clickedMarker}
+                                            mapRef={mapRef}
+                                            handleClickMarker={handleClickMarker}
+                                        />
+                                    ) ||
+                                    <CrashesMarkers
+                                        handleChooseCarServiceModeEmit={handleChooseCarServiceModeEmit}
+                                        clickedMarker={clickedMarker}
+                                        handleClickMarker={handleClickMarker}
+                                        handleDeleteCrashEmit={handleDeleteCrashEmit}
+                                        mapRef={mapRef}
+                                        markers={crashMarkers}
+                                        setClickedMarker={setClickedMarker}
+                                    />
+                                }
+                            </MarkerClusterGroup>
+                        </MapContainer>
+
+                    </Col>
+                </Row>
+                <ServiceAddCrashModal show={crashModal.show} setShow={setCrashModal} onSubmit={handleAddCrashEmit}
+                                      userCars={crashMarkers}/>
+            </Container>
+        </>
+    );
 })

@@ -1,21 +1,26 @@
-import { Container, Row, Col, Button, Modal } from 'react-bootstrap';
-import { Socket, io } from 'socket.io-client';
-import { Context } from '..';
-import { getCrashesByUserId } from '../http/carServiceApi/crashesApi';
+import {Col, Container, Row} from 'react-bootstrap';
+import {io, Socket} from 'socket.io-client';
+import {Context} from '../../../index';
+import {getCrashesByUserId} from '../../../http/carServiceApi/crashesApi';
 
-import React, { useContext, useEffect, useState, useRef } from 'react'
-import { observer } from 'mobx-react-lite'
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
-import L, { LatLngTuple } from 'leaflet';
+import React, {useContext, useEffect, useRef, useState} from 'react'
+import {observer} from 'mobx-react-lite'
+import {MapContainer, TileLayer} from 'react-leaflet';
+import L, {LatLngTuple} from 'leaflet';
 import "leaflet/dist/leaflet.css"
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import { AddCrashModal, ModalData } from './AddCrashModal';
-import { MAP_ZOOM, MARKER_ZOOM } from '../utils/constants';
-import { format } from 'date-fns';
-import { CrashDetails } from './CrashDetails';
-import { MapClickComponent } from './Service/markers/MapClickComponent';
-import { CrashesMarkers } from './Service/markers/CrashesMarkers';
-import { CrashesList } from './Service/markers/CrashesList';
+import {AddCrashModal, ModalData} from './AddCrashModal';
+import {MAP_ZOOM} from '../../../utils/constants';
+import {MapClickComponent} from '../MapClickComponent';
+import {CrashesMarkers} from './CrashComponents/CrashesMarkers';
+import {CrashesList} from './CrashComponents/CrashesList';
+import {
+    crashMarkersHandleAdd,
+    crashMarkersHandleDelete,
+    crashMarkersInit,
+    crashMarkersUserAdded,
+    crashMarkersUserDeleted
+} from "../ServiceMap/Reducer/CrashMarkersReducer";
 
 interface CrashMapProps {
     test?: string;
@@ -55,7 +60,7 @@ export const CrashMap: React.FC<CrashMapProps> = observer(() => {
     useEffect(() => {
         if (!markers.length) {
             getCrashesByUserId(user.userId || 0).then((data: (CrashInfo | CarInfo)[]) => {
-                setMarkers(data);
+                crashMarkersInit(setMarkers, { data })
             });
         }
         const socket = io(process.env.REACT_APP_CAR_SERVICE_API_URL || "", {
@@ -67,33 +72,10 @@ export const CrashMap: React.FC<CrashMapProps> = observer(() => {
             console.log("ERROR: ", err);
         })
         socket.on('user_deleted_crash', (userCarId: number) => {
-            setMarkers((oldMarkers) => {
-                return oldMarkers.map((carOrCrash) => {
-                    if (carOrCrash.userCarId !== userCarId) {
-                        return { ...carOrCrash };
-                    }
-                    // eslint-disable-next-line no-undefined
-                    return {
-                        ...carOrCrash, location: '', description: '', latLngTuple: []
-                    };
-                })
-            })
+            crashMarkersUserDeleted(setMarkers, { userCarId })
         })
         socket.on('user_added_crash', (crashInfo: CrashInfo) => {
-            if (crashInfo.user !== user._user.email) {
-                return;
-            }
-            console.log("ADD!")
-            const [lat, lng] = crashInfo.location.split(" ").map((val) => parseFloat(val));
-            crashInfo.latLngTuple = [lat, lng]
-            setMarkers((oldMarkers) => {
-                return oldMarkers.map((marker) => {
-                    if (marker.userCarId === crashInfo.userCarId) {
-                        return { ...marker, description: crashInfo.description, location: crashInfo.location, latLngTuple: crashInfo.latLngTuple }
-                    }
-                    return { ...marker }
-                })
-            })
+            crashMarkersUserAdded(setMarkers, { crashInfo })
         })
         setSocket(socket)
         return () => {
@@ -103,45 +85,16 @@ export const CrashMap: React.FC<CrashMapProps> = observer(() => {
 
 
     const handleAddCrashEmit = (modalData: ModalData): void => {
-        // { ...modalData, location: crashModal.latLngTuple.join(", ") }
-        const location = crashModal.latLngTuple.join(", ")
-        // eslint-disable-next-line max-statements-per-line
-        let createdAt: Date = new Date();
-        socket?.emitWithAck('user_add_crash', { ...modalData, location })!.then(
-            (dateStr) => {
-                createdAt = new Date(dateStr)
-            }
-        )
-        console.log(createdAt)
-        setMarkers((oldMarkers) => {
-            return oldMarkers.map((carOrCrash) => {
-                if (carOrCrash.userCarId !== modalData.userCarId) {
-                    return { ...carOrCrash };
-                }
-                return { ...carOrCrash, description: modalData.description, location, latLngTuple: crashModal.latLngTuple, date: createdAt };
-            })
-        })
+        if (!socket) {
+            return
+        }
+        crashMarkersHandleAdd(setMarkers, { modalData, crashModal, socket })
     }
     const handleDeleteCrashEmit = (userCarId: number) => {
-        socket?.emit('user_delete_crash', userCarId)
-        setMarkers((oldMarkers) => {
-            return oldMarkers.map((carOrCrash) => {
-                if (carOrCrash.userCarId !== userCarId) {
-                    return { ...carOrCrash };
-                }
-                // eslint-disable-next-line no-undefined
-                return ({
-                    carMileage: carOrCrash.carMileage,
-                    id: carOrCrash.id,
-                    userCarId: carOrCrash.userCarId,
-                    brand: carOrCrash.brand,
-                    model: carOrCrash.model,
-                    fuelType: carOrCrash.fuelType,
-                    bodyType: carOrCrash.bodyType,
-                    year: carOrCrash.year
-                } as CarInfo);
-            })
-        })
+        if (!socket) {
+            return
+        }
+        crashMarkersHandleDelete(setMarkers, { socket, userCarId })
     }
 
 

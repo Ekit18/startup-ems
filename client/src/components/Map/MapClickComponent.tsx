@@ -1,5 +1,5 @@
-import { useMapEvents } from "react-leaflet";
-import { CrashModalState } from "../ServiceCrashMap";
+import {useMapEvents} from "react-leaflet";
+import {CrashModalState} from "./ServiceMap/ServiceCrashMap";
 
 interface ClickInterface {
     clickedMarker: number | null,

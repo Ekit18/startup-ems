@@ -1,8 +1,8 @@
 /* eslint-disable no-extra-parens */
 import React from 'react'
-import { observer } from 'mobx-react-lite'
-import { CrashDetails } from '../../CrashDetails';
-import { CrashInfo, CarInfo } from '../../CrashMap';
+import {observer} from 'mobx-react-lite'
+import {CarInfo, CrashInfo} from "../CrashMap";
+import {CrashDetails} from "./CrashDetails";
 
 interface CrashesListProps {
     markers: (CrashInfo | CarInfo)[],
