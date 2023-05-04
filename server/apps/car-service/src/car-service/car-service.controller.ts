@@ -1,7 +1,7 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from "@nestjs/common";
-import {ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {CarServices, CreateCarServiceDto, JwtAuthGuard, Roles, RolesGuard, UpdateCarServiceDto} from "inq-shared-lib";
-import {CarServicesServices} from "./car-service.service";
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { CarServices, CreateCarServiceDto, JwtAuthGuard, Roles, RolesGuard, UpdateCarServiceDto } from "inq-shared-lib";
+import { CarServicesServices } from "./car-service.service";
 
 @ApiTags("Car service")
 @Controller('car-service')
