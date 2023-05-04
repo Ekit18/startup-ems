@@ -1,21 +1,21 @@
 /* eslint-disable no-extra-parens */
 import React from 'react'
-import {observer} from 'mobx-react-lite'
-import {CarInfo, CrashInfo} from '../../UserMap/CrashMap';
-import {Marker, Popup} from 'react-leaflet';
+import { observer } from 'mobx-react-lite'
+import { CarInfo, CrashInfo } from '../../UserMap/CrashMap';
+import { Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
-import {MARKER_ZOOM} from '../../../../utils/constants';
-import {CrashDetails} from './CrashDetails';
-import {CrashIcon} from '../../../../ui/icons';
+import { MARKER_ZOOM } from '../../../../utils/constants';
+import { CrashDetails } from './CrashDetails';
+import { CrashIcon } from '../../../../ui/icons';
 
 interface CrashesMarkersProps {
-        markers: (CrashInfo | CarInfo)[],
-        setClickedMarker: React.Dispatch<React.SetStateAction<number | null>>,
-        clickedMarker: number | null,
-        mapRef: React.MutableRefObject<L.Map | null>,
-        handleClickMarker: (index: number) => void,
-        handleDeleteCrashEmit: (userCarId: number) => void,
-        handleChooseCarServiceModeEmit: (flag:boolean) => void
+  markers: (CrashInfo | CarInfo)[],
+  setClickedMarker: React.Dispatch<React.SetStateAction<number | null>>,
+  clickedMarker: number | null,
+  mapRef: React.MutableRefObject<L.Map | null>,
+  handleClickMarker: (index: number) => void,
+  handleDeleteCrashEmit: (userCarId: number) => void,
+  handleChooseCarServiceModeEmit: (flag: boolean) => void
 }
 
 export const CrashesMarkers: React.FC<CrashesMarkersProps> = observer(({ markers, setClickedMarker, clickedMarker, mapRef, handleClickMarker, handleDeleteCrashEmit, handleChooseCarServiceModeEmit }) => {

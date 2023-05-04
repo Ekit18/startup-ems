@@ -1,7 +1,7 @@
-import {observer} from "mobx-react-lite"
-import {useState} from "react"
-import {Button, Form, Modal} from "react-bootstrap"
-import {CarInfo, CrashInfo, CrashModalState} from "./CrashMap"
+import { observer } from "mobx-react-lite"
+import { useState } from "react"
+import { Button, Form, Modal } from "react-bootstrap"
+import { CarInfo, CrashInfo, CrashModalState } from "./CrashMap"
 
 export interface ModalData {
     description: string,

@@ -1,13 +1,13 @@
-import {CarInfo, CrashInfo} from "../../UserMap/CrashMap";
-import {Socket} from "socket.io-client";
-import {CrashModalState} from "../ServiceCrashMap";
-import {ModalData} from "../ServiceAddCrashModal";
+import { CarInfo, CrashInfo } from "../../UserMap/CrashMap";
+import { Socket } from "socket.io-client";
+import { CrashModalState } from "../ServiceCrashMap";
+import { ModalData } from "../ServiceAddCrashModal";
 
 interface CrashMarkersAction {
-    data ?:(CrashInfo | CarInfo)[],
-    crashInfo ?: CrashInfo
-    userCarId ?: number;
-    socket ?: Socket;
+    data?: (CrashInfo | CarInfo)[],
+    crashInfo?: CrashInfo
+    userCarId?: number;
+    socket?: Socket;
     crashModal?: CrashModalState
     modalData?: ModalData;
 }
@@ -43,8 +43,8 @@ export function crashMarkersUserDeleted(
         return
     }
     console.log("DELETE!")
-    setCrashMarkers((prevState:(CrashInfo | CarInfo)[]) => {
-        return prevState.map((carOrCrash:(CrashInfo | CarInfo)) => {
+    setCrashMarkers((prevState: (CrashInfo | CarInfo)[]) => {
+        return prevState.map((carOrCrash: (CrashInfo | CarInfo)) => {
             if (carOrCrash.userCarId !== action.userCarId) {
                 return { ...carOrCrash };
             }
@@ -70,7 +70,7 @@ export function crashMarkersHandleAdd(
         }
     )
     console.log(createdAt)
-    setCrashMarkers((prevState:(CrashInfo | CarInfo)[]) => {
+    setCrashMarkers((prevState: (CrashInfo | CarInfo)[]) => {
         return prevState.map((carOrCrash) => {
             if (carOrCrash.userCarId !== action.modalData.userCarId) {
                 return { ...carOrCrash };
@@ -88,13 +88,13 @@ export function crashMarkersHandleAdd(
 
 export function crashMarkersHandleDelete(
     setCrashMarkers: CallableFunction,
-    action: Required<Pick<CrashMarkersAction, 'socket' | 'userCarId' >>
+    action: Required<Pick<CrashMarkersAction, 'socket' | 'userCarId'>>
 ) {
     if (!action.userCarId || !action.socket) {
         return
     }
     action.socket?.emit('user_delete_crash', action.userCarId)
-    setCrashMarkers((oldMarkers:(CrashInfo | CarInfo)[]) => {
+    setCrashMarkers((oldMarkers: (CrashInfo | CarInfo)[]) => {
         return oldMarkers.map((carOrCrash) => {
             if (carOrCrash.userCarId !== action.userCarId) {
                 return { ...carOrCrash };

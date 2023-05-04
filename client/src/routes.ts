@@ -1,9 +1,9 @@
-import {CrashMap} from './components/Map/UserMap/CrashMap';
-import {ServiceCrashMap} from "./components/Map/ServiceMap/ServiceCrashMap"
+import { CrashMap } from './components/Map/UserMap/CrashMap';
+import { ServiceCrashMap } from "./components/Map/ServiceMap/ServiceCrashMap"
 import Auth from "./pages/Auth"
 import MainPage from "./pages/MainPage"
-import {Redirect} from "./pages/Redirect"
-import {RepairSigning} from "./pages/RepairSigning"
+import { Redirect } from "./pages/Redirect"
+import { RepairSigning } from "./pages/RepairSigning"
 import {
     GOOGLE_REDIRECT_ROUTE,
     LOGIN_ROUTE,

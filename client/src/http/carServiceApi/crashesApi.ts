@@ -1,7 +1,7 @@
 /* eslint-disable no-extra-parens */
-import {CarInfo, CrashInfo} from "../../components/Map/UserMap/CrashMap";
-import {getAllUserIds} from "../carApi/userCarsApi";
-import {$carServiceHost} from '../index';
+import { CarInfo, CrashInfo } from "../../components/Map/UserMap/CrashMap";
+import { getAllUserIds } from "../carApi/userCarsApi";
+import { $carServiceHost } from '../index';
 
 export const getCrashesByUserId = async (userId: number): Promise<(CrashInfo | CarInfo)[]> => {
     const { data } = await $carServiceHost.get(`crashes/user-crashes/${userId}`);

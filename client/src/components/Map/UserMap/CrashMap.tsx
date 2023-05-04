@@ -1,19 +1,19 @@
-import {Col, Container, Row} from 'react-bootstrap';
-import {io, Socket} from 'socket.io-client';
-import {Context} from '../../../index';
-import {getCrashesByUserId} from '../../../http/carServiceApi/crashesApi';
+import { Col, Container, Row } from 'react-bootstrap';
+import { io, Socket } from 'socket.io-client';
+import { Context } from '../../../index';
+import { getCrashesByUserId } from '../../../http/carServiceApi/crashesApi';
 
-import React, {useContext, useEffect, useRef, useState} from 'react'
-import {observer} from 'mobx-react-lite'
-import {MapContainer, TileLayer} from 'react-leaflet';
-import L, {LatLngTuple} from 'leaflet';
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { observer } from 'mobx-react-lite'
+import { MapContainer, TileLayer } from 'react-leaflet';
+import L, { LatLngTuple } from 'leaflet';
 import "leaflet/dist/leaflet.css"
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import {AddCrashModal, ModalData} from './AddCrashModal';
-import {MAP_ZOOM} from '../../../utils/constants';
-import {MapClickComponent} from '../MapClickComponent';
-import {CrashesMarkers} from './CrashComponents/CrashesMarkers';
-import {CrashesList} from './CrashComponents/CrashesList';
+import { AddCrashModal, ModalData } from './AddCrashModal';
+import { MAP_ZOOM } from '../../../utils/constants';
+import { MapClickComponent } from '../MapClickComponent';
+import { CrashesMarkers } from './CrashComponents/CrashesMarkers';
+import { CrashesList } from './CrashComponents/CrashesList';
 import {
     crashMarkersHandleAdd,
     crashMarkersHandleDelete,

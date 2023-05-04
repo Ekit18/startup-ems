@@ -1,6 +1,6 @@
-import {Button, Col, Row} from "react-bootstrap";
-import {CarServiceInfo} from "../ServiceCrashMap";
-import {observer} from "mobx-react-lite";
+import { Button, Col, Row } from "react-bootstrap";
+import { CarServiceInfo } from "../ServiceCrashMap";
+import { observer } from "mobx-react-lite";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import _ from "lodash";
@@ -11,13 +11,13 @@ interface DetailsProps {
     isListDetails: boolean
     handleClickMarker: (index: number) => void,
 }
-export const CarServiceDetails: React.FC<DetailsProps> = observer(({ carServiceMarker, index, handleClickMarker, isListDetails }:DetailsProps) => {
+export const CarServiceDetails: React.FC<DetailsProps> = observer(({ carServiceMarker, index, handleClickMarker, isListDetails }: DetailsProps) => {
     return (
         <div
             onClick={isListDetails
-            ? () => handleClickMarker(index)
+                ? () => handleClickMarker(index)
                 // eslint-disable-next-line no-undefined
-            : undefined
+                : undefined
             }
         >
             <hr />

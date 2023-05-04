@@ -253,24 +253,24 @@
 //   rotate: [Xrotate, Yrotate, 0],
 //   scale: 2500,
 // }} */
-import {Button, Col, Container, Row} from 'react-bootstrap';
-import {io, Socket} from 'socket.io-client';
-import {getAllCrashes} from '../../../http/carServiceApi/crashesApi';
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import { io, Socket } from 'socket.io-client';
+import { getAllCrashes } from '../../../http/carServiceApi/crashesApi';
 
-import React, {useEffect, useRef, useState} from 'react'
-import {observer} from 'mobx-react-lite'
-import {MapContainer, TileLayer} from 'react-leaflet';
-import L, {LatLngTuple} from 'leaflet';
+import React, { useEffect, useRef, useState } from 'react'
+import { observer } from 'mobx-react-lite'
+import { MapContainer, TileLayer } from 'react-leaflet';
+import L, { LatLngTuple } from 'leaflet';
 import "leaflet/dist/leaflet.css"
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import {ModalData} from '../UserMap/AddCrashModal';
-import {MAP_ZOOM} from '../../../utils/constants';
-import {CarInfo, CrashInfo} from '../UserMap/CrashMap';
-import {ServiceAddCrashModal} from './ServiceAddCrashModal';
-import {CrashesMarkers} from './CrashComponents/CrashesMarkers';
-import {CrashesList} from './CrashComponents/CrashesList';
-import {MapClickComponent} from '../MapClickComponent';
-import {getAllCarServices} from "../../../http/carServiceApi/carServiceApi";
+import { ModalData } from '../UserMap/AddCrashModal';
+import { MAP_ZOOM } from '../../../utils/constants';
+import { CarInfo, CrashInfo } from '../UserMap/CrashMap';
+import { ServiceAddCrashModal } from './ServiceAddCrashModal';
+import { CrashesMarkers } from './CrashComponents/CrashesMarkers';
+import { CrashesList } from './CrashComponents/CrashesList';
+import { MapClickComponent } from '../MapClickComponent';
+import { getAllCarServices } from "../../../http/carServiceApi/carServiceApi";
 import {
     crashMarkersHandleAdd,
     crashMarkersHandleDelete,
@@ -278,8 +278,8 @@ import {
     crashMarkersUserAdded,
     crashMarkersUserDeleted
 } from "./Reducer/CrashMarkersReducer";
-import {CarServiceList} from "./CarServiceComponents/CarServiceList";
-import {CarServiceMarkers} from "./CarServiceComponents/CarServiceMarkers";
+import { CarServiceList } from "./CarServiceComponents/CarServiceList";
+import { CarServiceMarkers } from "./CarServiceComponents/CarServiceMarkers";
 
 interface CrashMapProps {
     test?: string;
@@ -358,8 +358,8 @@ export const ServiceCrashMap: React.FC<CrashMapProps> = observer(() => {
         setClickedMarker(index);
     };
 
-    const handleChooseCarServiceModeEmit = (flag:boolean) => {
-      setChooseServiceMode(flag);
+    const handleChooseCarServiceModeEmit = (flag: boolean) => {
+        setChooseServiceMode(flag);
     };
 
     return (
@@ -390,11 +390,11 @@ export const ServiceCrashMap: React.FC<CrashMapProps> = observer(() => {
                     </Col>
                     <Col md={8}>
                         <MapContainer style={{ height: "100vh" }} center={[46.963664, 32.010681]} zoom={MAP_ZOOM}
-                                      ref={mapRef}>
+                            ref={mapRef}>
                             <TileLayer
                                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-                            <MapClickComponent clickedMarker={clickedMarker} setCrashModal={setCrashModal}/>
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                            <MapClickComponent clickedMarker={clickedMarker} setCrashModal={setCrashModal} />
                             <MarkerClusterGroup>
                                 {
                                     (chooseServiceMode &&
@@ -422,7 +422,7 @@ export const ServiceCrashMap: React.FC<CrashMapProps> = observer(() => {
                     </Col>
                 </Row>
                 <ServiceAddCrashModal show={crashModal.show} setShow={setCrashModal} onSubmit={handleAddCrashEmit}
-                                      userCars={crashMarkers}/>
+                    userCars={crashMarkers} />
             </Container>
         </>
     );

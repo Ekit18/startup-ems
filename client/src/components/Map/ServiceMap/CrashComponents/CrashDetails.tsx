@@ -1,8 +1,8 @@
 /* eslint-disable no-undefined */
 /* eslint-disable no-extra-parens */
-import {observer} from "mobx-react-lite";
-import {Button, Col, Row} from "react-bootstrap";
-import {CarInfo, CrashInfo} from "../../UserMap/CrashMap"
+import { observer } from "mobx-react-lite";
+import { Button, Col, Row } from "react-bootstrap";
+import { CarInfo, CrashInfo } from "../../UserMap/CrashMap"
 
 interface DetailsProps {
     marker: CrashInfo | CarInfo,
@@ -10,7 +10,7 @@ interface DetailsProps {
     isListDetails: boolean
     handleDeleteCrashEmit: (userCarId: number) => void,
     handleClickMarker: (index: number) => void,
-    handleChooseCarServiceModeEmit: (flag:boolean) => void
+    handleChooseCarServiceModeEmit: (flag: boolean) => void
 }
 export const CrashDetails: React.FC<DetailsProps> = observer(({ marker, index, handleClickMarker, handleDeleteCrashEmit, isListDetails, handleChooseCarServiceModeEmit }) => {
     const formattedDate = new Date(marker.date).toUTCString();
@@ -32,15 +32,15 @@ export const CrashDetails: React.FC<DetailsProps> = observer(({ marker, index, h
                 Year: {marker.year}<br />
             </h4>
             <Row>
-            <Col md={12} className="mb-3">
-            <Button className="w-100" variant={'danger'} onClick={() => handleDeleteCrashEmit(marker.userCarId)}>Delete</Button>
-            </Col>
-            <Col md={12} className="mb-3">
-            <Button className="w-100" variant={'success'} onClick={() => console.log("STO!!!")} disabled>Mark solved</Button>
-            </Col>
-            <Col md={12} className="mb-3">
-            <Button className="w-100" variant={'primary'} onClick={() => handleChooseCarServiceModeEmit(true)} disabled>Choose Car service station</Button>
-            </Col>
+                <Col md={12} className="mb-3">
+                    <Button className="w-100" variant={'danger'} onClick={() => handleDeleteCrashEmit(marker.userCarId)}>Delete</Button>
+                </Col>
+                <Col md={12} className="mb-3">
+                    <Button className="w-100" variant={'success'} onClick={() => console.log("STO!!!")} disabled>Mark solved</Button>
+                </Col>
+                <Col md={12} className="mb-3">
+                    <Button className="w-100" variant={'primary'} onClick={() => handleChooseCarServiceModeEmit(true)} disabled>Choose Car service station</Button>
+                </Col>
             </Row>
             <hr />
 
