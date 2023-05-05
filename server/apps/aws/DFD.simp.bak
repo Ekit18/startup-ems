@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<sim-project version="10.3" multi-file="no">
+  <meta>
+    <name>Project</name>
+    <authors> </authors>
+    <description />
+  </meta>
+  <counters diagrams="1" models="1">
+    <entity-names>
+      <counter>
+        <item-type type-id="dfd-external" type="DfdExternal" />
+        <value>3</value>
+      </counter>
+      <counter>
+        <item-type type-id="dfd-process" type="DfdProcess" />
+        <value>3</value>
+      </counter>
+      <counter>
+        <item-type type-id="dfd-data-store" type="DfdDataStore" />
+        <value>1</value>
+      </counter>
+    </entity-names>
+    <entity-ids>
+      <counter>
+        <item-type type-id="dfd-external" type="DfdExternal" />
+        <value>4</value>
+      </counter>
+      <counter>
+        <item-type type-id="dfd-process" type="DfdProcess" />
+        <value>4</value>
+      </counter>
+      <counter>
+        <item-type type-id="" type="AbstractElementGroup" />
+        <value>10</value>
+      </counter>
+      <counter>
+        <item-type type-id="dfd-data-store" type="DfdDataStore" />
+        <value>2</value>
+      </counter>
+    </entity-ids>
+    <diagrams />
+    <fields />
+  </counters>
+  <alias-groups />
+  <management>
+    <persons>
+      <person id="P5f991d6e72e44dc18e6b0a6b3ccf3b5b">
+        <first-name />
+        <last-name />
+        <role />
+        <e-mail />
+        <phone-number />
+        <description />
+        <color>#00000000</color>
+      </person>
+    </persons>
+    <tasks />
+    <requirements />
+    <issues />
+    <to-dos />
+  </management>
+  <glossary />
+  <types default="UML">
+    <type-sets>
+      <type-set file="UmlTypes.xml" />
+    </type-sets>
+    <custom-types />
+  </types>
+  <filters />
+  <macros />
+  <items>
+    <item id="di733160421596312476" cid="DFE001" type="dfd-external" name="Parts Microservice ClientService" style-class="" visibility="package" change-tracking-state="added" creator="P5f991d6e72e44dc18e6b0a6b3ccf3b5b" creation-date="05/05/2023 21:30:25">
+      <style class="default" />
+    </item>
+  </items>
+  <models>
+    <model id="p7cc8606c7df547f293855811ddaa8642_724560343" name="Model 1" namespace="" order-index="1">
+      <meta>
+        <authors>
+          <author> </author>
+        </authors>
+        <description />
+        <creation-date>05/05/2023 21:29:32</creation-date>
+        <change-date>01/01/0001 00:00:00</change-date>
+        <revision-count>0</revision-count>
+        <version />
+      </meta>
+      <abstract-items />
+      <sub-models />
+      <diagram type="gane-sarson-data-flow" id="p1c8cbb3803a543f4b10ad8e507114fa6_271244667" name="Diagram1" order-index="1" show-id="false" show-name="true" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" show-template-parameters="true" show-fields="true" show-empty-compartments="true" show-special-indicators="false" show-attributes="true" show-attribute-visibility="true" show-operations="true" show-operation-parameters="true" show-operation-visibility="true" show-nullability="true" show-sequence-number="false" show-extension-points="false" show-relationship-texts="true" show-description="false" show-field-description="false" auto-routed-paths="false">
+        <style>
+          <background-color index="1" color="#FFFFFFFF" />
+          <background-color index="2" color="#FFFFFFFF" />
+          <background-type type="solid" />
+        </style>
+        <meta>
+          <authors>
+            <author> </author>
+          </authors>
+          <description />
+          <creation-date>05/05/2023 21:29:32</creation-date>
+          <change-date>05/05/2023 21:36:00</change-date>
+          <revision-count>0</revision-count>
+          <version />
+        </meta>
+        <abstract-items>
+          <item id="di805995101930683318" cid="2" type="dfd-process" name="AWS Microservice" style-class="" visibility="package" change-tracking-state="added" creator="P5f991d6e72e44dc18e6b0a6b3ccf3b5b" creation-date="05/05/2023 21:33:17">
+            <style class="default" />
+          </item>
+          <item id="di258824373513357226" cid="RabbitMQ Server" type="dfd-process" name="" style-class="" visibility="package" change-tracking-state="added" creator="P5f991d6e72e44dc18e6b0a6b3ccf3b5b" creation-date="05/05/2023 21:31:22">
+            <style class="default" />
+          </item>
+          <item id="di529152077592259000" cid="6.1 Queue" type="dfd-data-store" name="parts" style-class="" visibility="package" change-tracking-state="added" creator="P5f991d6e72e44dc18e6b0a6b3ccf3b5b" creation-date="05/05/2023 21:31:56">
+            <style class="default" />
+          </item>
+          <item id="di710549602568492153" cid="DFE002" type="dfd-external" name="AWS S3 Service" style-class="" visibility="package" change-tracking-state="added" creator="P5f991d6e72e44dc18e6b0a6b3ccf3b5b" creation-date="05/05/2023 21:35:29">
+            <style class="default" />
+          </item>
+          <item id="di328148011720681777" cid="DFE003" type="dfd-external" name="External3" style-class="" visibility="package" change-tracking-state="added" creator="P5f991d6e72e44dc18e6b0a6b3ccf3b5b" creation-date="05/05/2023 21:36:00">
+            <style class="default" />
+          </item>
+        </abstract-items>
+        <layer name="Default" visible="true" enabled="true" locked="false">
+          <item id="di258824373513357226" iid="2075d715ee8049fcb9ea91e7f64a3938" creation-date="05/05/2023 21:31:22" order-index="1" type="entity">
+            <layout ax="390" ay="370" awidth="210" aheight="110" x="390" y="370" width="210" height="110" />
+          </item>
+          <item id="di529152077592259000" iid="a8e6e69a13454abb91a07124814cf56d" creation-date="05/05/2023 21:31:56" order-index="2" type="entity">
+            <layout ax="440" ay="410" awidth="120" aheight="50" x="440" y="410" width="120" height="50" />
+          </item>
+          <item id="di805995101930683318" iid="34475a0c9011492b9ef7924d71360781" creation-date="05/05/2023 21:33:17" order-index="3" type="entity">
+            <layout ax="410" ay="120" awidth="120" aheight="90" x="410" y="120" width="120" height="90" />
+          </item>
+          <item id="di710549602568492153" iid="b9e6b720d7104c86a9db14a72b0a4f27" creation-date="05/05/2023 21:35:29" order-index="4" type="entity">
+            <layout ax="550" ay="290" awidth="120" aheight="70" x="550" y="290" width="120" height="70" />
+          </item>
+          <item id="di733160421596312476" iid="67572913a9fb4e05b1ed3e0d6634259e" creation-date="05/05/2023 21:30:25" order-index="0" type="entity">
+            <layout ax="130" ay="400" awidth="120" aheight="70" x="130" y="400" width="120" height="70" />
+          </item>
+          <item id="di328148011720681777" iid="fab29bf1cdbc45e29de8f270aaca2f9b" creation-date="05/05/2023 21:36:00" order-index="5" type="entity">
+            <layout ax="300" ay="270" awidth="120" aheight="70" x="300" y="270" width="120" height="70" />
+          </item>
+        </layer>
+      </diagram>
+    </model>
+  </models>
+  <documents />
+  <document-templates />
+</sim-project>

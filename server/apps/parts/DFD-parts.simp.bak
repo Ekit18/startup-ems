@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<sim-project version="10.3" multi-file="no">
+  <meta>
+    <name>DFD-parts</name>
+    <authors> </authors>
+    <description />
+  </meta>
+  <counters diagrams="1" models="2">
+    <entity-names>
+      <counter>
+        <item-type type-id="dfd-gate" type="DfdGate" />
+        <value>2</value>
+      </counter>
+      <counter>
+        <item-type type-id="" type="DrawingItem" />
+        <value>2</value>
+      </counter>
+      <counter>
+        <item-type type-id="" type="TextItem" />
+        <value>3</value>
+      </counter>
+    </entity-names>
+    <entity-ids>
+      <counter>
+        <item-type type-id="dfd-gate" type="DfdGate" />
+        <value>3</value>
+      </counter>
+      <counter>
+        <item-type type-id="" type="AbstractElementGroup" />
+        <value>42</value>
+      </counter>
+      <counter>
+        <item-type type-id="shape" type="AbstractShapeItem" />
+        <value>5</value>
+      </counter>
+      <counter>
+        <item-type type-id="text" type="AbstractTextItem" />
+        <value>4</value>
+      </counter>
+    </entity-ids>
+    <diagrams />
+    <fields />
+  </counters>
+  <alias-groups />
+  <management>
+    <persons>
+      <person id="P2c45b6667ee04c26878efd28c2cb2a5d">
+        <first-name />
+        <last-name />
+        <role />
+        <e-mail />
+        <phone-number />
+        <description />
+        <color>#00000000</color>
+      </person>
+    </persons>
+    <tasks />
+    <requirements />
+    <issues />
+    <to-dos />
+  </management>
+  <glossary />
+  <types default="UML">
+    <type-sets>
+      <type-set file="UmlTypes.xml" />
+    </type-sets>
+    <custom-types />
+  </types>
+  <filters />
+  <macros />
+  <items>
+    <item id="di146941622788711028" cid="ELEM035" type="group" name="Group" style-class="" visibility="package" creator="P2c45b6667ee04c26878efd28c2cb2a5d" creation-date="05/05/2023 17:43:51">
+      <style class="default" />
+    </item>
+  </items>
+  <models>
+    <model id="pde47bb175bf1445ea7512f0bb2169735_430485208" name="Model 1" namespace="" order-index="1">
+      <meta>
+        <authors>
+          <author> </author>
+        </authors>
+        <description />
+        <creation-date>05/05/2023 17:35:11</creation-date>
+        <change-date>01/01/0001 00:00:00</change-date>
+        <revision-count>0</revision-count>
+        <version />
+      </meta>
+      <abstract-items />
+      <sub-models />
+      <diagram type="gane-sarson-data-flow" id="pb6879973dbc5454aafca7c55819027d7_688050332" name="Diagram1" order-index="1" show-id="false" show-name="true" show-parent-name="false" show-stereotypes="true" show-tagged-values="false" show-template-parameters="true" show-fields="true" show-empty-compartments="true" show-special-indicators="false" show-attributes="true" show-attribute-visibility="true" show-operations="true" show-operation-parameters="true" show-operation-visibility="true" show-nullability="true" show-sequence-number="false" show-extension-points="false" show-relationship-texts="true" show-description="false" show-field-description="false" auto-routed-paths="false">
+        <style>
+          <background-color index="1" color="#FFFFFFFF" />
+          <background-color index="2" color="#FFFFFFFF" />
+          <background-type type="solid" />
+        </style>
+        <meta>
+          <authors>
+            <author> </author>
+          </authors>
+          <description />
+          <creation-date>05/05/2023 17:35:11</creation-date>
+          <change-date>05/05/2023 17:43:51</change-date>
+          <revision-count>0</revision-count>
+          <version />
+        </meta>
+        <abstract-items />
+        <layer name="Default" visible="true" enabled="true" locked="false">
+          <item id="di146941622788711028" iid="06a8a12cd4f84cc5aba2b1fc149d6a45" creation-date="05/05/2023 17:43:51" order-index="3" type="group">
+            <layout ax="210" ay="140" awidth="380" aheight="270" x="0" y="0" width="0" height="0" />
+            <group-items>
+              <item id="di361814593585204146" iid="f8accfaa38604834a35b50aa3428b3d3" name="Element1" creation-date="05/05/2023 17:37:21" order-index="1" type="drawing-shape">
+                <layout ax="210" ay="140" awidth="380" aheight="270" x="210" y="140" width="380" height="270" container-layout="simple" />
+                <drawing-shape type="Rectangle" />
+                <style class="default" />
+              </item>
+              <item id="di140241165614281631" iid="ae8dcd95e2494ebeba37c4e32f96b331" name="Element3" creation-date="05/05/2023 17:37:41" order-index="2" type="drawing-text">
+                <layout ax="210" ay="140" awidth="380" aheight="20" x="210" y="140" width="380" height="20" container-layout="simple" />
+                <drawing-text>
+                  <text>Parts Microservice</text>
+                </drawing-text>
+                <style class="default" />
+              </item>
+            </group-items>
+          </item>
+        </layer>
+      </diagram>
+    </model>
+  </models>
+  <documents />
+  <document-templates />
+</sim-project>
