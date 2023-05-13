@@ -44,6 +44,23 @@ export class UserCarsService {
         return userCar;
     }
 
+    async getAllUserCarsWithEmail(userId: number): Promise<UserCarsDataWithUserCarId[]> {
+        const user = await lastValueFrom(this.UserClient.send({ role: "user", cmd: "findUserById" }, userId));
+        if (!user) {
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+        }
+        const userCars = await this.userCarsRepository.findAll({ where: { userId } });
+        const cars = await Promise.all(userCars.map(async (car) => {
+            const carData = await this.carService.getCarByIdWithoutIncludeAll(car.carId);
+            const brand = await this.brandService.getBrandById(carData.get().brandId);
+            delete carData.get().brandId;
+            return { ...carData.get(), brand: brand.brand, carMileage: car.carMileage, userCarId: car.id, user: user.email, };
+        }
+        ));
+        console.log(`\nUSER EMAIL: ${user.email}\n`);
+        return cars;
+    }
+
     async getAllUserCars(userId: number): Promise<UserCarsDataWithUserCarId[]> {
         const user = await lastValueFrom(this.UserClient.send({ role: "user", cmd: "findUserById" }, userId));
         if (!user) {
@@ -60,6 +77,8 @@ export class UserCarsService {
         console.log(`\nUSER EMAIL: ${user.email}\n`);
         return cars;
     }
+
+
     async getUserCarForCrashInfo(userCarId: number): Promise<UserCarsDataWithUserCarId> {
         const userCar = await this.userCarsRepository.findOne({ where: { id: userCarId } });
         const carData = await this.carService.getCarByIdWithoutIncludeAll(userCar.carId);

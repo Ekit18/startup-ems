@@ -15,19 +15,29 @@ interface CrashesMarkersProps {
   mapRef: React.MutableRefObject<L.Map | null>,
   handleClickMarker: (index: number) => void,
   handleDeleteCrashEmit: (userCarId: number) => void,
-  handleChooseCarServiceModeEmit: (flag: boolean) => void
+  handleChooseCarServiceModeEmit: (flag: boolean) => void,
+  setCurrCrashToChooseCarServiceFor: React.Dispatch<React.SetStateAction<CarInfo | CrashInfo | null>>
 }
 
-export const CrashesMarkers: React.FC<CrashesMarkersProps> = observer(({ markers, setClickedMarker, clickedMarker, mapRef, handleClickMarker, handleDeleteCrashEmit, handleChooseCarServiceModeEmit }) => {
+export const CrashesMarkers: React.FC<CrashesMarkersProps> = observer(({ setCurrCrashToChooseCarServiceFor, markers, setClickedMarker, clickedMarker, mapRef, handleClickMarker, handleDeleteCrashEmit, handleChooseCarServiceModeEmit }) => {
   return (
     <>
       {markers.filter((marker) => Boolean((marker as CrashInfo).description)).map((marker, index) =>
         <Marker key={index} position={(marker as Required<CrashInfo>).latLngTuple} eventHandlers={{
           click: () => {
+            console.log(`POPUPCLICK: ${index}`);
             setClickedMarker(index);
           },
           popupclose: () => {
+            console.log("POPUPCLOSE");
             setClickedMarker(null);
+          },
+          unload: () => {
+            setClickedMarker(null);
+          },
+          remove: () => {
+            setClickedMarker(null);
+            console.log("test")
           }
         }} icon={CrashIcon} ref={(ref) => {
           if (ref && clickedMarker === index) {
@@ -39,7 +49,7 @@ export const CrashesMarkers: React.FC<CrashesMarkersProps> = observer(({ markers
           }
         }}>
           <Popup>
-            <CrashDetails handleChooseCarServiceModeEmit={handleChooseCarServiceModeEmit} marker={marker} index={index} handleClickMarker={handleClickMarker} handleDeleteCrashEmit={handleDeleteCrashEmit} isListDetails={false} />
+            <CrashDetails setCurrCrashToChooseCarServiceFor={setCurrCrashToChooseCarServiceFor} setClickedMarker={setClickedMarker} handleChooseCarServiceModeEmit={handleChooseCarServiceModeEmit} marker={marker} index={index} handleClickMarker={handleClickMarker} handleDeleteCrashEmit={handleDeleteCrashEmit} isListDetails={false} />
           </Popup>
         </Marker>
       )}

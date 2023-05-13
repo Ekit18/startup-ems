@@ -13,7 +13,7 @@ class ModelResponse {
 @ApiTags("Cars")
 @Controller('car')
 export class CarController {
-    constructor(private carService: CarService, private readonly httpService: HttpService, private readonly brandService:BrandService) { }
+    constructor(private carService: CarService, private readonly httpService: HttpService, private readonly brandService: BrandService) { }
 
     @ApiOperation({ summary: "Creating car" })
     @ApiResponse({ status: 200, type: Car })
@@ -25,15 +25,15 @@ export class CarController {
         const brand = await this.brandService.getBrandById(carDto.brandId);
         const hookData = { brand: brand.brand, model: car.model, fuelType: car.fuelType, bodyType: car.bodyType, year: car.year };
         this.httpService
-        .post('https://webhook.site/4b06c166-2ada-4ea4-86f0-2f9f0461503d', hookData)
-        .subscribe({
-            complete: () => {
-                console.log('completed');
-            },
-            error: (err) => {
-                console.log(err);
-            },
-        });
+            .post('https://webhook.site/4b06c166-2ada-4ea4-86f0-2f9f0461503d', hookData)
+            .subscribe({
+                complete: () => {
+                    console.log('completed');
+                },
+                error: (err) => {
+                    console.log(err);
+                },
+            });
         return car;
     }
 
@@ -51,6 +51,22 @@ export class CarController {
     @Get('brand/:brandId')
     getAllModelsByBrand(@Param() dto: GetCarByBrandIdDto) {
         return this.carService.getAllCarsModelsByBrand(dto);
+    }
+
+    @ApiOperation({ summary: "Getting all years by brand id and model" })
+    @ApiResponse({ status: 200, type: [ModelResponse] })
+    @UseGuards(JwtAuthGuard)
+    @Get('years/brand/:brandId/model/:model')
+    getAllYearsByBrandAndModel(@Param() dto: GetCarByBrandIdDto & GetCarByModelDto) {
+        return this.carService.getAllYearsByBrandAndModel(dto);
+    }
+
+    @ApiOperation({ summary: "Getting all cars by years, brand id and model" })
+    @ApiResponse({ status: 200, type: [ModelResponse] })
+    @UseGuards(JwtAuthGuard)
+    @Get('/brand/:brandId/model/:model/year/:year')
+    getAllCarsByBrandAndModelAndYear(@Param() dto: GetCarByBrandIdDto & GetCarByModelDto & Pick<CarDto, 'year'>) {
+        return this.carService.getAllCarsByBrandAndModelAndYear(dto);
     }
 
     @ApiOperation({ summary: "Changing car by car id" })

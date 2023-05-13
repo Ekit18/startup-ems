@@ -88,11 +88,16 @@ export function crashMarkersHandleAdd(
 
 export function crashMarkersHandleDelete(
     setCrashMarkers: CallableFunction,
-    action: Required<Pick<CrashMarkersAction, 'socket' | 'userCarId'>>
+    action: Required<Pick<CrashMarkersAction, 'socket' | 'userCarId'>>,
+    setClickedMarker?:any
 ) {
     if (!action.userCarId || !action.socket) {
         return
     }
+    if (setClickedMarker) {
+        setClickedMarker(null);
+    }
+    console.log("Closing..")
     action.socket?.emit('user_delete_crash', action.userCarId)
     setCrashMarkers((oldMarkers: (CrashInfo | CarInfo)[]) => {
         return oldMarkers.map((carOrCrash) => {

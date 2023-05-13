@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import FormData = require('form-data');
-import { S3Client, DeleteObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, DeleteObjectCommand, PutObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { HttpService } from '@nestjs/axios';
 import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
@@ -9,6 +9,9 @@ import { FilesErrorObject } from './parts-guides-aws.controller';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from 'rxjs';
+
+type FileType = 'Part' | 'Guide';
+
 @Injectable()
 export class PartsGuidesAwsService {
     constructor(
@@ -16,7 +19,20 @@ export class PartsGuidesAwsService {
         @InjectModel(PartsGuidesAWS) private partsGuidesAWSRepository: typeof PartsGuidesAWS,
         @Inject(PARTS_QUEUE) private PartsClient: ClientProxy,
         private readonly s3Client: S3Client,
-    ) {
+    ) {}
+
+    async getAllStatic() {
+        const command = new ListObjectsV2Command({
+            Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
+            MaxKeys: 100
+          });
+        const { Contents, IsTruncated, NextContinuationToken } = await this.s3Client.send(command);
+        const partStatic = Contents.filter((s3File) => s3File.Key.startsWith('Part'));
+        const guideStatic = Contents.filter((s3File) => s3File.Key.startsWith('Guide'));
+        return {
+            partStatic,
+            guideStatic
+        };
     }
 
     async deletePublicFile(key: string) {
@@ -32,7 +48,7 @@ export class PartsGuidesAwsService {
         this.partsGuidesAWSRepository.destroy({ where: { key } });
     }
 
-    private async uploadPublicFile(dataBuffer: Buffer, filename: string, fileType: string, partId: number) {
+    private async uploadPublicFile(dataBuffer: Buffer, filename: string, fileType: FileType, partId: number) {
         const uploadParams = {
             Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
             Body: dataBuffer,
@@ -63,7 +79,7 @@ export class PartsGuidesAwsService {
             throw new HttpException({ message: 'Part with such id does not exist!' }, HttpStatus.BAD_REQUEST);
         }
 
-        const newFile = await this.uploadPublicFile(fileBuffer, fileOriginalname, "Part", partId);
+        const newFile = await this.uploadPublicFile(fileBuffer, fileOriginalname, 'Guide', partId);
 
         part.$add('static', [newFile.id]);
         return newFile.url;
@@ -75,7 +91,7 @@ export class PartsGuidesAwsService {
             throw new HttpException({ message: 'Part with such id does not exist!' }, HttpStatus.BAD_REQUEST);
         }
 
-        const newFile = await this.uploadPublicFile(fileBuffer, fileOriginalname, "Guide", partId);
+        const newFile = await this.uploadPublicFile(fileBuffer, fileOriginalname, 'Part', partId);
 
         part.$add('static', [newFile.id]);
         return newFile.url;

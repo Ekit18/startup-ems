@@ -45,6 +45,24 @@ export class CarService {
         return models;
     }
 
+    async getAllYearsByBrandAndModel(dto: GetCarByBrandIdDto & GetCarByModelDto) {
+        const { brandId, model } = dto;
+        const years = await this.carRepository.findAll({ where: { brandId, model }, attributes: ["year"], group: ['year'] });
+        if (!years) {
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+        }
+        return years;
+    }
+
+    async getAllCarsByBrandAndModelAndYear(dto: GetCarByBrandIdDto & GetCarByModelDto & Pick<CarDto, 'year'>) {
+        const { brandId, model, year } = dto;
+        const cars = await this.carRepository.findAll({ where: { brandId, model, year } });
+        if (!cars) {
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+        }
+        return cars;
+    }
+
     async updateCar(id: number, dto: UpdateCarDto) {
         if (!Object.keys(dto).length) {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);

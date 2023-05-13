@@ -22,7 +22,7 @@ export class UserCarsRmqController {
     findAllUserCars(@Payload() userId: number, @Ctx() context: RmqContext): Promise<UserCarsDataWithUserCarId[]> {
         this.rmqService.ack(context);
         console.log("TESTSTTTS");
-        return this.userCars.getAllUserCars(userId);
+        return this.userCars.getAllUserCarsWithEmail(userId);
     }
 
     @MessagePattern({ role: "user-cars", cmd: "getUserCarForCrashInfo" })

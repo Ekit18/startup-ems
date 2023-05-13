@@ -1,9 +1,9 @@
 import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
-import { CarService } from "apps/car/src/car/car.service";
 import { CarOperation, RepairsHistory, CreateRepairsHistory } from "inq-shared-lib";
 import { CarOperationService } from "../car-operation/car-operation.service";
 import { CarServicesServices } from "../car-service/car-service.service";
+import { CarService } from "apps/car/src/car/car.service";
 
 export interface CarHistoryByService extends CarService {
     operations: CarOperation[];

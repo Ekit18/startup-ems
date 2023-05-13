@@ -70,6 +70,67 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+    ports:
+      - '5001:5001'
+
+  car:
+    build:
+      context: .
+      dockerfile: ./apps/car/Dockerfile
+      target: development
+    command: npm run start:dev car
+    env_file:
+      - ./apps/car/.env
+    depends_on:
+      - rabbitmq
+      - auth
+    environment:
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '5002:5002'
+
+
+  car-service:
+    build:
+      context: .
+      dockerfile: ./apps/car-service/Dockerfile
+      target: development
+    command: npm run start:dev car-service
+    env_file:
+      - ./apps/car-service/.env
+    depends_on:
+      - rabbitmq
+      - auth
+    environment:
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '5003:5003'
+
+  chat-gpt:
+    build:
+      context: .
+      dockerfile: ./apps/chat-gpt/Dockerfile
+      target: development
+    command: npm run start:dev chat-gpt
+    env_file:
+      - ./apps/chat-gpt/.env
+    depends_on:
+      - rabbitmq
+      - auth
+    environment:
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '5004:5004'
+
 
   parts:
     build:
@@ -87,7 +148,6 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+    ports:
+      - '5005:5005'
 
-networks:
-  postgres:
-    driver: bridge

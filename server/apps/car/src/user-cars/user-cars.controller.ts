@@ -16,6 +16,14 @@ export class UserCarsController {
         return this.userCarsService.createUserCar(userCarsDto);
     }
 
+    @ApiOperation({ summary: "Getting all user cars with email" })
+    @ApiResponse({ status: 200, type: [UserCars] })
+    @UseGuards(JwtAuthGuard)
+    @Get('all-cars-with-email/:userId')
+    getAllUserCarsByIdWithEmail(@Param('userId') userId: number) {
+        return this.userCarsService.getAllUserCarsWithEmail(userId);
+    }
+
     @ApiOperation({ summary: "Getting all user cars" })
     @ApiResponse({ status: 200, type: [UserCars] })
     @UseGuards(JwtAuthGuard)

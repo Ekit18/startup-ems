@@ -5,9 +5,11 @@ import { Button, Col, Container, Row } from 'react-bootstrap'
 import { Context } from '..'
 // import { SocketsTest } from '../components/SocketsTest'
 import { RepairSigning } from './RepairSigning'
+import { UserCars } from '../components/UserCars/UserCars'
+import { CreateCar } from '../components/Car/CreateCar'
 
 
-const MainPage:React.FC = observer(() => {
+const MainPage: React.FC = observer(() => {
   const { user } = useContext(Context)
 
   return (
@@ -15,7 +17,9 @@ const MainPage:React.FC = observer(() => {
       <h2>user id: {user.userId}</h2>
       <Button onClick={() => user.logOut()}>log out</Button>
       <hr />
-      <RepairSigning/>
+      <UserCars />
+      {/* <RepairSigning/> */}
+      <CreateCar />
     </>
   )
 })

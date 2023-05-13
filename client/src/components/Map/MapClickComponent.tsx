@@ -6,6 +6,7 @@ interface ClickInterface {
     setCrashModal: React.Dispatch<React.SetStateAction<CrashModalState>>
 }
 export const MapClickComponent: React.FC<ClickInterface> = ({ clickedMarker, setCrashModal }) => {
+    console.log("RERENDER!")
     const map = useMapEvents({
         click: (e) => {
             if (clickedMarker === null) {

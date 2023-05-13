@@ -1,4 +1,4 @@
-import { Controller, HttpException, HttpStatus, Param, Post, UploadedFiles, UseInterceptors, Delete, Inject } from '@nestjs/common';
+import { Controller, HttpException, HttpStatus, Param, Post, Get, UploadedFiles, UseInterceptors, Delete, Inject } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiOperation } from '@nestjs/swagger';
 import { DeleteStaticDTO } from 'inq-shared-lib';
@@ -34,6 +34,12 @@ export class PartsGuidesAwsController {
         console.log(config.MAX_FILE_SIZE);
 
         callback(null, true);
+    }
+    @ApiOperation({ summary: 'Delete static file from S3 and DB' })
+    @Get()
+    getStaticFiles() {
+        const staticFiles = this.partsGuidesAwsService.getAllStatic();
+        return staticFiles;
     }
     @ApiOperation({ summary: 'Push static image of a part to S3' })
     @Post('part/:partId')

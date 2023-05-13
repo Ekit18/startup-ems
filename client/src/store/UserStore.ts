@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 
 export interface UserData {
     email?: string;
-    id?: number;
+    id: number;
     roles?: UserRole[];
     iat?: number;
     exp?: number;
@@ -26,7 +26,7 @@ export default class UserStore {
     _user: UserData
     constructor() {
         this._isAuth = true
-        this._user = {}
+        this._user = { id: -1 }
         makeAutoObservable(this)
     }
 
@@ -56,7 +56,7 @@ export default class UserStore {
 
     logOut() {
         this._isAuth = false
-        this._user = {}
+        this._user = { id: -1 }
         localStorage.clear()
     }
 }

@@ -5,6 +5,7 @@ import { Context } from '.';
 import { check } from './http/authApi/userApi';
 import AppRouter from './components/AppRouter';
 import { UserData } from './store/UserStore';
+import { fetchUserCars } from './http/carApi/userCarsApi';
 
 const App = observer(() => {
     const { user } = useContext(Context)

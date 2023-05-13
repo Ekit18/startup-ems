@@ -5,5 +5,6 @@ export const GOOGLE_REDIRECT_ROUTE = 'login/google/redirect'
 export const REPAIR_SIGNING_ROUTE = '/main/repair-signing'
 export const SERVICE_MAP_ROUTE = '/service/map'
 export const USER_MAP_ROUTE = '/main/map'
+export const ADD_USER_CARS_ROUTE = '/main/add-user-cars'
 export const MARKER_ZOOM = 13
 export const MAP_ZOOM = 13

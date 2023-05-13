@@ -5,6 +5,7 @@ import MainPage from "./pages/MainPage"
 import { Redirect } from "./pages/Redirect"
 import { RepairSigning } from "./pages/RepairSigning"
 import {
+    ADD_USER_CARS_ROUTE,
     GOOGLE_REDIRECT_ROUTE,
     LOGIN_ROUTE,
     MAIN_ROUTE,
@@ -13,6 +14,7 @@ import {
     SERVICE_MAP_ROUTE,
     USER_MAP_ROUTE,
 } from "./utils/constants"
+import AddUserCars from './components/UserCars/AddUserCars/AddUserCars';
 
 export const authRoutes = [
     {
@@ -26,7 +28,11 @@ export const authRoutes = [
     {
         path: USER_MAP_ROUTE,
         Component: CrashMap
-    }
+    },
+    {
+        path: ADD_USER_CARS_ROUTE,
+        Component: AddUserCars
+    },
 ]
 
 

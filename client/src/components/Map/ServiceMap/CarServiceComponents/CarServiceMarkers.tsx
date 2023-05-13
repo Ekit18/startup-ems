@@ -6,6 +6,7 @@ import L from 'leaflet';
 import { MARKER_ZOOM } from '../../../../utils/constants';
 import { ServiceIcon } from '../../../../ui/icons';
 import { CarServiceInfo } from "../ServiceCrashMap";
+import { CarInfo, CrashInfo } from '../../UserMap/CrashMap';
 import { CarServiceDetails } from "./CarServiceDetails";
 
 interface CarServiceMarkersProps {
@@ -14,9 +15,13 @@ interface CarServiceMarkersProps {
   clickedMarker: number | null,
   mapRef: React.MutableRefObject<L.Map | null>,
   handleClickMarker: (index: number) => void,
+  handleDeleteCrashEmit: (userCarId: number) => void,
+  setCurrCrashToChooseCarServiceFor: React.Dispatch<React.SetStateAction<CarInfo | CrashInfo | null>>,
+  currCrashToChooseCarServiceFor: CarInfo | CrashInfo | null,
+  handleConfirm: (confirmCarServiceModal: boolean) => void,
 }
 
-export const CarServiceMarkers: React.FC<CarServiceMarkersProps> = observer(({ carServiceMarkers, setClickedMarker, clickedMarker, mapRef, handleClickMarker }) => {
+export const CarServiceMarkers: React.FC<CarServiceMarkersProps> = observer(({ handleConfirm, currCrashToChooseCarServiceFor, setCurrCrashToChooseCarServiceFor, handleDeleteCrashEmit, carServiceMarkers, setClickedMarker, clickedMarker, mapRef, handleClickMarker }) => {
   return (
     <>
       {carServiceMarkers.map((marker, index) =>
@@ -34,12 +39,12 @@ export const CarServiceMarkers: React.FC<CarServiceMarkersProps> = observer(({ c
               if (mapRef.current) {
                 mapRef.current.setView(ref.getLatLng(), MARKER_ZOOM)
               }
-              setClickedMarker(index);
+              setClickedMarker(null);
             }
           }}
         >
           <Popup>
-            <CarServiceDetails carServiceMarker={marker} index={index} handleClickMarker={handleClickMarker} isListDetails={false} />
+            <CarServiceDetails handleConfirm={handleConfirm} setCurrCrashToChooseCarServiceFor={setCurrCrashToChooseCarServiceFor} currCrashToChooseCarServiceFor={currCrashToChooseCarServiceFor} handleDeleteCrashEmit={handleDeleteCrashEmit} carServiceMarker={marker} index={index} handleClickMarker={handleClickMarker} isListDetails={false} />
           </Popup>
         </Marker>
       )}
