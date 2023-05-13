@@ -51,7 +51,7 @@ export default class UserStore {
     }
 
     isService() {
-        return this._user.roles?.find((role) => role.value === "ADMIN")
+        return Boolean(this._user.roles?.find((role) => role.value === "ADMIN"))
     }
 
     logOut() {
