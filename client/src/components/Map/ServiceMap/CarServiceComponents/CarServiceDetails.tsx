@@ -14,16 +14,11 @@ interface DetailsProps {
     handleClickMarker: (index: number) => void,
     handleDeleteCrashEmit: (userCarId: number) => void
     setCurrCrashToChooseCarServiceFor: React.Dispatch<React.SetStateAction<CarInfo | CrashInfo | null>>,
-    currCrashToChooseCarServiceFor: CarInfo | CrashInfo | null,
+    setCurrCarService: React.Dispatch<React.SetStateAction<CarServiceInfo | null>>,
     handleConfirm: (confirmCarServiceModal: boolean) => void
 }
 
-export const CarServiceDetails: React.FC<DetailsProps> = observer(({ handleConfirm, setCurrCrashToChooseCarServiceFor, currCrashToChooseCarServiceFor, handleDeleteCrashEmit, carServiceMarker, index, handleClickMarker, isListDetails }: DetailsProps) => {
-    useEffect(() => {
-            handleDeleteCrashEmit(currCrashToChooseCarServiceFor!.userCarId);
-            setCurrCrashToChooseCarServiceFor(null);
-    })
-
+export const CarServiceDetails: React.FC<DetailsProps> = observer(({ handleConfirm, setCurrCrashToChooseCarServiceFor, setCurrCarService, handleDeleteCrashEmit, carServiceMarker, index, handleClickMarker, isListDetails }: DetailsProps) => {
     return (
         <div
             onClick={isListDetails
@@ -44,6 +39,7 @@ export const CarServiceDetails: React.FC<DetailsProps> = observer(({ handleConfi
                 <Col md={12} className="mb-3">
                     <Button className="w-100" variant={'primary'} onClick={() => {
                         handleConfirm(true);
+                        setCurrCarService(carServiceMarker);
                     }}>Choose</Button>
                 </Col>
             </Row>

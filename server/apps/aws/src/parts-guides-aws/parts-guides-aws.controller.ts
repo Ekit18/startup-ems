@@ -35,7 +35,7 @@ export class PartsGuidesAwsController {
 
         callback(null, true);
     }
-    @ApiOperation({ summary: 'Delete static file from S3 and DB' })
+    @ApiOperation({ summary: 'Get all static files from S3 and DB' })
     @Get()
     getStaticFiles() {
         const staticFiles = this.partsGuidesAwsService.getAllStatic();

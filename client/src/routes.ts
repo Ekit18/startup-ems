@@ -6,6 +6,7 @@ import { Redirect } from "./pages/Redirect"
 import { RepairSigning } from "./pages/RepairSigning"
 import {
     ADD_USER_CARS_ROUTE,
+    CHAT_GPT_ROUTE,
     GOOGLE_REDIRECT_ROUTE,
     LOGIN_ROUTE,
     MAIN_ROUTE,
@@ -15,8 +16,13 @@ import {
     USER_MAP_ROUTE,
 } from "./utils/constants"
 import AddUserCars from './components/UserCars/AddUserCars/AddUserCars';
+import { ChatPage } from './components/ChatGPT/ChatPage';
 
 export const authRoutes = [
+    {
+        path: CHAT_GPT_ROUTE,
+        Component: ChatPage
+    },
     {
         path: MAIN_ROUTE,
         Component: MainPage

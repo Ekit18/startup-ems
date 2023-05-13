@@ -25,7 +25,7 @@ export default class UserStore {
     _isAuth: boolean
     _user: UserData
     constructor() {
-        this._isAuth = true
+        this._isAuth = false
         this._user = { id: -1 }
         makeAutoObservable(this)
     }
@@ -51,7 +51,7 @@ export default class UserStore {
     }
 
     isService() {
-        return this._user.roles?.find((role) => role.value === "ADMIN")
+        return Boolean(this._user.roles?.find((role) => role.value === "ADMIN"))
     }
 
     logOut() {

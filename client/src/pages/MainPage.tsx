@@ -7,15 +7,20 @@ import { Context } from '..'
 import { RepairSigning } from './RepairSigning'
 import { UserCars } from '../components/UserCars/UserCars'
 import { CreateCar } from '../components/Car/CreateCar'
+import { useNavigate } from 'react-router-dom'
+import { CHAT_GPT_ROUTE, SERVICE_MAP_ROUTE, USER_MAP_ROUTE } from '../utils/constants'
 
 
 const MainPage: React.FC = observer(() => {
   const { user } = useContext(Context)
-
+  const navigate = useNavigate()
   return (
     <>
       <h2>user id: {user.userId}</h2>
-      <Button onClick={() => user.logOut()}>log out</Button>
+      <Button onClick={() => user.logOut()} className="me-5 ms-3">log out</Button>
+      <Button variant="danger" onClick={() => navigate(SERVICE_MAP_ROUTE)} className="me-5">Service map</Button>
+      <Button onClick={() => navigate(USER_MAP_ROUTE)} className="me-5">User map</Button>
+      <Button onClick={() => navigate(CHAT_GPT_ROUTE)} className="me-5">Chat Page</Button>
       <hr />
       <UserCars />
       {/* <RepairSigning/> */}

@@ -280,6 +280,7 @@ import {
 } from "./Reducer/CrashMarkersReducer";
 import { CarServiceList } from "./CarServiceComponents/CarServiceList";
 import { CarServiceMarkers } from "./CarServiceComponents/CarServiceMarkers";
+import { ConfirmCarServiceModal } from './ConfirmCarServiceModal';
 
 interface CrashMapProps {
     test?: string;
@@ -301,10 +302,12 @@ export interface CarServiceInfo {
 
 export const ServiceCrashMap: React.FC<CrashMapProps> = observer(() => {
     const [crashMarkers, setCrashMarkers] = useState<(CrashInfo | CarInfo)[]>([]);
+
     const [chooseServiceMode, setChooseServiceMode] = useState<boolean>(false)
     const [carServiceMarkers, setCarServiceMarkers] = useState<(CarServiceInfo)[]>([])
     const [currCrashToChooseCarServiceFor, setCurrCrashToChooseCarServiceFor] = useState<null | CrashInfo | CarInfo>(null);
     const [confirmCarServiceModal, setConfirmCarServiceModal] = useState<boolean>(false);
+    const [currCarService, setCurrCarService] = useState<CarServiceInfo | null>(null);
 
     const [clickedMarker, setClickedMarker] = useState<number | null>(null);
 
@@ -384,7 +387,7 @@ export const ServiceCrashMap: React.FC<CrashMapProps> = observer(() => {
                                 <CarServiceList
                                     handleConfirm={setConfirmCarServiceModal}
                                     setCurrCrashToChooseCarServiceFor={setCurrCrashToChooseCarServiceFor}
-                                    currCrashToChooseCarServiceFor={currCrashToChooseCarServiceFor}
+                                    setCurrCarService={setCurrCarService}
                                     handleDeleteCrashEmit={handleDeleteCrashEmit}
                                     carServicemarkers={carServiceMarkers}
                                     handleClickMarker={handleClickMarker}
@@ -413,7 +416,7 @@ export const ServiceCrashMap: React.FC<CrashMapProps> = observer(() => {
                                         <CarServiceMarkers
                                             handleConfirm={setConfirmCarServiceModal}
                                             setCurrCrashToChooseCarServiceFor={setCurrCrashToChooseCarServiceFor}
-                                            currCrashToChooseCarServiceFor={currCrashToChooseCarServiceFor}
+                                            setCurrCarService={setCurrCarService}
                                             carServiceMarkers={carServiceMarkers}
                                             setClickedMarker={setClickedMarker}
                                             clickedMarker={clickedMarker}
@@ -440,7 +443,14 @@ export const ServiceCrashMap: React.FC<CrashMapProps> = observer(() => {
                 </Row>
                 <ServiceAddCrashModal show={crashModal.show} setShow={setCrashModal} onSubmit={handleAddCrashEmit}
                     userCars={crashMarkers}/>
-                {/* <ConfirmCarServiceModal show={confirmCarServiceModal} setShow={setConfirmCarServiceModal} onSubmit={handleAddCrashEmit}/> */}
+                <ConfirmCarServiceModal
+                    currCarService={currCarService!}
+                    handleDeleteCrashEmit={handleDeleteCrashEmit}
+                    show={confirmCarServiceModal}
+                    setShow={setConfirmCarServiceModal}
+                    currCrashToChooseCarServiceFor={currCrashToChooseCarServiceFor!}
+                    setChooseServiceMode={setChooseServiceMode}
+                />
             </Container>
         </>
     );

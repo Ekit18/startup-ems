@@ -8,3 +8,5 @@ export const USER_MAP_ROUTE = '/main/map'
 export const ADD_USER_CARS_ROUTE = '/main/add-user-cars'
 export const MARKER_ZOOM = 13
 export const MAP_ZOOM = 13
+export const DIAGNOSTIC_OPERATION = 0;
+export const CHAT_GPT_ROUTE = '/main/ai-help'

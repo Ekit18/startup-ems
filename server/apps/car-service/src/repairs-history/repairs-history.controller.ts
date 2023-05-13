@@ -8,7 +8,7 @@ export class RepairsHistoryController {
 
     @Roles("CARSERVICE")
     @UseGuards(RolesGuard)
-    @Post()
+    @Post('send_ai_message')
     create(@Body() dto: CreateRepairsHistory) {
         return this.repairsHistoryService.create(dto);
     }

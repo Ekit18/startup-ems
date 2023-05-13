@@ -10,11 +10,11 @@ interface CrashesListProps {
     handleClickMarker: (index: number) => void,
     handleDeleteCrashEmit: (userCarId: number) => void,
     setCurrCrashToChooseCarServiceFor: React.Dispatch<React.SetStateAction<CarInfo | CrashInfo | null>>,
-    currCrashToChooseCarServiceFor: CarInfo | CrashInfo | null,
+    setCurrCarService: React.Dispatch<React.SetStateAction<CarServiceInfo | null>>
     handleConfirm: (confirmCarServiceModal: boolean) => void
 }
 
-export const CarServiceList: React.FC<CrashesListProps> = observer(({ handleConfirm, setCurrCrashToChooseCarServiceFor, currCrashToChooseCarServiceFor, handleDeleteCrashEmit, carServicemarkers, handleClickMarker }) => {
+export const CarServiceList: React.FC<CrashesListProps> = observer(({ handleConfirm, setCurrCrashToChooseCarServiceFor, setCurrCarService, handleDeleteCrashEmit, carServicemarkers, handleClickMarker }) => {
     return (
         <>
             {
@@ -23,7 +23,7 @@ export const CarServiceList: React.FC<CrashesListProps> = observer(({ handleConf
                         <CarServiceDetails
                             handleConfirm={handleConfirm}
                             setCurrCrashToChooseCarServiceFor={setCurrCrashToChooseCarServiceFor}
-                            currCrashToChooseCarServiceFor={currCrashToChooseCarServiceFor}
+                            setCurrCarService={setCurrCarService}
                             handleDeleteCrashEmit={handleDeleteCrashEmit}
                             key={index}
                             carServiceMarker={marker}

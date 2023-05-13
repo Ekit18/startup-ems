@@ -34,12 +34,6 @@ export const CrashDetails: React.FC<DetailsProps> = observer(({ marker, index, h
                 <Col md={12} className="mb-3">
                     <Button className="w-100" variant={'danger'} onClick={() => handleDeleteCrashEmit(marker.userCarId)}>Delete</Button>
                 </Col>
-                <Col md={12} className="mb-3">
-                    <Button className="w-100" variant={'success'} onClick={() => console.log("STO!!!")} disabled>Mark solved</Button>
-                </Col>
-                <Col md={12} className="mb-3">
-                    <Button className="w-100" variant={'primary'} onClick={() => console.log("STO!!!")} disabled>Choose Car service station</Button>
-                </Col>
             </Row>
             <hr />
 

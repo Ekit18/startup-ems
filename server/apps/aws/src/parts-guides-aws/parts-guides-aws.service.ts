@@ -11,28 +11,52 @@ import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from 'rxjs';
 
 type FileType = 'Part' | 'Guide';
+interface StaticFile {
+    url: string,
+    part: Pick<Part, 'id' | 'brand' | 'name' | 'type'>
+}
+
+interface AllStaticFiles {
+    partStatic: StaticFile[],
+    guideStatic: StaticFile[]
+}
 
 @Injectable()
 export class PartsGuidesAwsService {
+    baseURI: string;
     constructor(
         private readonly configService: ConfigService,
         @InjectModel(PartsGuidesAWS) private partsGuidesAWSRepository: typeof PartsGuidesAWS,
         @Inject(PARTS_QUEUE) private PartsClient: ClientProxy,
         private readonly s3Client: S3Client,
-    ) {}
+    ) {
+        this.baseURI = `https://${this.configService.get('AWS_PUBLIC_BUCKET_NAME')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/`;
+    }
 
-    async getAllStatic() {
-        const command = new ListObjectsV2Command({
-            Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
-            MaxKeys: 100
-          });
-        const { Contents, IsTruncated, NextContinuationToken } = await this.s3Client.send(command);
-        const partStatic = Contents.filter((s3File) => s3File.Key.startsWith('Part'));
-        const guideStatic = Contents.filter((s3File) => s3File.Key.startsWith('Guide'));
-        return {
-            partStatic,
-            guideStatic
-        };
+    async getAllStatic(): Promise<AllStaticFiles> {
+        const contents:PartsGuidesAWS[] = await this.partsGuidesAWSRepository.findAll({});
+        // ПРАЦЮЄ
+        const partStatic = await Promise.all(contents.filter((s3File) => s3File.key.startsWith('Part')).map(async (s3File) => {
+            const part = await lastValueFrom(this.PartsClient.send({ role: "parts", cmd: "findOneById" }, 1));
+            return {
+                url: this.baseURI + s3File.key,
+               part
+            };
+        }
+        ));
+
+        const guideStatic = await Promise.all(contents.filter((s3File) => s3File.key.startsWith('Guide')).map(async (s3File) => {
+            const part = await lastValueFrom(this.PartsClient.send({ role: "parts", cmd: "findOneById" }, s3File.partId));
+            console.log(part);
+            return {
+                url: this.baseURI + s3File.key,
+                part
+            };
+        }
+        ));
+
+        // const result = await Promise.all([]);
+        return { partStatic, guideStatic };
     }
 
     async deletePublicFile(key: string) {
