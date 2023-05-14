@@ -1,4 +1,4 @@
-import { Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import { io, Socket } from 'socket.io-client';
 import { Context } from '../../../index';
 import { getCrashesByUserId } from '../../../http/carServiceApi/crashesApi';
@@ -10,7 +10,7 @@ import L, { LatLngTuple } from 'leaflet';
 import "leaflet/dist/leaflet.css"
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { AddCrashModal, ModalData } from './AddCrashModal';
-import { MAP_ZOOM } from '../../../utils/constants';
+import { MAIN_ROUTE, MAP_ZOOM } from '../../../utils/constants';
 import { MapClickComponent } from '../MapClickComponent';
 import { CrashesMarkers } from './CrashComponents/CrashesMarkers';
 import { CrashesList } from './CrashComponents/CrashesList';
@@ -21,6 +21,7 @@ import {
     crashMarkersUserAdded,
     crashMarkersUserDeleted
 } from "../ServiceMap/Reducer/CrashMarkersReducer";
+import { useNavigate } from 'react-router-dom';
 
 interface CrashMapProps {
     test?: string;
@@ -56,6 +57,7 @@ export const CrashMap: React.FC<CrashMapProps> = observer(() => {
     const [socket, setSocket] = useState<Socket>();
     const { user } = useContext(Context);
 
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (!markers.length) {
@@ -106,6 +108,7 @@ export const CrashMap: React.FC<CrashMapProps> = observer(() => {
             <Container fluid>
                 <Row>
                     <Col md={4} style={{ overflowY: "scroll", height: "100vh" }}>
+                        <Button onClick={() => navigate(MAIN_ROUTE)}>Return to main page</Button>
                         <CrashesList handleDeleteCrashEmit={handleDeleteCrashEmit} markers={markers} handleClickMarker={handleClickMarker} />
                     </Col>
                     <Col md={8}>

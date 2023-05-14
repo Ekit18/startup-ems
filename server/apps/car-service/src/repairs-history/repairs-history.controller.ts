@@ -8,9 +8,16 @@ export class RepairsHistoryController {
 
     @Roles("CARSERVICE")
     @UseGuards(RolesGuard)
-    @Post('send_ai_message')
+    @Post('begin-service')
     create(@Body() dto: CreateRepairsHistory) {
         return this.repairsHistoryService.create(dto);
+    }
+
+    @Roles("CARSERVICE")
+    @UseGuards(RolesGuard)
+    @Post('end-service')
+    createFromArray(@Body() dto: { initialRepairHistoryId: number } & { carOperationIds: number[] } & CreateRepairsHistory) {
+        return this.repairsHistoryService.createFromArray(dto);
     }
 
     @Roles("CARSERVICE")
@@ -25,6 +32,13 @@ export class RepairsHistoryController {
     @Get('car-service-history/:carServiceId')
     getAllCarServiceHistory(@Param('carServiceId') carServiceId: number) {
         return this.repairsHistoryService.getAllCarServiceHistory(carServiceId);
+    }
+
+    @Roles("CARSERVICE")
+    @UseGuards(RolesGuard)
+    @Get('car-service-unsigned-history/:carServiceId')
+    getAllUnsignedCarServiceHistory(@Param('carServiceId') carServiceId: number) {
+        return this.repairsHistoryService.getAllUnsignedCarServiceHistory(carServiceId);
     }
 
     @Roles("CARSERVICE")

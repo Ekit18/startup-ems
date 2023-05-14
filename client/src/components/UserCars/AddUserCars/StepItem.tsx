@@ -18,7 +18,6 @@ export const StepItem = <T extends number | string>({
         console.log(itemId);
         setItemSelect(itemId);
     };
-    console.log(itemSelected === itemId, itemSelected)
     return (
         <div
             className={`border p-5 text-center mb-4  ${itemSelected === itemId

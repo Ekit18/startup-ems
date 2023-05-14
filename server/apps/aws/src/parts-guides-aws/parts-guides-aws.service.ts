@@ -4,19 +4,22 @@ import { S3Client, DeleteObjectCommand, PutObjectCommand, ListObjectsV2Command }
 import { HttpService } from '@nestjs/axios';
 import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { PartsGuidesAWS, PARTS_QUEUE, Part } from 'inq-shared-lib';
+import { PartsGuidesAWS, PARTS_QUEUE, Part, GetPartTypesByBrandDTO, getAllStaticByBrandAndTypeDTO } from 'inq-shared-lib';
 import { FilesErrorObject } from './parts-guides-aws.controller';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from 'rxjs';
+import { HttpStatusCode } from 'axios';
 
 type FileType = 'Part' | 'Guide';
-interface StaticFile {
+export interface StaticFile {
     url: string,
-    part: Pick<Part, 'id' | 'brand' | 'name' | 'type'>
+    key: string,
+    part: Pick<Part, 'id' | 'brand' | 'name' | 'type'>,
+    isGuide: boolean
 }
 
-interface AllStaticFiles {
+export interface AllStaticFiles {
     partStatic: StaticFile[],
     guideStatic: StaticFile[]
 }
@@ -33,30 +36,56 @@ export class PartsGuidesAwsService {
         this.baseURI = `https://${this.configService.get('AWS_PUBLIC_BUCKET_NAME')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/`;
     }
 
-    async getAllStatic(): Promise<AllStaticFiles> {
-        const contents:PartsGuidesAWS[] = await this.partsGuidesAWSRepository.findAll({});
+    async getAllStatic(getAllStaticDTO: getAllStaticByBrandAndTypeDTO): Promise<any> {
+        const contents: PartsGuidesAWS[] = await this.partsGuidesAWSRepository.findAll({});
+
         // ПРАЦЮЄ
         const partStatic = await Promise.all(contents.filter((s3File) => s3File.key.startsWith('Part')).map(async (s3File) => {
-            const part = await lastValueFrom(this.PartsClient.send({ role: "parts", cmd: "findOneById" }, 1));
+            const part: Part = await lastValueFrom(this.PartsClient.send({ role: "parts", cmd: "findOneWithSuchBrandAndType" }, { partId: s3File.partId, brand: getAllStaticDTO.brand, type: getAllStaticDTO.type }));
             return {
                 url: this.baseURI + s3File.key,
-               part
+                key: s3File.key,
+                part,
+                isGuide: false
             };
         }
         ));
 
         const guideStatic = await Promise.all(contents.filter((s3File) => s3File.key.startsWith('Guide')).map(async (s3File) => {
-            const part = await lastValueFrom(this.PartsClient.send({ role: "parts", cmd: "findOneById" }, s3File.partId));
+            const part: Part = await lastValueFrom(this.PartsClient.send({ role: "parts", cmd: "findOneWithSuchBrandAndType" }, { partId: s3File.partId, brand: getAllStaticDTO.brand, type: getAllStaticDTO.type }));
             console.log(part);
             return {
                 url: this.baseURI + s3File.key,
-                part
+                key: s3File.key,
+                part,
+                isGuide: true
             };
         }
         ));
+        return { partStatic: partStatic.filter(({ part }) => part !== null), guideStatic: guideStatic.filter(({ part }) => part !== null) };
+    }
 
-        // const result = await Promise.all([]);
-        return { partStatic, guideStatic };
+    async getStaticFilesPartBrands() {
+        const result = await this.partsGuidesAWSRepository.findAll({ attributes: ["partId"], group: ['partId'] });
+        const resultPromise = Promise.all(result.map(async (statImg) => {
+            const part: Part = await lastValueFrom(this.PartsClient.send({ role: "parts", cmd: "findOneById" }, statImg.partId));
+            console.log(part);
+            return part.brand;
+        }));
+        return resultPromise;
+    }
+
+    async getStaticFilesPartTypesOfBrand(selectedBrand: GetPartTypesByBrandDTO) {
+        const result = await this.partsGuidesAWSRepository.findAll({ attributes: ["partId"], group: ['partId'] });
+        const resultPromise = Promise.all(result.map(async (statImg) => {
+            console.log(`RESULT:`);
+            console.log(statImg);
+            console.log(`RESULT END`);
+            const type: string = await lastValueFrom(this.PartsClient.send({ role: "parts", cmd: "getTypeByIdAndBrand" }, { partId: statImg.partId, brand: selectedBrand.brand }));
+            console.log(type);
+            return type;
+        }));
+        return (await resultPromise).filter((type) => type !== null);
     }
 
     async deletePublicFile(key: string) {
@@ -64,13 +93,18 @@ export class PartsGuidesAwsService {
         if (!candidate) {
             throw new HttpException("Such key does not exist!", HttpStatus.BAD_REQUEST);
         }
-        const delParams = {
-            Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
-            Key: key,
-        };
-        await this.s3Client.send(new DeleteObjectCommand(delParams));
-        this.partsGuidesAWSRepository.destroy({ where: { key } });
+        try {
+            const delParams = {
+                Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
+                Key: key,
+            };
+            await this.s3Client.send(new DeleteObjectCommand(delParams));
+            return this.partsGuidesAWSRepository.destroy({ where: { key } });
+        } catch (error) {
+            throw new HttpException("CANNOT DELETE STATIC FILE!", HttpStatusCode.BadRequest);
+        }
     }
+
 
     private async uploadPublicFile(dataBuffer: Buffer, filename: string, fileType: FileType, partId: number) {
         const uploadParams = {
@@ -104,8 +138,6 @@ export class PartsGuidesAwsService {
         }
 
         const newFile = await this.uploadPublicFile(fileBuffer, fileOriginalname, 'Guide', partId);
-
-        part.$add('static', [newFile.id]);
         return newFile.url;
     }
 
@@ -117,7 +149,6 @@ export class PartsGuidesAwsService {
 
         const newFile = await this.uploadPublicFile(fileBuffer, fileOriginalname, 'Part', partId);
 
-        part.$add('static', [newFile.id]);
         return newFile.url;
     }
 
@@ -144,6 +175,7 @@ export class PartsGuidesAwsService {
             'X-RapidAPI-Host': process.env.X_RAPIDAPI_HOST
         };
         const httpService = new HttpService();
+        console.log(headers);
         await httpService.axiosRef.post('https://nsfw3.p.rapidapi.com/v1/results', formData, { headers }).then((response) => {
             isNSFW = response.data.results[0].entities[0].classes.nsfw > 0.5;
         }).catch((error) => {

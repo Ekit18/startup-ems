@@ -21,7 +21,7 @@ export const RepairSigningAddItem: React.FC<RepairSigningAddItemProps> =
       event: React.ChangeEvent<HTMLSelectElement>,
     ) => {
       console.log(Number(event.target.value))
-      if (!Number(event.target.value)) {
+      if (!isFinite(Number(event.target.value))) {
         return
       }
       handleInputChange(

@@ -264,7 +264,7 @@ import L, { LatLngTuple } from 'leaflet';
 import "leaflet/dist/leaflet.css"
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { ModalData } from '../UserMap/AddCrashModal';
-import { MAP_ZOOM } from '../../../utils/constants';
+import { MAIN_ROUTE, MAP_ZOOM } from '../../../utils/constants';
 import { CarInfo, CrashInfo } from '../UserMap/CrashMap';
 import { ServiceAddCrashModal } from './ServiceAddCrashModal';
 import { CrashesMarkers } from './CrashComponents/CrashesMarkers';
@@ -281,6 +281,7 @@ import {
 import { CarServiceList } from "./CarServiceComponents/CarServiceList";
 import { CarServiceMarkers } from "./CarServiceComponents/CarServiceMarkers";
 import { ConfirmCarServiceModal } from './ConfirmCarServiceModal';
+import { useNavigate } from 'react-router-dom';
 
 interface CrashMapProps {
     test?: string;
@@ -316,6 +317,8 @@ export const ServiceCrashMap: React.FC<CrashMapProps> = observer(() => {
     const mapRef = useRef<L.Map | null>(null)
 
     const [socket, setSocket] = useState<Socket>();
+
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -376,6 +379,10 @@ export const ServiceCrashMap: React.FC<CrashMapProps> = observer(() => {
             <Container fluid>
                 <Row>
                     <Col md={4} style={{ overflowY: "scroll", height: "100vh" }}>
+                        {
+                            !chooseServiceMode &&
+                            <Button onClick={() => navigate(MAIN_ROUTE)}>Return to main page</Button>
+                        }
                         {
                             chooseServiceMode &&
                             <Button variant={'primary'} onClick={() => handleChooseCarServiceModeEmit(false)}>
@@ -442,7 +449,7 @@ export const ServiceCrashMap: React.FC<CrashMapProps> = observer(() => {
                     </Col>
                 </Row>
                 <ServiceAddCrashModal show={crashModal.show} setShow={setCrashModal} onSubmit={handleAddCrashEmit}
-                    userCars={crashMarkers}/>
+                    userCars={crashMarkers} />
                 <ConfirmCarServiceModal
                     currCarService={currCarService!}
                     handleDeleteCrashEmit={handleDeleteCrashEmit}

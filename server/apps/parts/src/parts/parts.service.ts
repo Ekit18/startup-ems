@@ -4,6 +4,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import { CarService } from "apps/car/src/car/car.service";
 import { Part, CarsParts, GetPartsDTO, CreatePartDTO, UpdatePartDTO, CAR_QUEUE } from "inq-shared-lib";
 import { lastValueFrom } from "rxjs";
+import { getPartsByIdByBrandAndTypePayload, getTypeByIdAndBrandPayload } from "./parts-rmq.controller";
 
 @Injectable()
 export class PartsService {
@@ -11,6 +12,15 @@ export class PartsService {
         @Inject(CAR_QUEUE) private CarClient: ClientProxy,
         @InjectModel(CarsParts) private carsParts: typeof CarsParts) { }
 
+    // Next 2 methods are needed because partId is got from aws partIds pool, whereas brand and type is got from a client's pick, so only those ids are needed, whose brand and type is such
+    async getTypeByIdAndBrand(data: getTypeByIdAndBrandPayload) {
+        const types = await this.partRepository.findOne({ where: { partId: data.partId, brand: data.brand }, attributes: ['type'] });
+        return types;
+    }
+    async getPartByIdByBrandAndType(data: getPartsByIdByBrandAndTypePayload) {
+        const parts = await this.partRepository.findOne({ where: { partId: data.partId, brand: data.brand, type: data.type } });
+        return parts;
+    }
     async getAllPartsByCarID(getPartsDTO: GetPartsDTO) {
         const candidateCar = await lastValueFrom(this.CarClient.send({ role: "car", cmd: 'getCarById' }, getPartsDTO.carId));
         if (!candidateCar) {

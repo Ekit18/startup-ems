@@ -65,6 +65,7 @@ export class ChatGptService {
         }
     }
 
+
     async getModelCarAnswerGPT(question: string, userCarId:number, useOnceModel: string, useOnceTemperature: number, useOnceMaxTokens: number) {
         try {
             const userCar: UserCarsDataWithUserCarId = await lastValueFrom(this.UserCarClient.send({ role: "user-cars", cmd: "getUserCarForCrashInfo" }, userCarId));
@@ -73,8 +74,10 @@ export class ChatGptService {
             diagnosing problems/errors present both visually &
             within engine parts in order to figure out what's causing them (like lack of oil or power issues)
             & suggest required replacements while recording down details such fuel consumption type etc..
-            My car is 'Model: ${userCar.model} Brand: ${userCar.brand} Body type: ${userCar.bodyType} Year: ${userCar.year} Fuel: ${userCar.fuelType} Mileage: ${userCar.carMileage}'.
+            My car is 'Model: ${userCar.model}, Brand: ${userCar.brand}, Body type: ${userCar.bodyType}, Year: ${userCar.year}, Fuel type: ${userCar.fuelType}, Mileage: ${userCar.carMileage}'.
             Tell at first about my particular car in sense of a problem. Don't answer if next inquiry isn't technical or about cars.
+            If you think that regular car owner with low technical skills won't be able to fix car by himself,
+            tell him that phrase in your text "As Inquiry app helper i suggest you to visit a authorised car service nearby".
             First inquiry is '${question}'
             `;
             const params: CreateChatCompletionRequest = {
@@ -82,7 +85,7 @@ export class ChatGptService {
                 temperature: useOnceTemperature,
                 // // eslint-disable-next-line camelcase
                 // max_tokens: useOnceMaxTokens,
-                messages: [{ role: 'user', content: question, name: 'User' }]
+                messages: [{ role: 'user', content: AI_PROMPT, name: 'User' }]
             };
             const response = await this.openAIApi.createChatCompletion(params);
             return response.data.choices[0].message;

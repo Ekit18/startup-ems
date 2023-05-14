@@ -6,7 +6,8 @@ import { Socket } from "socket.io-client";
 
 interface RepairSigningSignatureCanvasProps {
     socket: Socket | undefined
-    room:string
+    repairHistoryId:number
+    handleSubmit: () => void;
 }
 
 
@@ -15,7 +16,7 @@ interface RepairSigningSignatureCanvasDrawingData {
     y: number,
 }
 
-export const RepairSigningSignatureCanvas: React.FC<RepairSigningSignatureCanvasProps> = observer(({ socket, room }) => {
+export const RepairSigningSignatureCanvas: React.FC<RepairSigningSignatureCanvasProps> = observer(({ socket, repairHistoryId, handleSubmit }) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [isDrawing, setIsDrawing] = useState(false);
 
@@ -32,7 +33,7 @@ export const RepairSigningSignatureCanvas: React.FC<RepairSigningSignatureCanvas
         const rect = canvas.getBoundingClientRect();
         context.beginPath();
         context.moveTo(event.clientX - rect.left, event.clientY - rect.top);
-        socket?.emit("down", { x: event.clientX - rect.left, y: event.clientY - rect.top, room });
+        socket?.emit("down", { x: event.clientX - rect.left, y: event.clientY - rect.top, repairHistoryId });
     }
 
     function handleOnDraw(data: RepairSigningSignatureCanvasDrawingData) {
@@ -100,7 +101,7 @@ const handleOnDown = (data:RepairSigningSignatureCanvasDrawingData) => {
         context.lineCap = "round";
         context.lineTo(event.clientX - rect.left, event.clientY - rect.top);
         context.stroke();
-        socket?.emit("draw", { x: event.clientX - rect.left, y: event.clientY - rect.top, room });
+        socket?.emit("draw", { x: event.clientX - rect.left, y: event.clientY - rect.top, repairHistoryId });
     }
 
     function handleMouseUp() {
@@ -134,7 +135,7 @@ const handleOnDown = (data:RepairSigningSignatureCanvasDrawingData) => {
                         />
                     </Col>
                     <Col md={12} className="text-center">
-                        <button onClick={handleSaveClick}>Save Drawing</button>
+                        <button onClick={handleSubmit}>Save</button>
                     </Col>
                 </Row>
             </Container>

@@ -1,11 +1,10 @@
 import { Controller, HttpException, HttpStatus, Param, Post, Get, UploadedFiles, UseInterceptors, Delete, Inject } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiOperation } from '@nestjs/swagger';
-import { DeleteStaticDTO } from 'inq-shared-lib';
-import { PartsGuidesAwsService } from './parts-guides-aws.service';
+import { DeleteStaticDTO, GetPartTypesByBrandDTO, getAllStaticByBrandAndTypeDTO } from 'inq-shared-lib';
+import { AllStaticFiles, PartsGuidesAwsService } from './parts-guides-aws.service';
 import { ConfigService } from '@nestjs/config';
 import { config } from './file-options';
-import { MessagePattern } from "@nestjs/microservices";
 
 export type FilesErrorObject = {
     isError: boolean,
@@ -35,12 +34,29 @@ export class PartsGuidesAwsController {
 
         callback(null, true);
     }
+
+
     @ApiOperation({ summary: 'Get all static files from S3 and DB' })
-    @Get()
-    getStaticFiles() {
-        const staticFiles = this.partsGuidesAwsService.getAllStatic();
+    @Get('part-brands')
+    getStaticFilesPartBrands(): Promise<string[]> {
+        const brands = this.partsGuidesAwsService.getStaticFilesPartBrands();
+        return brands;
+    }
+
+    @ApiOperation({ summary: 'Get all static files from S3 and DB' })
+    @Get('part-types-of-brand/:brand')
+    getStaticFilesPartTypesOfBrand(@Param() selectedBrand: GetPartTypesByBrandDTO): Promise<string[]> {
+        const brands = this.partsGuidesAwsService.getStaticFilesPartTypesOfBrand(selectedBrand);
+        return brands;
+    }
+
+    @ApiOperation({ summary: 'Get all static files from S3 and DB' })
+    @Get(':brand/:type')
+    getStaticFiles(@Param() getAllStaticDTO: getAllStaticByBrandAndTypeDTO): Promise<AllStaticFiles> {
+        const staticFiles = this.partsGuidesAwsService.getAllStatic(getAllStaticDTO);
         return staticFiles;
     }
+
     @ApiOperation({ summary: 'Push static image of a part to S3' })
     @Post('part/:partId')
     @UseInterceptors(FilesInterceptor('file', config.MAX_NUM_FILES, { limits: { fieldSize: config.MAX_FILE_SIZE }, fileFilter: PartsGuidesAwsController.imageFilter }))
@@ -62,6 +78,7 @@ export class PartsGuidesAwsController {
         );
         return urls;
     }
+
     @ApiOperation({ summary: 'Push static image of a repair guide to S3' })
     @Post('guide/:partId')
     @UseInterceptors(FilesInterceptor('file', config.MAX_NUM_FILES, { limits: { fieldSize: config.MAX_FILE_SIZE }, fileFilter: PartsGuidesAwsController.imageFilter }))
@@ -79,6 +96,7 @@ export class PartsGuidesAwsController {
         const urls: string[] = await Promise.all(files.map((file) => this.partsGuidesAwsService.addGuideImg(partId, file.buffer, file.originalname)));
         return urls;
     }
+
     @ApiOperation({ summary: 'Delete static file from S3 and DB' })
     @Delete(':key')
     deleteStaticFile(@Param() key: DeleteStaticDTO) {
