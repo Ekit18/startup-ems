@@ -4,18 +4,26 @@ import { observer } from "mobx-react-lite";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import _ from "lodash";
-import { useState } from 'react';
+import { CrashInfo, CarInfo } from "../UserMap/CrashMap";
+import { DIAGNOSTIC_OPERATION } from "../../../utils/constants";
+import { postCarHistory } from "../../../http/carServiceApi/repairsHistoryApi";
 
 
 interface DetailsProps {
-   handleConfirm: () => void,
-//    show: boolean
+   handleDeleteCrashEmit: (userCarId: number) => void,
+   currCrashToChooseCarServiceFor: CarInfo | CrashInfo,
+   currCarService: CarServiceInfo
+   setShow: (flag:boolean) => void,
+   setChooseServiceMode: (flag:boolean) => void,
+   show: boolean,
 }
-export const CarServiceDetails: React.FC<DetailsProps> = observer(({ handleConfirm }: DetailsProps) => {
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+export const ConfirmCarServiceModal: React.FC<DetailsProps> = observer(({ currCarService, setChooseServiceMode, handleDeleteCrashEmit, currCrashToChooseCarServiceFor, setShow, show }) => {
+    const handleClose = () => {
+        handleDeleteCrashEmit(currCrashToChooseCarServiceFor.userCarId);
+        postCarHistory(currCrashToChooseCarServiceFor.userCarId, currCarService.id, DIAGNOSTIC_OPERATION)
+        setShow(false);
+        setChooseServiceMode(false);
+    }
     return (
         <>
             <Modal show={show} onHide={handleClose}>
@@ -28,7 +36,6 @@ export const CarServiceDetails: React.FC<DetailsProps> = observer(({ handleConfi
                         Close
                     </Button>
                     <Button variant="primary" onClick={ () => {
-                        handleConfirm();
                         handleClose();
                         }
                     }>

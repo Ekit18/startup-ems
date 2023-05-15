@@ -17,11 +17,11 @@ interface CarServiceMarkersProps {
   handleClickMarker: (index: number) => void,
   handleDeleteCrashEmit: (userCarId: number) => void,
   setCurrCrashToChooseCarServiceFor: React.Dispatch<React.SetStateAction<CarInfo | CrashInfo | null>>,
-  currCrashToChooseCarServiceFor: CarInfo | CrashInfo | null,
+  setCurrCarService: React.Dispatch<React.SetStateAction<CarServiceInfo | null>>,
   handleConfirm: (confirmCarServiceModal: boolean) => void,
 }
 
-export const CarServiceMarkers: React.FC<CarServiceMarkersProps> = observer(({ handleConfirm, currCrashToChooseCarServiceFor, setCurrCrashToChooseCarServiceFor, handleDeleteCrashEmit, carServiceMarkers, setClickedMarker, clickedMarker, mapRef, handleClickMarker }) => {
+export const CarServiceMarkers: React.FC<CarServiceMarkersProps> = observer(({ handleConfirm, setCurrCarService, setCurrCrashToChooseCarServiceFor, handleDeleteCrashEmit, carServiceMarkers, setClickedMarker, clickedMarker, mapRef, handleClickMarker }) => {
   return (
     <>
       {carServiceMarkers.map((marker, index) =>
@@ -44,7 +44,7 @@ export const CarServiceMarkers: React.FC<CarServiceMarkersProps> = observer(({ h
           }}
         >
           <Popup>
-            <CarServiceDetails handleConfirm={handleConfirm} setCurrCrashToChooseCarServiceFor={setCurrCrashToChooseCarServiceFor} currCrashToChooseCarServiceFor={currCrashToChooseCarServiceFor} handleDeleteCrashEmit={handleDeleteCrashEmit} carServiceMarker={marker} index={index} handleClickMarker={handleClickMarker} isListDetails={false} />
+            <CarServiceDetails setCurrCarService={setCurrCarService} handleConfirm={handleConfirm} setCurrCrashToChooseCarServiceFor={setCurrCrashToChooseCarServiceFor} handleDeleteCrashEmit={handleDeleteCrashEmit} carServiceMarker={marker} index={index} handleClickMarker={handleClickMarker} isListDetails={false} />
           </Popup>
         </Marker>
       )}

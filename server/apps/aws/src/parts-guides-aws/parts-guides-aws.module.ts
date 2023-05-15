@@ -23,7 +23,7 @@ import { AuthModule } from "apps/auth/src/auth/auth.module";
   }],
   imports: [
     JWTGuardRegisterModule.register(),
-    SequelizeModule.forFeature([PartsGuidesAWS]),
+    SequelizeModule.forFeature([PartsGuidesAWS, Part]),
     RmqModule.register({ name: PARTS_QUEUE }) // Register client to send msgs to Parts MCService
   ],
   exports: [

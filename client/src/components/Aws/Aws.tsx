@@ -1,11 +1,96 @@
-// import React from 'react'
-// import { observer } from 'mobx-react-lite'
+import React, { FormEvent, useEffect, useState } from 'react'
+import { observer } from 'mobx-react-lite'
+import { Static, StaticImage, deleteStatic, getAllStatic } from '../../http/awsApi/awsApi'
+import { Button, Card, Spinner, Form } from 'react-bootstrap'
+import { StaticCard } from './StaticCard'
+import { ErrorAlert } from './ErrorAlert'
+import { BrandStep } from './AwsSteps/BrandStep'
+// import { NameStep } from './AwsSteps/NameStep'
+import { useNavigate } from 'react-router-dom'
+import { MAIN_ROUTE } from '../../utils/constants'
+import { useMultistepForm } from '../UserCars/AddUserCars/hooks/useMultistepForm'
+import { TypeStep } from './AwsSteps/TypeStep'
+import { NameStep } from './AwsSteps/NameStep'
 
-// interface AwsProps {
 
-// }
+export enum ApiStatusCode {
+    DELETE_ERROR = -1,
+    NO_ERROR = 0
+}
 
-// export const Aws: React.FC<AwsProps> = observer(({}) => {
-//         return (<></>);
-// })
- export {}
+export interface FormData {
+    brand: string,
+    type: string
+}
+
+const initialState: FormData = {
+    brand: '',
+    type: ''
+}
+export const AwsComponent: React.FC = observer(() => {
+    const [data, setData] = useState<FormData>(initialState)
+    const navigate = useNavigate()
+
+    function updateFields(fields: Partial<FormData>) {
+        setData((prev) => {
+            return { ...prev, ...fields }
+        })
+        next()
+    }
+    const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next } =
+        useMultistepForm([
+            <BrandStep updateFields={updateFields} />,
+            <TypeStep updateFields={updateFields} selectedBrand={data.brand} />,
+            <NameStep updateFields={updateFields} selectedBrand={data.brand} selectedType={data.type} />,
+        ])
+
+    function onSubmit(e: FormEvent) {
+        e.preventDefault()
+        if (!isLastStep) {
+            return next()
+        }
+    }
+
+    return (
+        <div
+            style={{
+                position: 'relative',
+                background: 'white',
+                padding: '2rem',
+                margin: '1rem',
+                borderRadius: '.5rem',
+                fontFamily: 'Arial',
+                maxWidth: '100%',
+            }}
+        >
+            {isFirstStep
+                ? (
+                    <button type="button" onClick={() => navigate(MAIN_ROUTE)}>
+                        Return to main menu
+                    </button>
+                )
+                : (
+                    <button type="button" onClick={() => back()}>
+                        Back
+                    </button>
+                )}
+            <form onSubmit={onSubmit}>
+                <div style={{ position: 'absolute', top: '.5rem', right: '.5rem' }}>
+                    {currentStepIndex + 1} / {steps.length}
+                </div>
+                {step}
+                <div
+                    style={{
+                        marginTop: '1rem',
+                        display: 'flex',
+                        gap: '.5rem',
+                        justifyContent: 'flex-end',
+                    }}
+                >
+                </div>
+            </form>
+        </div>
+
+    )
+})
+

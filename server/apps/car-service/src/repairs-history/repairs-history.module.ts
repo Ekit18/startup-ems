@@ -1,7 +1,7 @@
 import { Module, forwardRef } from "@nestjs/common";
 import { SequelizeModule } from "@nestjs/sequelize";
 import { AuthModule } from "apps/auth/src/auth/auth.module";
-import { RepairsHistory, JWTGuardRegisterModule } from "inq-shared-lib";
+import { RepairsHistory, JWTGuardRegisterModule, CAR_QUEUE, RmqModule } from "inq-shared-lib";
 import { CarOperationModule } from "../car-operation/car-operation.module";
 import { RepairsHistoryController } from "./repairs-history.controller";
 import { RepairsHistoryGateway } from "./repairs-history.gateway";
@@ -14,7 +14,8 @@ import { JwtModule } from "@nestjs/jwt";
   providers: [RepairsHistoryService, RepairsHistoryGateway],
   imports: [
     SequelizeModule.forFeature([RepairsHistory]), CarServiceModule, CarOperationModule,
-    JWTGuardRegisterModule.register()
+    JWTGuardRegisterModule.register(),
+    RmqModule.register({ name: CAR_QUEUE })
   ],
   exports: [
     RepairsHistoryService
