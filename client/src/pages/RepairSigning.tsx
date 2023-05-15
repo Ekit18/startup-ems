@@ -11,6 +11,7 @@ import { RepairSigningUnsignedItems } from "../components/RepairSigning/RepairSi
 import { useNavigate, useParams } from "react-router-dom";
 import { REPAIR_SIGNING, MAIN_ROUTE } from "../utils/constants";
 import { postAllSignedCarHistory } from "../http/carServiceApi/repairsHistoryApi";
+import { repairSigningInitialItem } from "./UserRepairSigning";
 
 export type CarOperationItem = {
   id: number;
@@ -28,26 +29,22 @@ export interface RepairSigningData {
   userCarId: number;
 }
 
+const initialState = {
+  items: [
+  ],
+  repairHistoryId: 0,
+  isSigning: false,
+  userCarId: 0
+}
+
 export const RepairSigning: React.FC = observer(() => {
   const { id } = useParams();
   const [selectedCarService, setSelectedCarService] = useState<number>(Number(id) || 0)
   const [socket, setSocket] = useState<Socket>();
   const [carService, setCarService] = useState<(CarServiceInfo)[]>([])
-  const [signingFormData, setSigningFormData] = useState<RepairSigningData>({
-    items: [
-      {
-        id: 0,
-        name: "Діагностика",
-        symptom: "Запис до СТО",
-        repair: "Постановка діагнозу",
-        price: 500,
-        partId: 0
-      }
-    ],
-    repairHistoryId: 0,
-    isSigning: false,
-    userCarId: 0
-  });
+  const [signingFormData, setSigningFormData] = useState<RepairSigningData>(
+    initialState
+  );
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -85,15 +82,17 @@ export const RepairSigning: React.FC = observer(() => {
 
     socket.on("signing_update", handleSigningUpdate);
     socket.on("exception", handleException);
-
+    socket.on("finish", handleFinish);
     return () => {
       if (!socket) {
         return;
       }
       socket.off("signing_update", handleSigningUpdate);
       socket.off("exception", handleException);
+      socket.off("finish", handleFinish);
     };
   }, [socket, handleSigningUpdate]);
+
 
   const handleCarOperationAdd = (carOperation: CarOperationItem) => {
     if (!signingFormData.items.find((item) => item.id === carOperation.id)) {
@@ -127,7 +126,7 @@ export const RepairSigning: React.FC = observer(() => {
 
 
   const getTotalPriceSum = useCallback(() => {
-    return signingFormData.items.reduce((total, item) => total + item.price, 0);
+    return signingFormData.items.reduce((total, item) => total + item.price, repairSigningInitialItem.price);
   }, [signingFormData.items]);
 
   const handleIsSigningChange = () => {
@@ -151,6 +150,9 @@ export const RepairSigning: React.FC = observer(() => {
     .then(() => navigate(MAIN_ROUTE))
   }
 
+  const handleFinish = () => {
+    setSelectedCarService(0)
+  }
   return (
     <>
       {
@@ -158,7 +160,7 @@ export const RepairSigning: React.FC = observer(() => {
           <Container>
             <Row>
               <Col md={5} className="mt-5">
-              <Button onClick={() => navigate(MAIN_ROUTE)} className="me-5">Return to main page</Button>
+                <Button onClick={() => navigate(MAIN_ROUTE)} className="me-5">Return to main page</Button>
                 <h2>Select your car service:</h2>
                 <Form>
                   <Form.Select
@@ -185,18 +187,26 @@ export const RepairSigning: React.FC = observer(() => {
         Boolean(selectedCarService) &&
 
         <>
-         <Button onClick={() => {
-          setSelectedCarService(0)
-          navigate(REPAIR_SIGNING)
+          <Button onClick={() => {
+            setSelectedCarService(0)
+            navigate(REPAIR_SIGNING)
           }} className="me-5">Return to services page</Button>
           <h2>Selected Car Service: {selectedCarService}</h2>
           <RepairSigningUnsignedItems carServiceId={selectedCarService} selected={signingFormData} setSelected={setSigningFormData} />
           <hr />
           {Boolean(signingFormData.repairHistoryId) &&
             <>
-            <button onClick={() => handleIsSigningChange()}>test </button>
-            <h4>{signingFormData.repairHistoryId}</h4>
+              <button onClick={() => handleIsSigningChange()}>Start signing</button>
+              <h4> User crash id: {signingFormData.repairHistoryId}</h4>
               <h4 className="text-center">Added Operations</h4>
+              <div style={{ borderStyle: "dashed", borderColor: "green" }} className="mx-5">
+            <RepairSigningShowItem
+              item={repairSigningInitialItem}
+              handleCarOperationDelete={handleCarOperationDelete}
+              isSigning={signingFormData.isSigning}
+              isService={false}
+            />
+          </div>
               {signingFormData.items.map((item) => {
                 return (
                   <RepairSigningShowItem
@@ -213,7 +223,7 @@ export const RepairSigning: React.FC = observer(() => {
                 isSigning={signingFormData.isSigning}
               />
               {signingFormData.isSigning && (
-                <RepairSigningSignatureCanvas socket={socket} repairHistoryId={signingFormData.repairHistoryId} handleSubmit={handleSubmit}/>
+                <RepairSigningSignatureCanvas socket={socket} repairHistoryId={signingFormData.repairHistoryId} handleSubmit={handleSubmit} />
               )}
             </>
           }
