@@ -9,10 +9,11 @@ interface RepairSigningShowItemProps {
   item: CarOperationItem
   isSigning: boolean
   handleCarOperationDelete: (id: number) => void
+  isService?: boolean
 }
 
 export const RepairSigningShowItem: React.FC<RepairSigningShowItemProps> =
-  observer(({ item, handleCarOperationDelete, isSigning }) => {
+  observer(({ item, handleCarOperationDelete, isSigning, isService = true }) => {
     return (
       <>
         <Container>
@@ -20,12 +21,12 @@ export const RepairSigningShowItem: React.FC<RepairSigningShowItemProps> =
             <Col md={12} className="d-flex justify-content-between">
               <h2>{item.name}</h2>
               <h2>{item.price}</h2>
-              <Button
+              {isService && <Button
                 disabled={isSigning}
                 onClick={() => handleCarOperationDelete(item.id)}
               >
                 delete
-              </Button>
+              </Button>}
             </Col>
           </Row>
         </Container>
