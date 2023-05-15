@@ -14,11 +14,13 @@ import {
     REGISTRATION_ROUTE,
     SERVICE_MAP_ROUTE,
     USER_MAP_ROUTE,
-    REPAIR_SIGNING
+    REPAIR_SIGNING,
+    USER_SIGNING
 } from "./utils/constants"
 import AddUserCars from './components/UserCars/AddUserCars/AddUserCars';
 import { ChatPage } from './components/ChatGPT/ChatPage';
 import { AwsComponent } from './components/Aws/Aws';
+import { UserRepairSigning } from './pages/UserRepairSigning';
 
 export const authRoutes = [
     {
@@ -37,6 +39,10 @@ export const authRoutes = [
         path: ADD_USER_CARS_ROUTE,
         Component: AddUserCars
     },
+    {
+        path: USER_SIGNING,
+        Component: UserRepairSigning
+    }
 ]
 
 

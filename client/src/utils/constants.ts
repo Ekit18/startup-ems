@@ -11,4 +11,5 @@ export const DIAGNOSTIC_OPERATION = 0;
 export const CHAT_GPT_ROUTE = '/main/ai-help'
 export const AWS_STATIC_FILES_ROUTE = '/service/aws-static-files-manager'
 export const REPAIR_SIGNING = '/service/repair-signing'
+export const USER_SIGNING = '/main/user-repair-signing'
 export const CHAT_GPT_PATTERN = /(Inquiry|app|helper|authorised|car|service)/gi
