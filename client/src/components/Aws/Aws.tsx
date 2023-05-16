@@ -1,9 +1,6 @@
-import React, { FormEvent, useEffect, useState } from 'react'
+import React, { FormEvent, useContext, useState } from 'react'
 import { observer } from 'mobx-react-lite'
-import { Static, StaticImage, deleteStatic, getAllStatic } from '../../http/awsApi/awsApi'
-import { Button, Card, Spinner, Form } from 'react-bootstrap'
-import { StaticCard } from './StaticCard'
-import { ErrorAlert } from './ErrorAlert'
+import { Button } from 'react-bootstrap'
 import { BrandStep } from './AwsSteps/BrandStep'
 // import { NameStep } from './AwsSteps/NameStep'
 import { useNavigate } from 'react-router-dom'
@@ -11,6 +8,7 @@ import { MAIN_ROUTE } from '../../utils/constants'
 import { useMultistepForm } from '../UserCars/AddUserCars/hooks/useMultistepForm'
 import { TypeStep } from './AwsSteps/TypeStep'
 import { NameStep } from './AwsSteps/NameStep'
+import { Context } from '../..'
 
 
 export enum ApiStatusCode {
@@ -30,18 +28,17 @@ const initialState: FormData = {
 export const AwsComponent: React.FC = observer(() => {
     const [data, setData] = useState<FormData>(initialState)
     const navigate = useNavigate()
-
     function updateFields(fields: Partial<FormData>) {
         setData((prev) => {
             return { ...prev, ...fields }
         })
         next()
     }
-    const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next } =
+    const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next, goTo } =
         useMultistepForm([
             <BrandStep updateFields={updateFields} />,
             <TypeStep updateFields={updateFields} selectedBrand={data.brand} />,
-            <NameStep updateFields={updateFields} selectedBrand={data.brand} selectedType={data.type} />,
+            <NameStep updateFields={updateFields} selectedBrand={data.brand} selectedType={data.type} />
         ])
 
     function onSubmit(e: FormEvent) {

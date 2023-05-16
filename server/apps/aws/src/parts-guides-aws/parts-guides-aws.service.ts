@@ -142,7 +142,7 @@ export class PartsGuidesAwsService {
     }
 
     async addGuideImg(partId: number, fileBuffer: Buffer, fileOriginalname: string) {
-        const part: Part = await lastValueFrom(this.PartsClient.send({ cmd: "findOneByPartId" }, partId));
+        const part: Part = await lastValueFrom(this.PartsClient.send({ role: "parts", cmd: "findOneById" }, partId));
         if (!part) {
             throw new HttpException({ message: 'Part with such id does not exist!' }, HttpStatus.BAD_REQUEST);
         }

@@ -1,5 +1,5 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from "@nestjs/common";
-import {ApiOperation, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import {
     CreatePartDTO,
     GetPartDetailsDTO,
@@ -10,7 +10,7 @@ import {
     RolesGuard,
     UpdatePartDTO
 } from "inq-shared-lib";
-import {PartsService} from "./parts.service";
+import { PartsService } from "./parts.service";
 
 @ApiTags("Parts")
 @Controller('parts')
@@ -29,6 +29,13 @@ export class PartsController {
     @Get('part_info/:partId')
     getPartDetails(@Param() getPartDetailsDTO: GetPartDetailsDTO) {
         return this.partService.getPartById(getPartDetailsDTO.partId);
+    }
+
+    @ApiOperation({ summary: 'Get detailed info about all parts' })
+    @ApiResponse({ status: 200, type: [Part] })
+    @Get()
+    getAllPartDetails(): Promise<Part[]> {
+        return this.partService.getAllPartDetails();
     }
 
     @Roles("CARSERVICE", "PARTSHOP")

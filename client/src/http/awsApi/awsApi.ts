@@ -1,9 +1,10 @@
+import { STATIC_FILE_TYPES } from './../../utils/constants';
 import { HttpStatusCode } from "axios";
-import { $awsHost } from "..";
+import { $awsHost, $partsHost } from "..";
 import { ApiStatusCode } from "../../components/Aws/Aws";
 
 export interface PartData {
-    id: number,
+    partId: number,
     brand: string,
     name: string,
     type: string
@@ -46,5 +47,15 @@ export const getAllPartTypes = async (selectedBrand: string): Promise<TypeData[]
 }
 export const getAllPartsByBrandAndType = async (selectedBrand: string, selectedType: string): Promise<Static> => {
     const { data } = await $awsHost.get(`parts-guides-aws/${selectedBrand}/${selectedType}`);
+    return data;
+}
+export const addStaticFile = async (partId: number, staticType: string, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const { data } = await $awsHost.post(`parts-guides-aws/${staticType}/${partId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
     return data;
 }

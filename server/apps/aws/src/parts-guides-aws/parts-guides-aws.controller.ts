@@ -31,7 +31,6 @@ export class PartsGuidesAwsController {
             PartsGuidesAwsController.errObj.msg = "Wrong data size";
         }
         console.log(config.MAX_FILE_SIZE);
-
         callback(null, true);
     }
 
@@ -64,6 +63,7 @@ export class PartsGuidesAwsController {
         @Param('partId') partId: number,
         @UploadedFiles() files: Array<Express.Multer.File>
     ) {
+        console.log("HERERERERRE");
         if (PartsGuidesAwsController.errObj.isError) {
             throw new HttpException(PartsGuidesAwsController.errObj.msg, HttpStatus.BAD_REQUEST);
         }

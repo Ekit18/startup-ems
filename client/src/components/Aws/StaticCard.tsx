@@ -14,7 +14,7 @@ export const StaticCard: React.FC<StaticCardProps> = ({ url, _key, part, handleD
             <Card.Body>
                 <Card.Title>{part.brand}/{part.type}/{part.name}</Card.Title>
                 <Card.Text>
-                    ID: {part.id}
+                    ID: {part.partId}
                 </Card.Text>
                 <Button variant="danger" onClick={() => handleDeleteClick(_key)}>
                     Delete static file

@@ -12,6 +12,11 @@ export class PartsService {
         @Inject(CAR_QUEUE) private CarClient: ClientProxy,
         @InjectModel(CarsParts) private carsParts: typeof CarsParts) { }
 
+    async getAllPartDetails(): Promise<Part[]> {
+        const parts = await this.partRepository.findAll({});
+        console.log(parts);
+        return parts;
+    }
     // Next 2 methods are needed because partId is got from aws partIds pool, whereas brand and type is got from a client's pick, so only those ids are needed, whose brand and type is such
     async getTypeByIdAndBrand(data: getTypeByIdAndBrandPayload) {
         const types = await this.partRepository.findOne({ where: { partId: data.partId, brand: data.brand }, attributes: ['type'] });

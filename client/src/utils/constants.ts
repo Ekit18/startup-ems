@@ -10,5 +10,7 @@ export const MAP_ZOOM = 13
 export const DIAGNOSTIC_OPERATION = 0;
 export const CHAT_GPT_ROUTE = '/main/ai-help'
 export const AWS_STATIC_FILES_ROUTE = '/service/aws-static-files-manager'
+export const AWS_ADD_STATIC_FILE_ROUTE = '/service/aws-static-files-manager/add-static'
 export const REPAIR_SIGNING = '/service/repair-signing'
 export const CHAT_GPT_PATTERN = /(Inquiry|app|helper|authorised|car|service)/gi
+export const STATIC_FILE_TYPES = ['part', 'guide']

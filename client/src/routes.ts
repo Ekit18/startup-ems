@@ -14,11 +14,13 @@ import {
     REGISTRATION_ROUTE,
     SERVICE_MAP_ROUTE,
     USER_MAP_ROUTE,
-    REPAIR_SIGNING
+    REPAIR_SIGNING,
+    AWS_ADD_STATIC_FILE_ROUTE
 } from "./utils/constants"
 import AddUserCars from './components/UserCars/AddUserCars/AddUserCars';
 import { ChatPage } from './components/ChatGPT/ChatPage';
 import { AwsComponent } from './components/Aws/Aws';
+import { AddStaticFile } from './pages/AddStaticFile';
 
 export const authRoutes = [
     {
@@ -44,6 +46,10 @@ export const roleAuthRoutes = [
     {
         path: SERVICE_MAP_ROUTE,
         Component: ServiceCrashMap
+    },
+    {
+        path: AWS_ADD_STATIC_FILE_ROUTE,
+        Component: AddStaticFile
     },
     {
         path: AWS_STATIC_FILES_ROUTE,
