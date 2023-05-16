@@ -1,8 +1,9 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { Container, Row, Col } from "react-bootstrap";
 import { observer } from 'mobx-react-lite'
 import { Socket } from "socket.io-client";
+import { useRafThrottle } from "./hooks/useRafThrottle";
 
 interface RepairSigningSignatureCanvasProps {
     socket: Socket | undefined
@@ -36,7 +37,7 @@ export const RepairSigningSignatureCanvas: React.FC<RepairSigningSignatureCanvas
         socket?.emit("down", { x: event.clientX - rect.left, y: event.clientY - rect.top, repairHistoryId });
     }
 
-    function handleOnDraw(data: RepairSigningSignatureCanvasDrawingData) {
+    const handleOnDraw = useRafThrottle((data: RepairSigningSignatureCanvasDrawingData) => {
         const canvas = canvasRef.current;
         if (!canvas) {
             return;
@@ -47,7 +48,7 @@ export const RepairSigningSignatureCanvas: React.FC<RepairSigningSignatureCanvas
         }
         context.lineTo(data.x, data.y);
         context.stroke();
-    }
+      });
 
 const handleOnDown = (data:RepairSigningSignatureCanvasDrawingData) => {
     const canvas = canvasRef.current;
@@ -77,7 +78,7 @@ const handleOnDown = (data:RepairSigningSignatureCanvasDrawingData) => {
             socket.off("ondraw", handleOnDraw);
             socket.off("exception", handleException);
         }
-    }, [socket, handleOnDraw]);
+    }, [socket]);
 
     const handleException = (data: any) => {
         alert(data.message)
@@ -135,7 +136,7 @@ const handleOnDown = (data:RepairSigningSignatureCanvasDrawingData) => {
                         />
                     </Col>
                     <Col md={12} className="text-center">
-                        <button onClick={handleSubmit}>Save</button>
+                        <button onClick={() => handleSubmit()}>Save</button>
                     </Col>
                 </Row>
             </Container>

@@ -59,4 +59,13 @@ export class RepairsHistoryGateway {
         // .to(data.room)
         this.server.sockets.to(data.repairHistoryId).emit("ondown", { x: data.x, y: data.y });
     }
+
+
+    @UseFilters(new WsExceptionFilter())
+    @SubscribeMessage('finish')
+    listenForFinish(@MessageBody() data: any) {
+        console.log(data);
+        // .to(data.room)
+        this.server.sockets.to(data.repairHistoryId).emit("finish");
+    }
 }

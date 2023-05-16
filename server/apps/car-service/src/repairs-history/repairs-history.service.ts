@@ -32,7 +32,7 @@ export class RepairsHistoryService {
         console.log(data);
         const initialHistory = await this.repairsHistoryRepository.update({ isSigned: true }, { where: { id: data.initialRepairHistoryId } });
         const result = await Promise.all(data.carOperationIds.map((item) => this.create({ ...data, carOperationId: item })));
-        return 0;
+        return result;
     }
 
     async getAllCarHistory(userCarId: number) {
@@ -52,8 +52,8 @@ export class RepairsHistoryService {
             const service = servicesMap.get(obj.carServiceId);
             const operation = operationsMap.get(obj.carOperationId);
             return existingObj
-                ? (existingObj.operations.push({ ...operation.get(), createdAt: obj.createdAt }), acc)
-                : [...acc, { ...service.get(), operations: [{ ...operation.get(), createdAt: obj.createdAt }] }];
+                ? (existingObj.operations.push({ ...operation.get(), createdAt: obj.createdAt, isSigned: obj.isSigned, repairsHistoryId: obj.id }), acc)
+                : [...acc, { ...service.get(), operations: [{ ...operation.get(), createdAt: obj.createdAt, isSigned: obj.isSigned, repairsHistoryId: obj.id }] }];
         }, []);
         return result;
     }
@@ -77,6 +77,7 @@ export class RepairsHistoryService {
         }));
         return result;
     }
+
 
     remove(dto: CreateRepairsHistory) {
         return RepairsHistory.destroy({ where: { ...dto } });

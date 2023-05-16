@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Context } from '../..'
-import { Container, Row, Col, Button, Accordion } from 'react-bootstrap'
+import { Container, Row, Col, Button, Accordion, Badge } from 'react-bootstrap'
 import { fetchUserCars } from '../../http/carApi/userCarsApi'
 import { observer } from 'mobx-react-lite'
 import { ChangeUserCarsModal } from './ChangeUserCarsModal'
@@ -17,10 +17,12 @@ export interface CarOperationData {
   repair: string;
   price: number;
   partId: number;
+  isSigned: boolean;
+  repairsHistoryId: number;
 }
 
 export interface RepairHistoryData extends CarServiceInfo {
-  operations: [CarOperationData]
+  operations: CarOperationData[]
 }
 
 export const UserCars: React.FC = observer(() => {
@@ -35,10 +37,6 @@ export const UserCars: React.FC = observer(() => {
     fetchUserCars(user.userId).then((data) => userCars.setUserCars(data))
   }, [userCars])
 
-
-  // const getCarHistory = (userCarId: number) => {
-  //   getAllCarHistoryByUserUserCarId(userCarId).then((data) => setCarHistory(data))
-  // }
 
   const handleDeleteClick = (carId: number) => {
     userCars.deleteUserCars(user.userId, carId)
@@ -80,16 +78,7 @@ export const UserCars: React.FC = observer(() => {
               >
                 Delete
               </Button>
-              <Accordion>
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header>
-                    Repairs history
-                  </Accordion.Header>
-                  <Accordion.Body>
                     <RepairsHistory userCarId={item.userCarId} />
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
             </Col>
           ))}
         </Row>

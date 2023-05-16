@@ -34,7 +34,7 @@ export const AddStaticFile: React.FC = observer(() => {
         if (formData.file.name === '') {
             return alert("Select file")
         }
-        addStaticFile(formData.partId, formData.staticType, formData.file);
+        addStaticFile(formData.partId, formData.staticType, formData.file).then(() => navigate(MAIN_ROUTE));
     }
 
     const handleChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {

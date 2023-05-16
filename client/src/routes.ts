@@ -15,12 +15,16 @@ import {
     SERVICE_MAP_ROUTE,
     USER_MAP_ROUTE,
     REPAIR_SIGNING,
-    AWS_ADD_STATIC_FILE_ROUTE
+    AWS_ADD_STATIC_FILE_ROUTE,
+    USER_SIGNING
 } from "./utils/constants"
+
 import AddUserCars from './components/UserCars/AddUserCars/AddUserCars';
 import { ChatPage } from './components/ChatGPT/ChatPage';
 import { AwsComponent } from './components/Aws/Aws';
 import { AddStaticFile } from './pages/AddStaticFile';
+import { UserRepairSigning } from './pages/UserRepairSigning';
+
 
 export const authRoutes = [
     {
@@ -39,6 +43,10 @@ export const authRoutes = [
         path: ADD_USER_CARS_ROUTE,
         Component: AddUserCars
     },
+    {
+        path: USER_SIGNING,
+        Component: UserRepairSigning
+    }
 ]
 
 
