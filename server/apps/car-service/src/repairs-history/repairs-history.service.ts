@@ -1,11 +1,13 @@
 import { Injectable, HttpException, HttpStatus, Inject } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
-import { CarOperation, RepairsHistory, CreateRepairsHistory, CAR_QUEUE } from "inq-shared-lib";
+import { CarOperation, RepairsHistory, CreateRepairsHistory, CAR_QUEUE, DeleteRepairsHistoryDto } from "inq-shared-lib";
 import { CarOperationService } from "../car-operation/car-operation.service";
 import { CarServicesServices } from "../car-service/car-service.service";
 import { CarService } from "apps/car/src/car/car.service";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";
+import RepairsHistorySearchService from "../repairs-history-search/repairs-history-search.service";
+import { Sequelize, Op } from "sequelize";
 
 export interface CarHistoryByService extends CarService {
     operations: CarOperation[];
@@ -16,6 +18,7 @@ export class RepairsHistoryService {
     constructor(@InjectModel(RepairsHistory) private repairsHistoryRepository: typeof RepairsHistory,
         private carServiceRepository: CarServicesServices,
         private carOperationRepository: CarOperationService,
+        private repairsHistorySearchService: RepairsHistorySearchService,
         @Inject(CAR_QUEUE) private UserCarClient: ClientProxy) { }
 
     async create(dto: CreateRepairsHistory) {
@@ -25,13 +28,21 @@ export class RepairsHistoryService {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
         const repairsHistory = await this.repairsHistoryRepository.create(dto);
+        console.log("CREATEDCREATEDCREATEDCREATEDCREATEDCREATEDCREATEDCREATED");
+        this.repairsHistorySearchService.indexRepairHistory(repairsHistory);
+        console.log("CREATEDCREATEDCREATEDCREATEDCREATEDCREATEDCREATEDCREATED");
         return repairsHistory;
     }
 
     async createFromArray(data: { initialRepairHistoryId: number } & { carOperationIds: number[] } & CreateRepairsHistory) {
-        console.log(data);
-        const initialHistory = await this.repairsHistoryRepository.update({ isSigned: true }, { where: { id: data.initialRepairHistoryId } });
-        const result = await Promise.all(data.carOperationIds.map((item) => this.create({ ...data, carOperationId: item })));
+        await this.repairsHistoryRepository.update({ isSigned: true }, { where: { id: data.initialRepairHistoryId } });
+        const updatedInitialHistory = await this.repairsHistoryRepository.findOne({ where: { id: data.initialRepairHistoryId }, include: { all: true } });
+        this.repairsHistorySearchService.update(updatedInitialHistory);
+        const result = await Promise.all(data.carOperationIds.map(async (item) => {
+            const repairsHistory = await this.create({ ...data, carOperationId: item });
+            this.repairsHistorySearchService.indexRepairHistory(repairsHistory);
+            return repairsHistory;
+        }));
         return result;
     }
 
@@ -78,8 +89,27 @@ export class RepairsHistoryService {
         return result;
     }
 
+    async searchForRepairsHistory(text: string) {
+        const results = await this.repairsHistorySearchService.search(Number(text));
+        const ids = results.map((result) => result.id);
+        if (!ids.length) {
+            return [];
+        }
+        return this.repairsHistoryRepository.findAll({
+            where: {
+              id: {
+                [Op.in]: ids
+              }
+            }
+          });
+    }
 
-    remove(dto: CreateRepairsHistory) {
-        return RepairsHistory.destroy({ where: { ...dto } });
+
+    remove(dto: DeleteRepairsHistoryDto) {
+        const deleteResponse = RepairsHistory.destroy({ where: { ...dto } });
+        if (!deleteResponse) {
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+        }
+        this.repairsHistorySearchService.remove(dto);
     }
 }

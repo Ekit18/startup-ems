@@ -1,13 +1,13 @@
-import { Controller, UseGuards, Post, Body, Get, Param, Delete } from "@nestjs/common";
-import { Roles, RolesGuard, CreateRepairsHistory } from "inq-shared-lib";
+import { Controller, UseGuards, Post, Body, Get, Param, Delete, Query, HttpException, HttpStatus } from "@nestjs/common";
+import { Roles, RolesGuard, CreateRepairsHistory, DeleteRepairsHistoryDto } from "inq-shared-lib";
 import { RepairsHistoryService } from "./repairs-history.service";
 
 @Controller('repairs-history')
 export class RepairsHistoryController {
     constructor(private repairsHistoryService: RepairsHistoryService) { }
 
-    @Roles("CARSERVICE")
-    @UseGuards(RolesGuard)
+    // @Roles("CARSERVICE")
+    // @UseGuards(RolesGuard)
     @Post('begin-service')
     create(@Body() dto: CreateRepairsHistory) {
         return this.repairsHistoryService.create(dto);
@@ -43,8 +43,18 @@ export class RepairsHistoryController {
 
     @Roles("CARSERVICE")
     @UseGuards(RolesGuard)
-    @Delete('car-service/:carServiceId/user-car/:userCarId/car-operation/:carOperationId')
-    remove(@Param() params: CreateRepairsHistory) {
+    @Get()
+    getPosts(@Query('search') search: string) {
+      if (!search) {
+        throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+    }
+    return this.repairsHistoryService.searchForRepairsHistory(search);
+    }
+
+    @Roles("CARSERVICE")
+    @UseGuards(RolesGuard)
+    @Delete('repair-history-id/:id')
+    remove(@Param() params: DeleteRepairsHistoryDto) {
         return this.repairsHistoryService.remove(params);
     }
 }

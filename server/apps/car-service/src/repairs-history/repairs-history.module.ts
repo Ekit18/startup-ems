@@ -7,7 +7,7 @@ import { RepairsHistoryController } from "./repairs-history.controller";
 import { RepairsHistoryGateway } from "./repairs-history.gateway";
 import { RepairsHistoryService } from "./repairs-history.service";
 import { CarServiceModule } from "../car-service/car-service.module";
-import { JwtModule } from "@nestjs/jwt";
+import { RepairsHistorySearchModule } from "../repairs-history-search/repairs-history-search.module";
 
 @Module({
   controllers: [RepairsHistoryController],
@@ -15,7 +15,8 @@ import { JwtModule } from "@nestjs/jwt";
   imports: [
     SequelizeModule.forFeature([RepairsHistory]), CarServiceModule, CarOperationModule,
     JWTGuardRegisterModule.register(),
-    RmqModule.register({ name: CAR_QUEUE })
+    RmqModule.register({ name: CAR_QUEUE }),
+    RepairsHistorySearchModule
   ],
   exports: [
     RepairsHistoryService

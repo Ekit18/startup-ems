@@ -12,6 +12,7 @@ import { CarOperationModule } from "./car-operation/car-operation.module";
 import { CrashesModule } from "./crashes/crashes.module";
 import { RepairsHistoryModule } from "./repairs-history/repairs-history.module";
 import { CarServiceModule } from "./car-service/car-service.module";
+import { RepairsHistorySearchModule } from "./repairs-history-search/repairs-history-search.module";
 
 
 @Module({
@@ -43,7 +44,8 @@ import { CarServiceModule } from "./car-service/car-service.module";
         CarOperationModule,
         CarServiceModule,
         CrashesModule,
-        RepairsHistoryModule
+        RepairsHistoryModule,
+        RepairsHistorySearchModule
     ],
     providers: [
         // {
