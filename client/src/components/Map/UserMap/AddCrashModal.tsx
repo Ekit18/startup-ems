@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite"
 import { useState } from "react"
 import { Button, Form, Modal } from "react-bootstrap"
 import { CarInfo, CrashInfo, CrashModalState } from "./CrashMap"
+import { useSearchParams } from "react-router-dom"
 
 export interface ModalData {
     description: string,
@@ -16,7 +17,9 @@ interface CrashModalProps {
 
 
 export const AddCrashModal: React.FC<CrashModalProps> = observer(({ show, setShow, onSubmit, userCars }) => {
-    const [modalData, setModalData] = useState<ModalData>({ description: "", userCarId: 0 })
+    const [searchParams] = useSearchParams();
+    const [modalData, setModalData] = useState<ModalData>({ description: searchParams.get('description') || "", userCarId: (Number(searchParams.get('userCarId')) || 0) })
+    console.log(searchParams.get('userCarId'))
     const handleClose = () => setShow((prevState) => ({ ...prevState, show: false }));
     const handleOpen = () => setShow((prevState) => ({ ...prevState, show: true }));
 
@@ -50,12 +53,16 @@ export const AddCrashModal: React.FC<CrashModalProps> = observer(({ show, setSho
                     type="text"
                     id="inputDescription"
                     name="description"
+                    value={modalData.description}
                     onChange={(e) => handleInputChange(e)}
                 />
                 <Form.Text id="passwordHelpBlock" muted>
                     Your description of problem.
                 </Form.Text>
-                <Form.Select name="userCarId" onChange={(e) => handleInputChange(e)}>
+                <Form.Select name="userCarId"
+                onChange={(e) => handleInputChange(e)}
+                defaultValue={modalData.userCarId}
+                >
                     <option >Select Your car</option>
                     {/* eslint-disable-next-line no-extra-parens */}
                     {userCars.filter((car) => !(car as CrashInfo).location).map((car) =>

@@ -19,7 +19,7 @@ export const ChatPage: React.FC = observer(() => {
     content: "",
     role: "",
   })
-  const [isRecomendedToVisitService, setIsRecomendedToVisitService] = useState<boolean>(false)
+  const [isRecommendedToVisitService, setIsRecomendedToVisitService] = useState<boolean>(false)
   const [selectedCar, setSelectedCar] = useState<UserCarData>({
     bodyType: "",
     brand: "",
@@ -98,7 +98,11 @@ export const ChatPage: React.FC = observer(() => {
               : <div>{response.content}</div>
           }
 
-          {isRecomendedToVisitService && <Button variant="success" onClick={() => navigate(USER_MAP_ROUTE)}>Find a car service</Button>}
+          {isRecommendedToVisitService && <Button variant="success"
+            onClick={() => navigate(`${USER_MAP_ROUTE}?description=${currentPrompt}&userCarId=${selectedCar.userCarId}`)}
+          >
+            Find a car service
+          </Button>}
         </Row>
       </Container>
     </>
