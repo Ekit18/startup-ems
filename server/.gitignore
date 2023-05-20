@@ -43,3 +43,5 @@ lerna-debug.log*
 data\
 docker-compose.yml
 docker.env
+
+esdata
