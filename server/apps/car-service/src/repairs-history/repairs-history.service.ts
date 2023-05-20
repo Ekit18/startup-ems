@@ -22,15 +22,13 @@ export class RepairsHistoryService {
         @Inject(CAR_QUEUE) private UserCarClient: ClientProxy) { }
 
     async create(dto: CreateRepairsHistory) {
-        const carService = await this.carServiceRepository.getCarServiceById(dto.carServiceId);
-        const carOperation = await this.carOperationRepository.getCarOperationById(dto.carOperationId);
-        if (!carService || !carOperation) {
-            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
-        }
+        // const carService = await this.carServiceRepository.getCarServiceById(dto.carServiceId);
+        // const carOperation = await this.carOperationRepository.getCarOperationById(dto.carOperationId);
+        // if (!carService || !carOperation) {
+        //     throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+        // }
         const repairsHistory = await this.repairsHistoryRepository.create(dto);
-        console.log("CREATEDCREATEDCREATEDCREATEDCREATEDCREATEDCREATEDCREATED");
         this.repairsHistorySearchService.indexRepairHistory(repairsHistory);
-        console.log("CREATEDCREATEDCREATEDCREATEDCREATEDCREATEDCREATEDCREATED");
         return repairsHistory;
     }
 
@@ -89,21 +87,21 @@ export class RepairsHistoryService {
         return result;
     }
 
-    async searchForRepairsHistory(text: string) {
-        const results = await this.repairsHistorySearchService.search(Number(text));
-        const ids = results.map((result) => result.id);
+    async searchForRepairsHistory(carServiceId: number, carOperationId: number, scrollId?: string) {
+        const results = await this.repairsHistorySearchService.search(carServiceId, carOperationId, scrollId);
+        const ids = results.result.map((result) => result.id);
         if (!ids.length) {
-            return [];
+            return { result: [], scrollId: results.scrollId };
         }
-        return this.repairsHistoryRepository.findAll({
+        const queryResult = await this.repairsHistoryRepository.findAll({
             where: {
-              id: {
-                [Op.in]: ids
-              }
+                id: {
+                    [Op.in]: ids
+                }
             }
-          });
+        });
+        return { result: queryResult, scrollId: results.scrollId };
     }
-
 
     remove(dto: DeleteRepairsHistoryDto) {
         const deleteResponse = RepairsHistory.destroy({ where: { ...dto } });
@@ -111,5 +109,6 @@ export class RepairsHistoryService {
             throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
         }
         this.repairsHistorySearchService.remove(dto);
+        return deleteResponse;
     }
 }

@@ -1,15 +1,35 @@
 import { Controller, UseGuards, Post, Body, Get, Param, Delete, Query, HttpException, HttpStatus } from "@nestjs/common";
-import { Roles, RolesGuard, CreateRepairsHistory, DeleteRepairsHistoryDto } from "inq-shared-lib";
+import { Roles, RolesGuard, CreateRepairsHistory, DeleteRepairsHistoryDto, SearchRepairsHistoryDto, GoogleCodeDto, QueryRepairsHistoryDto } from "inq-shared-lib";
 import { RepairsHistoryService } from "./repairs-history.service";
+
 
 @Controller('repairs-history')
 export class RepairsHistoryController {
     constructor(private repairsHistoryService: RepairsHistoryService) { }
-
+    count = 0;
     // @Roles("CARSERVICE")
     // @UseGuards(RolesGuard)
+    getRandomNumberInRange(min, max): number {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     @Post('begin-service')
-    create(@Body() dto: CreateRepairsHistory) {
+    create() {
+        // @Body() dto: CreateRepairsHistory
+        // const dto = {
+        //     userCarId: this.getRandomNumberInRange(5, 90005),
+        //     carServiceId: this.getRandomNumberInRange(121, 240),
+        //     carOperationId: this.getRandomNumberInRange(0, 13),
+        //     isSigned: true
+        // };
+        const dto = {
+            userCarId: this.getRandomNumberInRange(5, 90005),
+            carServiceId: 121,
+            carOperationId: 8,
+            isSigned: true
+        };
+        this.count++;
+        console.log(this.count);
         return this.repairsHistoryService.create(dto);
     }
 
@@ -43,17 +63,18 @@ export class RepairsHistoryController {
 
     @Roles("CARSERVICE")
     @UseGuards(RolesGuard)
-    @Get()
-    getPosts(@Query('search') search: string) {
-      if (!search) {
-        throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+    @Get('search/:carServiceId/:carOperationId')
+    searchRepairsHistory(@Param() params: SearchRepairsHistoryDto, @Query() query?: QueryRepairsHistoryDto) {
+        if (!params) {
+            throw new HttpException({ message: 'Wrong data' }, HttpStatus.BAD_REQUEST);
+        }
+        return this.repairsHistoryService.searchForRepairsHistory(params.carServiceId, params.carOperationId, query.scrollId);
     }
-    return this.repairsHistoryService.searchForRepairsHistory(search);
-    }
+
 
     @Roles("CARSERVICE")
     @UseGuards(RolesGuard)
-    @Delete('repair-history-id/:id')
+    @Delete(':id')
     remove(@Param() params: DeleteRepairsHistoryDto) {
         return this.repairsHistoryService.remove(params);
     }

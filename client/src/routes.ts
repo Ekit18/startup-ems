@@ -16,7 +16,8 @@ import {
     USER_MAP_ROUTE,
     REPAIR_SIGNING,
     AWS_ADD_STATIC_FILE_ROUTE,
-    USER_SIGNING
+    USER_SIGNING,
+    REPAIR_SEARCH
 } from "./utils/constants"
 
 import AddUserCars from './components/UserCars/AddUserCars/AddUserCars';
@@ -24,6 +25,7 @@ import { ChatPage } from './components/ChatGPT/ChatPage';
 import { AwsComponent } from './components/Aws/Aws';
 import { AddStaticFile } from './pages/AddStaticFile';
 import { UserRepairSigning } from './pages/UserRepairSigning';
+import { RepairHistorySearch } from './pages/RepairHistorySearch';
 
 
 export const authRoutes = [
@@ -70,6 +72,10 @@ export const roleAuthRoutes = [
     {
         path: `${REPAIR_SIGNING}/:id`,
         Component: RepairSigning
+    },
+    {
+        path: REPAIR_SEARCH,
+        Component: RepairHistorySearch
     }
 ]
 
